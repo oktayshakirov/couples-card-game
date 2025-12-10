@@ -13,14 +13,20 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.shadev.loveswipe"
+      "bundleIdentifier": "com.shadev.loveswipe",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-5852582960793521~5465329102"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1a0a0f"
       },
-      "package": "com.shadev.loveswipe"
+      "package": "com.shadev.loveswipe",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-5852582960793521~5465329102"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

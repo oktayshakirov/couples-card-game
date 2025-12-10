@@ -60,13 +60,13 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   leftButton: {
-    backgroundColor: "#F44336",
+    backgroundColor: "#4A90E2",
   },
   skipButton: {
     backgroundColor: "#666",
   },
   rightButton: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#FF6B6B",
   },
   buttonText: {
     fontSize: 28,
@@ -74,4 +74,3 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
-

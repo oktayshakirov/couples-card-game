@@ -49,8 +49,8 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ question, dare }) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: width * 0.88,
-    height: height * 0.62,
+    width: width * 0.85,
+    height: height * 0.58,
     borderRadius: 28,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },

@@ -1,11 +1,13 @@
 import React, { useState, useRef } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import TinderCard from "react-tinder-card";
 import { SwipeCard } from "../components/Card";
 import { GameHeader } from "../components/GameHeader";
 import { ActionButtons } from "../components/ActionButtons";
+import { EmptyDeck } from "../components/EmptyDeck";
 import { useGameState } from "../hooks/useGameState";
 import { useCardDeck } from "../hooks/useCardDeck";
+import BannerAdComponent from "../components/ads/BannerAd";
 
 const MAX_VISIBLE_CARDS = 3;
 
@@ -55,6 +57,7 @@ export const GameScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <BannerAdComponent />
       <GameHeader
         currentPlayer={gameState.currentPlayer}
         player1Dares={gameState.player1.dares}
@@ -67,12 +70,7 @@ export const GameScreen: React.FC = () => {
 
       <View style={styles.content}>
         {cards.length === 0 ? (
-          <View style={styles.emptyDeckContainer}>
-            <Text style={styles.emptyDeckText}>All cards completed! 🎉</Text>
-            <Text style={styles.emptyDeckSubtext}>
-              You've finished the deck together!
-            </Text>
-          </View>
+          <EmptyDeck />
         ) : (
           renderedCards.map((card, index) => {
             const cardRef = getCardRef(card.id);
@@ -133,22 +131,5 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-  },
-  emptyDeckContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 40,
-  },
-  emptyDeckText: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#FF6B6B",
-    marginBottom: 12,
-    textAlign: "center",
-  },
-  emptyDeckSubtext: {
-    fontSize: 16,
-    color: "#999",
-    textAlign: "center",
   },
 });
