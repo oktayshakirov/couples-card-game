@@ -66,6 +66,8 @@ export const GameScreen: React.FC = () => {
         player2Dares={gameState.player2.dares}
         player2Truths={gameState.player2.truths}
         player2Skipped={gameState.player2.skipped}
+        player1Name={gameState.player1Name}
+        player2Name={gameState.player2Name}
       />
 
       <View style={styles.content}>
@@ -94,7 +96,13 @@ export const GameScreen: React.FC = () => {
                   swipeThreshold={100}
                   preventSwipe={["up", "down"]}
                 >
-                  <SwipeCard truth={card.truth} dare={card.dare} />
+                  <SwipeCard
+                    truth={card.truth}
+                    dare={card.dare}
+                    player1Name={gameState.player1Name}
+                    player2Name={gameState.player2Name}
+                    currentPlayer={gameState.currentPlayer}
+                  />
                 </TinderCard>
               </View>
             );

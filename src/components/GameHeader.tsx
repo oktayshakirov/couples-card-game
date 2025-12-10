@@ -10,6 +10,8 @@ interface GameHeaderProps {
   player2Dares: number;
   player2Truths: number;
   player2Skipped: number;
+  player1Name: string;
+  player2Name: string;
 }
 
 export const GameHeader: React.FC<GameHeaderProps> = ({
@@ -20,6 +22,8 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   player2Dares,
   player2Truths,
   player2Skipped,
+  player1Name,
+  player2Name,
 }) => {
   return (
     <View style={styles.header}>
@@ -43,7 +47,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
             currentPlayer === 1 && styles.activePlayerLabel,
           ]}
         >
-          Player 1
+          {player1Name}
         </Text>
         <View style={styles.statsRow}>
           <View style={styles.statBadge}>
@@ -86,7 +90,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
             currentPlayer === 2 && styles.activePlayerLabel,
           ]}
         >
-          Player 2
+          {player2Name}
         </Text>
         <View style={styles.statsRow}>
           <View style={styles.statBadge}>

@@ -6,16 +6,38 @@ const { width, height } = Dimensions.get("window");
 interface SwipeCardProps {
   truth: string;
   dare: string;
+  player1Name: string;
+  player2Name: string;
+  currentPlayer: 1 | 2;
 }
 
-export const SwipeCard: React.FC<SwipeCardProps> = ({ truth, dare }) => {
+export const SwipeCard: React.FC<SwipeCardProps> = ({
+  truth,
+  dare,
+  player1Name,
+  player2Name,
+  currentPlayer,
+}) => {
+  const getCurrentPlayerName = () =>
+    currentPlayer === 1 ? player1Name : player2Name;
+  const getOtherPlayerName = () =>
+    currentPlayer === 1 ? player2Name : player1Name;
+
+  const replacePlaceholders = (text: string) => {
+    return text
+      .replace(/{player1}/g, getCurrentPlayerName())
+      .replace(/{player2}/g, getOtherPlayerName());
+  };
+
+  const formattedTruth = replacePlaceholders(truth);
+  const formattedDare = replacePlaceholders(dare);
   return (
     <View style={styles.cardContainer}>
       <View style={styles.card}>
         {/* Truth Section */}
         <View style={styles.truthSection}>
           <Text style={styles.sectionLabel}>TRUTH</Text>
-          <Text style={styles.truthText}>{truth}</Text>
+          <Text style={styles.truthText}>{formattedTruth}</Text>
           {/* Swipe Left Hint */}
           <View style={styles.swipeHint}>
             <Text style={styles.swipeArrow}>←</Text>
@@ -35,7 +57,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ truth, dare }) => {
         {/* Dare Section */}
         <View style={styles.dareSection}>
           <Text style={styles.sectionLabel}>DARE</Text>
-          <Text style={styles.dareText}>{dare}</Text>
+          <Text style={styles.dareText}>{formattedDare}</Text>
           {/* Swipe Right Hint */}
           <View style={styles.swipeHint}>
             <Text style={styles.swipeHintText}>swipe right</Text>

@@ -10,6 +10,8 @@ export interface GameState {
   player1: PlayerStats;
   player2: PlayerStats;
   currentPlayer: 1 | 2;
+  player1Name: string;
+  player2Name: string;
 }
 
 interface UseGameStateReturn {
@@ -20,6 +22,7 @@ interface UseGameStateReturn {
   ) => void;
   switchPlayer: () => void;
   resetGame: () => void;
+  updatePlayerName: (player: 1 | 2, name: string) => void;
 }
 
 const initialGameState: GameState = {
@@ -34,6 +37,8 @@ const initialGameState: GameState = {
     skipped: 0,
   },
   currentPlayer: 1,
+  player1Name: "Player 1",
+  player2Name: "Player 2",
 };
 
 export const useGameState = (): UseGameStateReturn => {
@@ -63,10 +68,18 @@ export const useGameState = (): UseGameStateReturn => {
     setGameState(initialGameState);
   };
 
+  const updatePlayerName = (player: 1 | 2, name: string) => {
+    setGameState((prev) => ({
+      ...prev,
+      [player === 1 ? "player1Name" : "player2Name"]: name,
+    }));
+  };
+
   return {
     gameState,
     updatePlayerStats,
     switchPlayer,
     resetGame,
+    updatePlayerName,
   };
 };
