@@ -1,8 +1,8 @@
 # 💕 Couples Card Game
 
-Couples Card Game is a fun and interactive card game for couples built with React Native and Expo. Swipe through cards with questions and dares to deepen your connection and have a great time together!
+Couples Card Game is a fun and interactive card game for couples built with React Native and Expo. Swipe through cards with truths and dares to deepen your connection and have a great time together!
 
-> Transform your mobile device into an engaging couples activity. Couples Card Game combines beautiful swipe animations with meaningful questions and fun dares to help couples connect, laugh, and create lasting memories together.
+> Transform your mobile device into an engaging couples activity. Couples Card Game combines beautiful swipe animations with meaningful truths and fun dares to help couples connect, laugh, and create lasting memories together.
 
 Whether you're looking for a fun date night activity, want to spark deeper conversations, or simply enjoy playing games together, Couples Card Game provides an entertaining way to strengthen your relationship. Our app features smooth card swiping, player statistics tracking, and a beautiful interface designed for two players.
 
@@ -12,9 +12,9 @@ Whether you're looking for a fun date night activity, want to spark deeper conve
 
 ## Features
 
-- 💕 **Question & Dare Cards** - Each card contains a meaningful question and an exciting dare
+- 💕 **Truth & Dare Cards** - Each card contains a meaningful truth and an exciting dare
 - 👥 **Two-Player Mode** - Track stats for both players with a beautiful VS interface
-- 📊 **Player Statistics** - Keep track of questions answered, dares completed, and cards skipped
+- 📊 **Player Statistics** - Keep track of truths answered, dares completed, and cards skipped
 - 🎯 **Smooth Swiping** - Beautiful card swipe animations powered by react-tinder-card
 - 🎨 **Modern UI** - Dark theme with elegant design and smooth transitions
 - 🃏 **Card Deck Management** - Automatic progression through a deck of 10+ cards
@@ -117,9 +117,9 @@ xcodebuild -workspace CouplesCardGame.xcworkspace -scheme CouplesCardGame -confi
 ## 🎮 How to Play
 
 1. **Start the Game**: Launch the app to begin with the first card
-2. **Read the Card**: Each card displays a question and a dare
+2. **Read the Card**: Each card displays a truth and a dare
 3. **Make Your Choice**:
-   - **Swipe Left** (←) or tap the left button: Answer the question
+   - **Swipe Left** (←) or tap the left button: Answer the truth
    - **Swipe Right** (→) or tap the right button: Accept the dare
    - **Skip** (✗) or tap the skip button: Skip the card
 4. **Track Progress**: Watch your stats update in real-time in the header
@@ -128,7 +128,7 @@ xcodebuild -workspace CouplesCardGame.xcworkspace -scheme CouplesCardGame -confi
 ## 🎯 Game Rules
 
 - Players take turns (alternates after each swipe)
-- Questions are tracked separately from dares
+- Truths are tracked separately from dares
 - Skipped cards are counted but don't affect gameplay
 - The game ends when all cards are completed
 - Stats are displayed in real-time for both players
@@ -142,7 +142,7 @@ Edit `src/data/cards.ts` to add more cards to the deck:
 ```typescript
 {
   id: "11",
-  question: "Your question here?",
+  truth: "Your truth here?",
   dare: "Your dare here.",
 }
 ```

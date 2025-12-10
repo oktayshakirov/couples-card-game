@@ -26,7 +26,7 @@ export const GameScreen: React.FC = () => {
         updatePlayerStats(gameState.currentPlayer, "skipped");
         setIsSkipping(false);
       } else {
-        updatePlayerStats(gameState.currentPlayer, "questions");
+        updatePlayerStats(gameState.currentPlayer, "truths");
       }
       switchPlayer();
     }
@@ -61,10 +61,10 @@ export const GameScreen: React.FC = () => {
       <GameHeader
         currentPlayer={gameState.currentPlayer}
         player1Dares={gameState.player1.dares}
-        player1Questions={gameState.player1.questions}
+        player1Truths={gameState.player1.truths}
         player1Skipped={gameState.player1.skipped}
         player2Dares={gameState.player2.dares}
-        player2Questions={gameState.player2.questions}
+        player2Truths={gameState.player2.truths}
         player2Skipped={gameState.player2.skipped}
       />
 
@@ -94,7 +94,7 @@ export const GameScreen: React.FC = () => {
                   swipeThreshold={100}
                   preventSwipe={["up", "down"]}
                 >
-                  <SwipeCard question={card.question} dare={card.dare} />
+                  <SwipeCard truth={card.truth} dare={card.dare} />
                 </TinderCard>
               </View>
             );

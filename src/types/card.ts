@@ -1,5 +1,5 @@
 export interface Card {
   id: string;
-  question: string;
+  truth: string;
   dare: string;
 }

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export interface PlayerStats {
   dares: number;
-  questions: number;
+  truths: number;
   skipped: number;
 }
 
@@ -16,7 +16,7 @@ interface UseGameStateReturn {
   gameState: GameState;
   updatePlayerStats: (
     player: 1 | 2,
-    statType: "dares" | "questions" | "skipped"
+    statType: "dares" | "truths" | "skipped"
   ) => void;
   switchPlayer: () => void;
   resetGame: () => void;
@@ -25,12 +25,12 @@ interface UseGameStateReturn {
 const initialGameState: GameState = {
   player1: {
     dares: 0,
-    questions: 0,
+    truths: 0,
     skipped: 0,
   },
   player2: {
     dares: 0,
-    questions: 0,
+    truths: 0,
     skipped: 0,
   },
   currentPlayer: 1,
@@ -41,7 +41,7 @@ export const useGameState = (): UseGameStateReturn => {
 
   const updatePlayerStats = (
     player: 1 | 2,
-    statType: "dares" | "questions" | "skipped"
+    statType: "dares" | "truths" | "skipped"
   ) => {
     setGameState((prev) => ({
       ...prev,

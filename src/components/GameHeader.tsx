@@ -5,20 +5,20 @@ import { Ionicons } from "@expo/vector-icons";
 interface GameHeaderProps {
   currentPlayer: 1 | 2;
   player1Dares: number;
-  player1Questions: number;
+  player1Truths: number;
   player1Skipped: number;
   player2Dares: number;
-  player2Questions: number;
+  player2Truths: number;
   player2Skipped: number;
 }
 
 export const GameHeader: React.FC<GameHeaderProps> = ({
   currentPlayer,
   player1Dares,
-  player1Questions,
+  player1Truths,
   player1Skipped,
   player2Dares,
-  player2Questions,
+  player2Truths,
   player2Skipped,
 }) => {
   return (
@@ -48,7 +48,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         <View style={styles.statsRow}>
           <View style={styles.statBadge}>
             <Ionicons name="help-circle" size={12} color="#4A90E2" />
-            <Text style={styles.statText}>{player1Questions}</Text>
+            <Text style={styles.statText}>{player1Truths}</Text>
           </View>
           <View style={styles.statBadge}>
             <Ionicons name="flame" size={12} color="#FF6B6B" />
@@ -91,7 +91,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         <View style={styles.statsRow}>
           <View style={styles.statBadge}>
             <Ionicons name="help-circle" size={12} color="#4A90E2" />
-            <Text style={styles.statText}>{player2Questions}</Text>
+            <Text style={styles.statText}>{player2Truths}</Text>
           </View>
           <View style={styles.statBadge}>
             <Ionicons name="flame" size={12} color="#FF6B6B" />

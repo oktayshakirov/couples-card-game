@@ -4,18 +4,18 @@ import { View, Text, StyleSheet, Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 interface SwipeCardProps {
-  question: string;
+  truth: string;
   dare: string;
 }
 
-export const SwipeCard: React.FC<SwipeCardProps> = ({ question, dare }) => {
+export const SwipeCard: React.FC<SwipeCardProps> = ({ truth, dare }) => {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.card}>
-        {/* Question Section */}
-        <View style={styles.questionSection}>
-          <Text style={styles.sectionLabel}>QUESTION</Text>
-          <Text style={styles.questionText}>{question}</Text>
+        {/* Truth Section */}
+        <View style={styles.truthSection}>
+          <Text style={styles.sectionLabel}>TRUTH</Text>
+          <Text style={styles.truthText}>{truth}</Text>
           {/* Swipe Left Hint */}
           <View style={styles.swipeHint}>
             <Text style={styles.swipeArrow}>←</Text>
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     padding: 28,
     justifyContent: "space-between",
   },
-  questionSection: {
+  truthSection: {
     flex: 1,
     justifyContent: "center",
   },
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     marginBottom: 15,
   },
-  questionText: {
+  truthText: {
     fontSize: 24,
     fontWeight: "700",
     lineHeight: 34,
