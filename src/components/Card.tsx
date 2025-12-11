@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { hexToRgba } from "../utils/colorUtils";
 
 const { width, height } = Dimensions.get("window");
 
@@ -9,6 +10,7 @@ interface SwipeCardProps {
   player1Name: string;
   player2Name: string;
   currentPlayer: 1 | 2;
+  currentPlayerColor: string;
 }
 
 export const SwipeCard: React.FC<SwipeCardProps> = ({
@@ -17,6 +19,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
   player1Name,
   player2Name,
   currentPlayer,
+  currentPlayerColor,
 }) => {
   const getCurrentPlayerName = () =>
     currentPlayer === 1 ? player1Name : player2Name;
@@ -37,31 +40,55 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
         {/* Truth Section */}
         <View style={styles.truthSection}>
           <Text style={styles.sectionLabel}>TRUTH</Text>
-          <Text style={styles.truthText}>{formattedTruth}</Text>
+          <Text style={[styles.truthText, { color: currentPlayerColor }]}>
+            {formattedTruth}
+          </Text>
           {/* Swipe Left Hint */}
           <View style={styles.swipeHint}>
-            <Text style={styles.swipeArrow}>←</Text>
-            <Text style={styles.swipeHintText}>swipe left</Text>
+            <Text style={[styles.swipeArrow, { color: currentPlayerColor }]}>
+              ←
+            </Text>
+            <Text style={[styles.swipeHintText, { color: currentPlayerColor }]}>
+              swipe left
+            </Text>
           </View>
         </View>
 
         {/* Divider */}
         <View style={styles.divider}>
-          <View style={styles.dividerLine} />
-          <View style={styles.dividerHeart}>
+          <View
+            style={[
+              styles.dividerLine,
+              { backgroundColor: hexToRgba(currentPlayerColor, 0.3) },
+            ]}
+          />
+          <View
+            style={[styles.dividerHeart, { borderColor: currentPlayerColor }]}
+          >
             <Text style={styles.dividerEmoji}>❤️</Text>
           </View>
-          <View style={styles.dividerLine} />
+          <View
+            style={[
+              styles.dividerLine,
+              { backgroundColor: hexToRgba(currentPlayerColor, 0.3) },
+            ]}
+          />
         </View>
 
         {/* Dare Section */}
         <View style={styles.dareSection}>
           <Text style={styles.sectionLabel}>DARE</Text>
-          <Text style={styles.dareText}>{formattedDare}</Text>
+          <Text style={[styles.dareText, { color: currentPlayerColor }]}>
+            {formattedDare}
+          </Text>
           {/* Swipe Right Hint */}
           <View style={styles.swipeHint}>
-            <Text style={styles.swipeHintText}>swipe right</Text>
-            <Text style={styles.swipeArrow}>→</Text>
+            <Text style={[styles.swipeHintText, { color: currentPlayerColor }]}>
+              swipe right
+            </Text>
+            <Text style={[styles.swipeArrow, { color: currentPlayerColor }]}>
+              →
+            </Text>
           </View>
         </View>
       </View>
@@ -103,7 +130,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     lineHeight: 34,
     textAlign: "center",
-    color: "#E91E63",
     marginBottom: 15,
   },
   divider: {
@@ -114,15 +140,12 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 2,
-    backgroundColor: "#E91E63",
-    opacity: 0.3,
   },
   dividerHeart: {
     width: 50,
     height: 50,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: "#E91E63",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.5)",
@@ -141,7 +164,6 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     textAlign: "center",
     fontStyle: "italic",
-    color: "#E91E63",
     marginBottom: 15,
   },
   swipeHint: {
@@ -153,12 +175,10 @@ const styles = StyleSheet.create({
   },
   swipeArrow: {
     fontSize: 20,
-    color: "#E91E63",
     fontWeight: "600",
   },
   swipeHintText: {
     fontSize: 14,
-    color: "#E91E63",
     fontWeight: "500",
     textTransform: "uppercase",
     letterSpacing: 1,

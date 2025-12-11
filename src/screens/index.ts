@@ -1,1 +1,2 @@
-export { GameScreen } from './GameScreen';
+export { GameScreen } from "./GameScreen";
+export { PlayerSetupScreen } from "./PlayerSetupScreen";

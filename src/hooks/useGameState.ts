@@ -6,12 +6,38 @@ export interface PlayerStats {
   skipped: number;
 }
 
+export type Avatar =
+  | "person"
+  | "auto-awesome"
+  | "mood"
+  | "favorite"
+  | "local-florist"
+  | "bedtime"
+  | "pets"
+  | "local-fire-department";
+
+export type PlayerColor =
+  | "#FF6B6B"
+  | "#4A90E2"
+  | "#50C878"
+  | "#808080"
+  | "#FF69B4"
+  | "#9B59B6"
+  | "#FF8C00"
+  | "#00CED1";
+
+export interface PlayerInfo {
+  name: string;
+  avatar: Avatar;
+  color: PlayerColor;
+}
+
 export interface GameState {
   player1: PlayerStats;
   player2: PlayerStats;
   currentPlayer: 1 | 2;
-  player1Name: string;
-  player2Name: string;
+  player1Info: PlayerInfo;
+  player2Info: PlayerInfo;
 }
 
 interface UseGameStateReturn {
@@ -22,7 +48,8 @@ interface UseGameStateReturn {
   ) => void;
   switchPlayer: () => void;
   resetGame: () => void;
-  updatePlayerName: (player: 1 | 2, name: string) => void;
+  updatePlayerInfo: (player: 1 | 2, info: Partial<PlayerInfo>) => void;
+  isSetupComplete: () => boolean;
 }
 
 const initialGameState: GameState = {
@@ -37,8 +64,16 @@ const initialGameState: GameState = {
     skipped: 0,
   },
   currentPlayer: 1,
-  player1Name: "Player 1",
-  player2Name: "Player 2",
+  player1Info: {
+    name: "",
+    avatar: "person",
+    color: "#FF6B6B",
+  },
+  player2Info: {
+    name: "",
+    avatar: "auto-awesome",
+    color: "#4A90E2",
+  },
 };
 
 export const useGameState = (): UseGameStateReturn => {
@@ -68,11 +103,21 @@ export const useGameState = (): UseGameStateReturn => {
     setGameState(initialGameState);
   };
 
-  const updatePlayerName = (player: 1 | 2, name: string) => {
+  const updatePlayerInfo = (player: 1 | 2, info: Partial<PlayerInfo>) => {
     setGameState((prev) => ({
       ...prev,
-      [player === 1 ? "player1Name" : "player2Name"]: name,
+      [player === 1 ? "player1Info" : "player2Info"]: {
+        ...prev[player === 1 ? "player1Info" : "player2Info"],
+        ...info,
+      },
     }));
+  };
+
+  const isSetupComplete = () => {
+    return (
+      gameState.player1Info.name.trim() !== "" &&
+      gameState.player2Info.name.trim() !== ""
+    );
   };
 
   return {
@@ -80,6 +125,7 @@ export const useGameState = (): UseGameStateReturn => {
     updatePlayerStats,
     switchPlayer,
     resetGame,
-    updatePlayerName,
+    updatePlayerInfo,
+    isSetupComplete,
   };
 };

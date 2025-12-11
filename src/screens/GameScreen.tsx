@@ -5,14 +5,18 @@ import { SwipeCard } from "../components/Card";
 import { GameHeader } from "../components/GameHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { EmptyDeck } from "../components/EmptyDeck";
-import { useGameState } from "../hooks/useGameState";
+import { useGame } from "../contexts/GameContext";
 import { useCardDeck } from "../hooks/useCardDeck";
 import BannerAdComponent from "../components/ads/BannerAd";
 
 const MAX_VISIBLE_CARDS = 3;
 
-export const GameScreen: React.FC = () => {
-  const { gameState, updatePlayerStats, switchPlayer } = useGameState();
+interface GameScreenProps {
+  onBackToSetup?: () => void;
+}
+
+export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
+  const { gameState, updatePlayerStats, switchPlayer } = useGame();
   const { cards, getCardRef, removeCard } = useCardDeck();
   const [isSkipping, setIsSkipping] = useState(false);
   const topCardRef = useRef<any>(null);
@@ -66,8 +70,13 @@ export const GameScreen: React.FC = () => {
         player2Dares={gameState.player2.dares}
         player2Truths={gameState.player2.truths}
         player2Skipped={gameState.player2.skipped}
-        player1Name={gameState.player1Name}
-        player2Name={gameState.player2Name}
+        player1Name={gameState.player1Info.name}
+        player2Name={gameState.player2Info.name}
+        player1Avatar={gameState.player1Info.avatar}
+        player2Avatar={gameState.player2Info.avatar}
+        player1Color={gameState.player1Info.color}
+        player2Color={gameState.player2Info.color}
+        onSettingsPress={onBackToSetup}
       />
 
       <View style={styles.content}>
@@ -99,9 +108,14 @@ export const GameScreen: React.FC = () => {
                   <SwipeCard
                     truth={card.truth}
                     dare={card.dare}
-                    player1Name={gameState.player1Name}
-                    player2Name={gameState.player2Name}
+                    player1Name={gameState.player1Info.name}
+                    player2Name={gameState.player2Info.name}
                     currentPlayer={gameState.currentPlayer}
+                    currentPlayerColor={
+                      gameState.currentPlayer === 1
+                        ? gameState.player1Info.color
+                        : gameState.player2Info.color
+                    }
                   />
                 </TinderCard>
               </View>

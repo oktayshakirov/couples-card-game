@@ -1,6 +1,8 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Avatar, PlayerColor } from "../hooks/useGameState";
+import { hexToRgba } from "../utils/colorUtils";
 
 interface GameHeaderProps {
   currentPlayer: 1 | 2;
@@ -12,6 +14,11 @@ interface GameHeaderProps {
   player2Skipped: number;
   player1Name: string;
   player2Name: string;
+  player1Avatar: Avatar;
+  player2Avatar: Avatar;
+  player1Color: PlayerColor;
+  player2Color: PlayerColor;
+  onSettingsPress?: () => void;
 }
 
 export const GameHeader: React.FC<GameHeaderProps> = ({
@@ -24,27 +31,55 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   player2Skipped,
   player1Name,
   player2Name,
+  player1Avatar,
+  player2Avatar,
+  player1Color,
+  player2Color,
+  onSettingsPress,
 }) => {
   return (
     <View style={styles.header}>
+      {onSettingsPress && (
+        <TouchableOpacity
+          style={styles.settingsButton}
+          onPress={onSettingsPress}
+        >
+          <MaterialIcons name="mode" size={20} color="#999" />
+        </TouchableOpacity>
+      )}
       {/* Player 1 */}
       <View style={styles.playerCard}>
         <View
           style={[
             styles.avatarContainer,
-            currentPlayer === 1 && styles.activeAvatarContainer,
+            {
+              backgroundColor: hexToRgba(player1Color, 0.12),
+              borderColor:
+                currentPlayer === 1 ? player1Color : "rgba(255,255,255,0.15)",
+            },
+            currentPlayer === 1 && [
+              styles.activeAvatarContainer,
+              {
+                borderColor: player1Color,
+                backgroundColor: hexToRgba(player1Color, 0.15),
+                shadowColor: player1Color,
+              },
+            ],
           ]}
         >
-          <Ionicons
-            name="person"
+          <MaterialIcons
+            name={player1Avatar as any}
             size={24}
-            color={currentPlayer === 1 ? "#FF6B6B" : "#999"}
+            color={currentPlayer === 1 ? player1Color : "#999"}
           />
         </View>
         <Text
           style={[
             styles.playerLabel,
-            currentPlayer === 1 && styles.activePlayerLabel,
+            currentPlayer === 1 && [
+              styles.activePlayerLabel,
+              { color: player1Color },
+            ],
           ]}
         >
           {player1Name}
@@ -75,19 +110,34 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         <View
           style={[
             styles.avatarContainer,
-            currentPlayer === 2 && styles.activeAvatarContainer,
+            {
+              backgroundColor: hexToRgba(player2Color, 0.12),
+              borderColor:
+                currentPlayer === 2 ? player2Color : "rgba(255,255,255,0.15)",
+            },
+            currentPlayer === 2 && [
+              styles.activeAvatarContainer,
+              {
+                borderColor: player2Color,
+                backgroundColor: hexToRgba(player2Color, 0.15),
+                shadowColor: player2Color,
+              },
+            ],
           ]}
         >
-          <Ionicons
-            name="person"
+          <MaterialIcons
+            name={player2Avatar as any}
             size={24}
-            color={currentPlayer === 2 ? "#FF6B6B" : "#999"}
+            color={currentPlayer === 2 ? player2Color : "#999"}
           />
         </View>
         <Text
           style={[
             styles.playerLabel,
-            currentPlayer === 2 && styles.activePlayerLabel,
+            currentPlayer === 2 && [
+              styles.activePlayerLabel,
+              { color: player2Color },
+            ],
           ]}
         >
           {player2Name}
@@ -121,6 +171,17 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.03)",
     borderBottomWidth: 1,
     borderBottomColor: "rgba(255,107,107,0.15)",
+    position: "relative",
+  },
+  settingsButton: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 10,
   },
   playerCard: {
     flex: 1,
@@ -131,17 +192,12 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: "rgba(255,255,255,0.08)",
     borderWidth: 2,
-    borderColor: "rgba(255,255,255,0.15)",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 6,
   },
   activeAvatarContainer: {
-    borderColor: "#FF6B6B",
-    backgroundColor: "rgba(255,107,107,0.15)",
-    shadowColor: "#FF6B6B",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.4,
     shadowRadius: 8,
@@ -155,7 +211,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   activePlayerLabel: {
-    color: "#FF6B6B",
     fontWeight: "700",
   },
   statsRow: {
