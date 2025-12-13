@@ -6,6 +6,8 @@ export interface PlayerStats {
   skipped: number;
 }
 
+//Todo: Wait until previous card is fully swiped until we allow it again
+
 export type Avatar =
   | "person"
   | "auto-awesome"
@@ -50,6 +52,7 @@ interface UseGameStateReturn {
   resetGame: () => void;
   updatePlayerInfo: (player: 1 | 2, info: Partial<PlayerInfo>) => void;
   isSetupComplete: () => boolean;
+  canPlayerSkip: (player: 1 | 2) => boolean;
 }
 
 const initialGameState: GameState = {
@@ -120,6 +123,11 @@ export const useGameState = (): UseGameStateReturn => {
     );
   };
 
+  const canPlayerSkip = (player: 1 | 2): boolean => {
+    const playerStats = player === 1 ? gameState.player1 : gameState.player2;
+    return playerStats.skipped < 3;
+  };
+
   return {
     gameState,
     updatePlayerStats,
@@ -127,5 +135,6 @@ export const useGameState = (): UseGameStateReturn => {
     resetGame,
     updatePlayerInfo,
     isSetupComplete,
+    canPlayerSkip,
   };
 };

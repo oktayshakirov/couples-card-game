@@ -5,13 +5,21 @@ interface ActionButtonsProps {
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
   onSkip: () => void;
+  canSkip: boolean;
 }
 
 export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onSwipeLeft,
   onSwipeRight,
   onSkip,
+  canSkip,
 }) => {
+  const handleSkip = () => {
+    if (canSkip) {
+      onSkip();
+    }
+  };
+
   return (
     <View style={styles.buttonsContainer}>
       <TouchableOpacity
@@ -22,10 +30,20 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.button, styles.skipButton]}
-        onPress={onSkip}
+        style={[
+          styles.button,
+          styles.skipButton,
+          !canSkip && styles.disabledButton,
+        ]}
+        onPress={handleSkip}
+        disabled={!canSkip}
+        activeOpacity={canSkip ? 0.7 : 1}
       >
-        <Text style={styles.buttonText}>✗</Text>
+        <Text
+          style={[styles.buttonText, !canSkip && styles.disabledButtonText]}
+        >
+          ✗
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -72,5 +90,12 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: "#FFF",
     fontWeight: "700",
+  },
+  disabledButton: {
+    backgroundColor: "#333",
+    opacity: 0.5,
+  },
+  disabledButtonText: {
+    color: "#999",
   },
 });

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
+import Toast from "react-native-toast-message";
 import { GameScreen } from "./src/screens/GameScreen";
 import { PlayerSetupScreen } from "./src/screens/PlayerSetupScreen";
 import { GameProvider, useGame } from "./src/contexts/GameContext";
+import { toastConfig } from "./src/components/Toast";
 
 const AppContent = () => {
   const { gameState, updatePlayerInfo, isSetupComplete } = useGame();
@@ -37,6 +39,7 @@ const AppContent = () => {
       ) : (
         <GameScreen onBackToSetup={handleBackToSetup} />
       )}
+      <Toast config={toastConfig} />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { View, StyleSheet } from "react-native";
 import TinderCard from "react-tinder-card";
 import { SwipeCard } from "../components/Card";
@@ -8,6 +8,11 @@ import { EmptyDeck } from "../components/EmptyDeck";
 import { useGame } from "../contexts/GameContext";
 import { useCardDeck } from "../hooks/useCardDeck";
 import BannerAdComponent from "../components/ads/BannerAd";
+import {
+  showSkipCountdown,
+  showTruthToast,
+  showDareToast,
+} from "../utils/toast";
 
 const MAX_VISIBLE_CARDS = 3;
 
@@ -16,21 +21,64 @@ interface GameScreenProps {
 }
 
 export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
-  const { gameState, updatePlayerStats, switchPlayer } = useGame();
+  const { gameState, updatePlayerStats, switchPlayer, canPlayerSkip } =
+    useGame();
   const { cards, getCardRef, removeCard } = useCardDeck();
-  const [isSkipping, setIsSkipping] = useState(false);
+  const isSkippingRef = useRef<boolean>(false);
   const topCardRef = useRef<any>(null);
 
+  const getCurrentPlayerInfo = () => {
+    const currentPlayer = gameState.currentPlayer;
+    return {
+      player: currentPlayer,
+      name:
+        currentPlayer === 1
+          ? gameState.player1Info.name
+          : gameState.player2Info.name,
+      color:
+        currentPlayer === 1
+          ? gameState.player1Info.color
+          : gameState.player2Info.color,
+      avatar:
+        currentPlayer === 1
+          ? gameState.player1Info.avatar
+          : gameState.player2Info.avatar,
+      stats: currentPlayer === 1 ? gameState.player1 : gameState.player2,
+    };
+  };
+
   const onSwipe = (direction: string) => {
+    const { player, name, color, avatar, stats } = getCurrentPlayerInfo();
+
     if (direction === "right") {
-      updatePlayerStats(gameState.currentPlayer, "dares");
+      updatePlayerStats(player, "dares");
+      showDareToast({
+        playerName: name,
+        playerColor: color,
+        playerAvatar: avatar,
+      });
       switchPlayer();
     } else if (direction === "left") {
-      if (isSkipping) {
-        updatePlayerStats(gameState.currentPlayer, "skipped");
-        setIsSkipping(false);
+      if (isSkippingRef.current) {
+        updatePlayerStats(player, "skipped");
+        isSkippingRef.current = false;
+
+        const remainingSkips = Math.max(0, 3 - (stats.skipped + 1));
+        if (remainingSkips > 0) {
+          showSkipCountdown({
+            playerName: name,
+            remainingSkips,
+            playerColor: color,
+            playerAvatar: avatar,
+          });
+        }
       } else {
-        updatePlayerStats(gameState.currentPlayer, "truths");
+        updatePlayerStats(player, "truths");
+        showTruthToast({
+          playerName: name,
+          playerColor: color,
+          playerAvatar: avatar,
+        });
       }
       switchPlayer();
     }
@@ -51,8 +99,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
   };
 
   const skip = () => {
-    if (!topCardRef.current) return;
-    setIsSkipping(true);
+    if (!topCardRef.current || !canPlayerSkip(gameState.currentPlayer)) return;
+    isSkippingRef.current = true;
     topCardRef.current.swipe("left");
   };
 
@@ -129,6 +177,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
           onSwipeLeft={swipeLeft}
           onSwipeRight={swipeRight}
           onSkip={skip}
+          canSkip={canPlayerSkip(gameState.currentPlayer)}
         />
       )}
     </View>

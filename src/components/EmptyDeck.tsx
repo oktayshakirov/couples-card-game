@@ -4,8 +4,10 @@ import { View, Text, StyleSheet } from "react-native";
 export const EmptyDeck: React.FC = () => {
   return (
     <View style={styles.container}>
+      {/*Todo: Add Buttons (Start New Game / Select New Card Deck)*/}
       <Text style={styles.title}>All cards completed! 🎉</Text>
       <Text style={styles.subtitle}>You've finished the deck together!</Text>
+      {/*Todo: Show finals stats for both players*/}
     </View>
   );
 };

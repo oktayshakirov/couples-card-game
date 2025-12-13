@@ -65,6 +65,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/*Todo: Add Close Button*/}
         <Text style={[styles.title, { color: currentInfo.color }]}>
           {isEditing ? "Edit Players" : "Setup Players"}
         </Text>
@@ -73,7 +74,6 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             ? "Update your profiles and continue the game"
             : "Customize your profiles before starting the game"}
         </Text>
-
         {/* Player Selector */}
         <View style={styles.playerSelector}>
           <TouchableOpacity
@@ -115,7 +115,6 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             </Text>
           </TouchableOpacity>
         </View>
-
         {/* Current Player Setup */}
         <View style={styles.setupSection}>
           {/* Name Input */}

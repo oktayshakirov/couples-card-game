@@ -17,6 +17,8 @@ function detachListeners() {
   interstitialListeners = [];
 }
 
+//Todo: Add interstitial ads between all 3 card swipes
+
 function cleanupAdInstance() {
   if (interstitial) {
     try {
@@ -191,4 +193,3 @@ export async function showInterstitial() {
 }
 
 export default null;
-

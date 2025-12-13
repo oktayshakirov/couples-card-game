@@ -32,7 +32,6 @@ export const useCardDeck = (): UseCardDeckReturn => {
     childRefs.current.clear();
   };
 
-  // Current card is the last one in the array (top of stack)
   const currentCard = cards.length > 0 ? cards[cards.length - 1] : null;
 
   return {
