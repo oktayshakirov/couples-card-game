@@ -59,8 +59,8 @@ export const toastConfig = {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: 100,
-    width: "90%",
+    minHeight: 120,
+    width: "95%",
     borderRadius: 12,
     borderLeftWidth: 4,
     paddingHorizontal: 16,

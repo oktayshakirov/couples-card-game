@@ -3,7 +3,7 @@ import { Avatar } from "../hooks/useGameState";
 
 const DEFAULT_TOAST_CONFIG = {
   position: "top" as const,
-  topOffset: 130,
+  topOffset: 140,
   visibilityTime: 2500,
 };
 

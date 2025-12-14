@@ -1,5 +1,15 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Dimensions,
+} from "react-native";
+
+const { width, height } = Dimensions.get("window");
+const isTablet = width >= 768;
+const isSmallScreen = height < 700;
 
 interface ActionButtonsProps {
   onSwipeLeft: () => void;
@@ -61,14 +71,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    gap: 30,
-    paddingBottom: 40,
-    paddingTop: 20,
+    gap: isSmallScreen ? 20 : isTablet ? 40 : 30,
   },
   button: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: isSmallScreen ? 50 : isTablet ? 72 : 60,
+    height: isSmallScreen ? 50 : isTablet ? 72 : 60,
+    borderRadius: isSmallScreen ? 25 : isTablet ? 36 : 30,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
@@ -87,7 +95,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF6B6B",
   },
   buttonText: {
-    fontSize: 28,
+    fontSize: isSmallScreen ? 24 : isTablet ? 32 : 28,
     color: "#FFF",
     fontWeight: "700",
   },

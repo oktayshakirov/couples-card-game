@@ -6,8 +6,6 @@ export interface PlayerStats {
   skipped: number;
 }
 
-//Todo: Wait until previous card is fully swiped until we allow it again
-
 export type Avatar =
   | "person"
   | "auto-awesome"
@@ -16,17 +14,21 @@ export type Avatar =
   | "local-florist"
   | "bedtime"
   | "pets"
-  | "local-fire-department";
+  | "local-fire-department"
+  | "star"
+  | "celebration";
 
 export type PlayerColor =
-  | "#FF6B6B"
-  | "#4A90E2"
-  | "#50C878"
-  | "#808080"
-  | "#FF69B4"
-  | "#9B59B6"
-  | "#FF8C00"
-  | "#00CED1";
+  | "#B19CD9"
+  | "#7FCDCD"
+  | "#8DB4D4"
+  | "#8FBC8F"
+  | "#D4A5A5"
+  | "#A0A0A0"
+  | "#E6A8D3"
+  | "#F4A460"
+  | "#B8E6B8"
+  | "#FFD4A3";
 
 export interface PlayerInfo {
   name: string;
@@ -70,12 +72,12 @@ const initialGameState: GameState = {
   player1Info: {
     name: "",
     avatar: "person",
-    color: "#FF6B6B",
+    color: "#B19CD9",
   },
   player2Info: {
     name: "",
     avatar: "auto-awesome",
-    color: "#4A90E2",
+    color: "#8DB4D4",
   },
 };
 

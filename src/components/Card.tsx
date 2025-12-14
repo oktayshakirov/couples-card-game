@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { hexToRgba } from "../utils/colorUtils";
 
 const { width, height } = Dimensions.get("window");
+const isTablet = width >= 768;
+const isSmallScreen = height < 700;
 
 interface SwipeCardProps {
   truth: string;
@@ -98,9 +100,17 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: width * 0.85,
-    height: height * 0.58,
-    borderRadius: 28,
+    width: isSmallScreen
+      ? width * 0.92
+      : isTablet
+      ? width * 0.75
+      : width * 0.88,
+    height: isSmallScreen
+      ? height * 0.48
+      : isTablet
+      ? height * 0.52
+      : height * 0.55,
+    borderRadius: isSmallScreen ? 20 : isTablet ? 32 : 28,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.25,
@@ -110,8 +120,8 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: "#FFE5EC",
-    borderRadius: 28,
-    padding: 28,
+    borderRadius: isSmallScreen ? 20 : isTablet ? 32 : 28,
+    padding: isSmallScreen ? 14 : isTablet ? 28 : 20,
     justifyContent: "space-between",
   },
   truthSection: {
@@ -119,66 +129,66 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   sectionLabel: {
-    fontSize: 13,
+    fontSize: isSmallScreen ? 11 : isTablet ? 14 : 12,
     fontWeight: "700",
     color: "#888",
     letterSpacing: 2,
-    marginBottom: 15,
+    marginBottom: isSmallScreen ? 8 : isTablet ? 16 : 12,
   },
   truthText: {
-    fontSize: 24,
+    fontSize: isSmallScreen ? 18 : isTablet ? 28 : 22,
     fontWeight: "700",
-    lineHeight: 34,
+    lineHeight: isSmallScreen ? 24 : isTablet ? 36 : 30,
     textAlign: "center",
-    marginBottom: 15,
+    marginBottom: isSmallScreen ? 8 : isTablet ? 16 : 12,
   },
   divider: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 20,
+    marginVertical: isSmallScreen ? 10 : isTablet ? 20 : 14,
   },
   dividerLine: {
     flex: 1,
     height: 2,
   },
   dividerHeart: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: isSmallScreen ? 36 : isTablet ? 52 : 44,
+    height: isSmallScreen ? 36 : isTablet ? 52 : 44,
+    borderRadius: isSmallScreen ? 18 : isTablet ? 26 : 22,
     borderWidth: 2,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.5)",
-    marginHorizontal: 15,
+    marginHorizontal: isSmallScreen ? 8 : isTablet ? 16 : 12,
   },
   dividerEmoji: {
-    fontSize: 22,
+    fontSize: isSmallScreen ? 16 : isTablet ? 24 : 20,
   },
   dareSection: {
     flex: 1,
     justifyContent: "center",
   },
   dareText: {
-    fontSize: 20,
+    fontSize: isSmallScreen ? 16 : isTablet ? 24 : 19,
     fontWeight: "600",
-    lineHeight: 30,
+    lineHeight: isSmallScreen ? 22 : isTablet ? 32 : 26,
     textAlign: "center",
     fontStyle: "italic",
-    marginBottom: 15,
+    marginBottom: isSmallScreen ? 8 : isTablet ? 16 : 12,
   },
   swipeHint: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
+    gap: isSmallScreen ? 6 : 8,
     opacity: 0.4,
   },
   swipeArrow: {
-    fontSize: 20,
+    fontSize: isSmallScreen ? 16 : isTablet ? 24 : 20,
     fontWeight: "600",
   },
   swipeHintText: {
-    fontSize: 14,
+    fontSize: isSmallScreen ? 12 : isTablet ? 16 : 13,
     fontWeight: "500",
     textTransform: "uppercase",
     letterSpacing: 1,

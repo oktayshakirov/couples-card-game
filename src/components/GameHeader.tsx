@@ -1,8 +1,18 @@
 import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Avatar, PlayerColor } from "../hooks/useGameState";
 import { hexToRgba } from "../utils/colorUtils";
+
+const { width, height } = Dimensions.get("window");
+const isTablet = width >= 768;
+const isSmallScreen = height < 700;
 
 interface GameHeaderProps {
   currentPlayer: 1 | 2;
@@ -44,7 +54,11 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           style={styles.settingsButton}
           onPress={onSettingsPress}
         >
-          <MaterialIcons name="mode" size={20} color="#999" />
+          <MaterialIcons
+            name="people"
+            size={isSmallScreen ? 18 : isTablet ? 24 : 20}
+            color="#999"
+          />
         </TouchableOpacity>
       )}
       {/* Player 1 */}
@@ -69,7 +83,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         >
           <MaterialIcons
             name={player1Avatar as any}
-            size={24}
+            size={isSmallScreen ? 22 : isTablet ? 30 : 26}
             color={currentPlayer === 1 ? player1Color : "#999"}
           />
         </View>
@@ -86,15 +100,27 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         </Text>
         <View style={styles.statsRow}>
           <View style={styles.statBadge}>
-            <Ionicons name="help-circle" size={12} color="#4A90E2" />
+            <Ionicons
+              name="help-circle"
+              size={isSmallScreen ? 12 : isTablet ? 16 : 14}
+              color="#4A90E2"
+            />
             <Text style={styles.statText}>{player1Truths}</Text>
           </View>
           <View style={styles.statBadge}>
-            <Ionicons name="flame" size={12} color="#FF6B6B" />
+            <Ionicons
+              name="flame"
+              size={isSmallScreen ? 12 : isTablet ? 16 : 14}
+              color="#FF6B6B"
+            />
             <Text style={styles.statText}>{player1Dares}</Text>
           </View>
           <View style={styles.statBadge}>
-            <Ionicons name="close" size={12} color="#999" />
+            <Ionicons
+              name="close"
+              size={isSmallScreen ? 12 : isTablet ? 16 : 14}
+              color="#999"
+            />
             <Text style={styles.statText}>{player1Skipped}</Text>
           </View>
         </View>
@@ -127,7 +153,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         >
           <MaterialIcons
             name={player2Avatar as any}
-            size={24}
+            size={isSmallScreen ? 22 : isTablet ? 30 : 26}
             color={currentPlayer === 2 ? player2Color : "#999"}
           />
         </View>
@@ -144,15 +170,27 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         </Text>
         <View style={styles.statsRow}>
           <View style={styles.statBadge}>
-            <Ionicons name="help-circle" size={12} color="#4A90E2" />
+            <Ionicons
+              name="help-circle"
+              size={isSmallScreen ? 12 : isTablet ? 16 : 14}
+              color="#4A90E2"
+            />
             <Text style={styles.statText}>{player2Truths}</Text>
           </View>
           <View style={styles.statBadge}>
-            <Ionicons name="flame" size={12} color="#FF6B6B" />
+            <Ionicons
+              name="flame"
+              size={isSmallScreen ? 12 : isTablet ? 16 : 14}
+              color="#FF6B6B"
+            />
             <Text style={styles.statText}>{player2Dares}</Text>
           </View>
           <View style={styles.statBadge}>
-            <Ionicons name="close" size={12} color="#999" />
+            <Ionicons
+              name="close"
+              size={isSmallScreen ? 12 : isTablet ? 16 : 14}
+              color="#999"
+            />
             <Text style={styles.statText}>{player2Skipped}</Text>
           </View>
         </View>
@@ -166,8 +204,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: isSmallScreen ? 12 : isTablet ? 20 : 16,
+    paddingVertical: isSmallScreen ? 8 : isTablet ? 16 : 12,
     backgroundColor: "rgba(255,255,255,0.03)",
     borderBottomWidth: 1,
     borderBottomColor: "rgba(255,107,107,0.15)",
@@ -175,10 +213,10 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     position: "absolute",
-    top: 8,
-    right: 8,
-    width: 36,
-    height: 36,
+    top: isSmallScreen ? 6 : isTablet ? 12 : 8,
+    right: isSmallScreen ? 6 : isTablet ? 12 : 8,
+    width: isSmallScreen ? 32 : isTablet ? 44 : 36,
+    height: isSmallScreen ? 32 : isTablet ? 44 : 36,
     alignItems: "center",
     justifyContent: "center",
     zIndex: 10,
@@ -186,16 +224,16 @@ const styles = StyleSheet.create({
   playerCard: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: 4,
+    paddingVertical: isSmallScreen ? 2 : 4,
   },
   avatarContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: isSmallScreen ? 42 : isTablet ? 58 : 50,
+    height: isSmallScreen ? 42 : isTablet ? 58 : 50,
+    borderRadius: isSmallScreen ? 21 : isTablet ? 29 : 25,
     borderWidth: 2,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 6,
+    marginBottom: isSmallScreen ? 5 : isTablet ? 8 : 6,
   },
   activeAvatarContainer: {
     shadowOffset: { width: 0, height: 0 },
@@ -204,10 +242,10 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   playerLabel: {
-    fontSize: 11,
+    fontSize: isSmallScreen ? 9 : isTablet ? 13 : 11,
     fontWeight: "600",
     color: "#888",
-    marginBottom: 6,
+    marginBottom: isSmallScreen ? 4 : isTablet ? 8 : 6,
     letterSpacing: 0.5,
   },
   activePlayerLabel: {
@@ -215,29 +253,29 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: "row",
-    gap: 6,
+    gap: isSmallScreen ? 5 : isTablet ? 10 : 7,
   },
   statBadge: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 3,
+    gap: isSmallScreen ? 3 : isTablet ? 5 : 4,
     backgroundColor: "rgba(255,255,255,0.05)",
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 10,
-    minWidth: 28,
+    paddingHorizontal: isSmallScreen ? 6 : isTablet ? 10 : 8,
+    paddingVertical: isSmallScreen ? 3 : isTablet ? 5 : 4,
+    borderRadius: isSmallScreen ? 8 : 10,
+    minWidth: isSmallScreen ? 28 : isTablet ? 38 : 32,
     justifyContent: "center",
   },
   statText: {
-    fontSize: 12,
+    fontSize: isSmallScreen ? 12 : isTablet ? 16 : 13,
     fontWeight: "700",
     color: "#FFF",
   },
   vsDivider: {
-    paddingHorizontal: 10,
+    paddingHorizontal: isSmallScreen ? 6 : isTablet ? 14 : 10,
   },
   vsText: {
-    fontSize: 14,
+    fontSize: isSmallScreen ? 12 : isTablet ? 16 : 14,
     fontWeight: "800",
     color: "#FF6B6B",
     letterSpacing: 1,
