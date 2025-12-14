@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: isSmallScreen ? 26 : isTablet ? 36 : 30,
     fontWeight: "800",
-    color: "#FF6B6B",
+    color: "#B19CD9",
     flex: 1,
     textAlign: "center",
   },
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   activePlayerTab: {
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#B19CD9",
   },
   playerTabText: {
     fontSize: isSmallScreen ? 14 : isTablet ? 17 : 15,
@@ -423,8 +423,8 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   activeAvatarButton: {
-    borderColor: "#FF6B6B",
-    backgroundColor: "rgba(255,107,107,0.15)",
+    borderColor: "#B19CD9",
+    backgroundColor: "rgba(177,156,217,0.15)",
   },
   colorContainer: {
     flexDirection: "row",
@@ -459,10 +459,10 @@ const styles = StyleSheet.create({
     marginTop: isSmallScreen ? 24 : isTablet ? 32 : 28,
     paddingTop: isSmallScreen ? 20 : isTablet ? 28 : 24,
     borderTopWidth: 1,
-    borderTopColor: "rgba(255,107,107,0.15)",
+    borderTopColor: "rgba(177,156,217,0.15)",
   },
   startButton: {
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#B19CD9",
     borderRadius: 12,
     padding: isSmallScreen ? 14 : isTablet ? 20 : 16,
     alignItems: "center",

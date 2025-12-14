@@ -23,9 +23,14 @@ interface GameScreenProps {
 }
 
 export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
-  const { gameState, updatePlayerStats, switchPlayer, canPlayerSkip } =
-    useGame();
-  const { cards, getCardRef, removeCard } = useCardDeck();
+  const {
+    gameState,
+    updatePlayerStats,
+    switchPlayer,
+    canPlayerSkip,
+    resetGame,
+  } = useGame();
+  const { cards, getCardRef, removeCard, resetDeck } = useCardDeck();
   const isSkippingRef = useRef<boolean>(false);
   const topCardRef = useRef<any>(null);
   const lastSwipeTimeRef = useRef<number>(0);
@@ -129,6 +134,11 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
   const visibleCards = cards.slice(0, MAX_VISIBLE_CARDS);
   const renderedCards = visibleCards.slice().reverse();
 
+  const handlePlayAgain = () => {
+    resetGame();
+    resetDeck();
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
       <BannerAdComponent />
@@ -151,7 +161,19 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
 
       <View style={styles.content}>
         {cards.length === 0 ? (
-          <EmptyDeck />
+          <EmptyDeck
+            player1Name={gameState.player1Info.name}
+            player2Name={gameState.player2Info.name}
+            player1Color={gameState.player1Info.color}
+            player2Color={gameState.player2Info.color}
+            player1Truths={gameState.player1.truths}
+            player1Dares={gameState.player1.dares}
+            player1Skipped={gameState.player1.skipped}
+            player2Truths={gameState.player2.truths}
+            player2Dares={gameState.player2.dares}
+            player2Skipped={gameState.player2.skipped}
+            onPlayAgain={handlePlayAgain}
+          />
         ) : (
           renderedCards.map((card, index) => {
             const cardRef = getCardRef(card.id);

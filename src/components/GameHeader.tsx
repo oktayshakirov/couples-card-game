@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     paddingVertical: isSmallScreen ? 8 : isTablet ? 16 : 12,
     backgroundColor: "rgba(255,255,255,0.03)",
     borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,107,107,0.15)",
+    borderBottomColor: "rgba(177,156,217,0.15)",
     position: "relative",
   },
   settingsButton: {
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   vsText: {
     fontSize: isSmallScreen ? 12 : isTablet ? 16 : 14,
     fontWeight: "800",
-    color: "#FF6B6B",
+    color: "#B19CD9",
     letterSpacing: 1,
   },
 });

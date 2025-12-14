@@ -105,7 +105,20 @@ export const useGameState = (): UseGameStateReturn => {
   };
 
   const resetGame = () => {
-    setGameState(initialGameState);
+    setGameState((prev) => ({
+      ...prev,
+      player1: {
+        dares: 0,
+        truths: 0,
+        skipped: 0,
+      },
+      player2: {
+        dares: 0,
+        truths: 0,
+        skipped: 0,
+      },
+      currentPlayer: 1,
+    }));
   };
 
   const updatePlayerInfo = (player: 1 | 2, info: Partial<PlayerInfo>) => {
