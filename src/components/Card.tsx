@@ -13,6 +13,7 @@ interface SwipeCardProps {
   player2Name: string;
   currentPlayer: 1 | 2;
   currentPlayerColor: string;
+  blurred?: boolean;
 }
 
 export const SwipeCard: React.FC<SwipeCardProps> = ({
@@ -22,6 +23,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
   player2Name,
   currentPlayer,
   currentPlayerColor,
+  blurred = false,
 }) => {
   const getCurrentPlayerName = () =>
     currentPlayer === 1 ? player1Name : player2Name;
@@ -38,7 +40,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
   const formattedDare = replacePlaceholders(dare);
   return (
     <View style={styles.cardContainer}>
-      <View style={styles.card}>
+      <View style={[styles.card, blurred && styles.blurredCard]}>
         {/* Truth Section */}
         <View style={styles.truthSection}>
           <Text style={styles.sectionLabel}>TRUTH</Text>
@@ -123,6 +125,9 @@ const styles = StyleSheet.create({
     borderRadius: isSmallScreen ? 20 : isTablet ? 32 : 28,
     padding: isSmallScreen ? 14 : isTablet ? 28 : 20,
     justifyContent: "space-between",
+  },
+  blurredCard: {
+    opacity: 0.3,
   },
   truthSection: {
     flex: 1,

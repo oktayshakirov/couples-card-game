@@ -18,6 +18,9 @@ export interface ShowChoiceParams {
   playerName: string;
   playerColor?: string;
   playerAvatar?: Avatar;
+  nextPlayerName?: string;
+  onConfirm?: () => void;
+  onCancel?: () => void;
 }
 
 export interface ToastConfig {
@@ -48,7 +51,7 @@ export const showSkipCountdown = ({
     text1: playerName,
     text2: `has ${remainingSkips} ${skipsText} left`,
     ...DEFAULT_TOAST_CONFIG,
-    visibilityTime: 3000, // Override for skip countdown
+    visibilityTime: 2500, // 2500ms for skip
     props: {
       playerColor,
       playerAvatar,
@@ -65,15 +68,25 @@ export const showChoiceToast = ({
   playerColor,
   playerAvatar,
   choice,
+  nextPlayerName,
+  onConfirm,
+  onCancel,
 }: ShowChoiceParams & { choice: "truth" | "dare" }): void => {
+  console.log("Showing toast:", { playerName, choice, nextPlayerName });
   Toast.show({
     type: choice === "dare" ? "success" : "info",
     text1: playerName,
     text2: `Picked ${choice === "dare" ? "Dare" : "Truth"}`,
-    ...DEFAULT_TOAST_CONFIG,
+    position: "top",
+    topOffset: 140,
+    visibilityTime: 999999, // Stay until confirmation (very large number)
     props: {
       playerColor,
       playerAvatar,
+      nextPlayerName,
+      choice,
+      onConfirm,
+      onCancel,
     },
   });
 };

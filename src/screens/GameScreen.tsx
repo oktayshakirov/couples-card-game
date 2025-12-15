@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TinderCard from "react-tinder-card";
 import { SwipeCard } from "../components/Card";
+import { PendingCard } from "../components/PendingCard";
 import { GameHeader } from "../components/GameHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { EmptyDeck } from "../components/EmptyDeck";
@@ -15,7 +16,7 @@ import {
   showDareToast,
 } from "../utils/toast";
 
-const MAX_VISIBLE_CARDS = 2;
+const MAX_VISIBLE_CARDS = 1;
 const SWIPE_COOLDOWN_MS = 1000;
 
 interface GameScreenProps {
@@ -34,6 +35,11 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
   const isSkippingRef = useRef<boolean>(false);
   const topCardRef = useRef<any>(null);
   const lastSwipeTimeRef = useRef<number>(0);
+  const [pendingConfirmation, setPendingConfirmation] = useState<{
+    cardId: string;
+    player: number;
+    choice: "truth" | "dare";
+  } | null>(null);
 
   const getCurrentPlayerInfo = () => {
     const currentPlayer = gameState.currentPlayer;
@@ -65,25 +71,48 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
     lastSwipeTimeRef.current = Date.now();
   };
 
-  const onSwipe = (direction: string) => {
+  const onSwipe = (direction: string, cardId: string) => {
     if (!canSwipe()) return;
 
     const { player, name, color, avatar, stats } = getCurrentPlayerInfo();
+    const nextPlayer = player === 1 ? 2 : 1;
+    const nextPlayerName =
+      nextPlayer === 1
+        ? gameState.player1Info.name
+        : gameState.player2Info.name;
+    const cardRef = getCardRef(cardId);
 
     if (direction === "right") {
       recordSwipe();
-      updatePlayerStats(player, "dares");
+      setPendingConfirmation({
+        cardId,
+        player,
+        choice: "dare",
+      });
       showDareToast({
         playerName: name,
         playerColor: color,
         playerAvatar: avatar,
+        nextPlayerName,
+        onConfirm: () => {
+          updatePlayerStats(player, "dares");
+          removeCard(cardId);
+          setPendingConfirmation(null);
+          switchPlayer();
+        },
+        onCancel: () => {
+          if (cardRef.current?.restoreCard) {
+            cardRef.current.restoreCard();
+          }
+          setPendingConfirmation(null);
+        },
       });
-      switchPlayer();
     } else if (direction === "left") {
       recordSwipe();
       if (isSkippingRef.current) {
         updatePlayerStats(player, "skipped");
         isSkippingRef.current = false;
+        removeCard(cardId);
 
         const remainingSkips = Math.max(0, 3 - (stats.skipped + 1));
         if (remainingSkips > 0) {
@@ -94,20 +123,39 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
             playerAvatar: avatar,
           });
         }
+        switchPlayer();
       } else {
-        updatePlayerStats(player, "truths");
+        setPendingConfirmation({
+          cardId,
+          player,
+          choice: "truth",
+        });
         showTruthToast({
           playerName: name,
           playerColor: color,
           playerAvatar: avatar,
+          nextPlayerName,
+          onConfirm: () => {
+            updatePlayerStats(player, "truths");
+            removeCard(cardId);
+            setPendingConfirmation(null);
+            switchPlayer();
+          },
+          onCancel: () => {
+            if (cardRef.current?.restoreCard) {
+              cardRef.current.restoreCard();
+            }
+            setPendingConfirmation(null);
+          },
         });
       }
-      switchPlayer();
     }
   };
 
   const onCardLeftScreen = (_direction: string, cardId: string) => {
-    removeCard(cardId);
+    if (!pendingConfirmation || pendingConfirmation.cardId !== cardId) {
+      removeCard(cardId);
+    }
   };
 
   const swipeLeft = () => {
@@ -131,7 +179,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
     topCardRef.current.swipe("left");
   };
 
-  const visibleCards = cards.slice(0, MAX_VISIBLE_CARDS);
+  const visibleCards = pendingConfirmation
+    ? [
+        cards.find((card) => card.id === pendingConfirmation.cardId),
+
+        { id: "placeholder", truth: "", dare: "" },
+      ].filter(Boolean)
+    : cards.slice(0, MAX_VISIBLE_CARDS);
   const renderedCards = visibleCards.slice().reverse();
 
   const handlePlayAgain = () => {
@@ -175,44 +229,73 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
             onPlayAgain={handlePlayAgain}
           />
         ) : (
-          renderedCards.map((card, index) => {
-            const cardRef = getCardRef(card.id);
-            const isTopCard = index === renderedCards.length - 1;
+          renderedCards
+            .filter((card): card is NonNullable<typeof card> => card != null)
+            .map((card, index) => {
+              const cardRef = getCardRef(card.id);
+              const isTopCard = index === renderedCards.length - 1;
 
-            const topCardRefCallback = (node: any) => {
-              if (node) {
-                topCardRef.current = node;
+              const topCardRefCallback = (node: any) => {
+                if (node) {
+                  topCardRef.current = node;
+                }
+              };
+
+              const isPending = pendingConfirmation?.cardId === card.id;
+              const isPlaceholder = card.id === "placeholder";
+
+              if (isPlaceholder) {
+                const nextPlayer = gameState.currentPlayer === 1 ? 2 : 1;
+                const nextPlayerName =
+                  nextPlayer === 1
+                    ? gameState.player1Info.name
+                    : gameState.player2Info.name;
+
+                return (
+                  <View key={card.id} style={styles.cardWrapper}>
+                    <PendingCard
+                      player1Name={gameState.player1Info.name}
+                      player2Name={gameState.player2Info.name}
+                      currentPlayerColor={
+                        gameState.currentPlayer === 1
+                          ? gameState.player1Info.color
+                          : gameState.player2Info.color
+                      }
+                      nextPlayerName={nextPlayerName}
+                    />
+                  </View>
+                );
               }
-            };
 
-            return (
-              <View key={card.id} style={styles.cardWrapper}>
-                <TinderCard
-                  ref={isTopCard ? topCardRefCallback : cardRef}
-                  onSwipe={onSwipe}
-                  onCardLeftScreen={(direction) =>
-                    onCardLeftScreen(direction, card.id)
-                  }
-                  swipeRequirementType="position"
-                  swipeThreshold={100}
-                  preventSwipe={["up", "down"]}
-                >
-                  <SwipeCard
-                    truth={card.truth}
-                    dare={card.dare}
-                    player1Name={gameState.player1Info.name}
-                    player2Name={gameState.player2Info.name}
-                    currentPlayer={gameState.currentPlayer}
-                    currentPlayerColor={
-                      gameState.currentPlayer === 1
-                        ? gameState.player1Info.color
-                        : gameState.player2Info.color
+              return (
+                <View key={card.id} style={styles.cardWrapper}>
+                  <TinderCard
+                    ref={isTopCard ? topCardRefCallback : cardRef}
+                    onSwipe={(direction) => onSwipe(direction, card.id)}
+                    onCardLeftScreen={(direction) =>
+                      onCardLeftScreen(direction, card.id)
                     }
-                  />
-                </TinderCard>
-              </View>
-            );
-          })
+                    swipeRequirementType="position"
+                    swipeThreshold={100}
+                    preventSwipe={["up", "down"]}
+                  >
+                    <SwipeCard
+                      truth={card.truth}
+                      dare={card.dare}
+                      player1Name={gameState.player1Info.name}
+                      player2Name={gameState.player2Info.name}
+                      currentPlayer={gameState.currentPlayer}
+                      currentPlayerColor={
+                        gameState.currentPlayer === 1
+                          ? gameState.player1Info.color
+                          : gameState.player2Info.color
+                      }
+                      blurred={false}
+                    />
+                  </TinderCard>
+                </View>
+              );
+            })
         )}
       </View>
 

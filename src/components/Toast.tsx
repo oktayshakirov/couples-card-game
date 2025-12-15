@@ -1,8 +1,17 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { Avatar } from "../hooks/useGameState";
+
+const { width } = Dimensions.get("window");
+const isTablet = width >= 768;
 
 interface CustomToastProps {
   text1?: string;
@@ -10,12 +19,31 @@ interface CustomToastProps {
   props?: {
     playerColor?: string;
     playerAvatar?: Avatar;
+    nextPlayerName?: string;
+    choice?: "truth" | "dare";
+    onConfirm?: () => void;
+    onCancel?: () => void;
   };
 }
 
 const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
   const playerColor = props?.playerColor || "#666";
   const playerAvatar = props?.playerAvatar;
+  const nextPlayerName = props?.nextPlayerName;
+  const choice = props?.choice;
+  const onConfirm = props?.onConfirm;
+  const onCancel = props?.onCancel;
+  const hasButtons = onConfirm && onCancel && nextPlayerName && choice;
+
+  const handleConfirm = () => {
+    onConfirm?.();
+    Toast.hide();
+  };
+
+  const handleCancel = () => {
+    onCancel?.();
+    Toast.hide();
+  };
 
   return (
     <View
@@ -39,7 +67,41 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
             <Text style={[styles.text1, { color: playerColor }]}>{text1}</Text>
           )}
           {text2 && <Text style={styles.text2}>{text2}</Text>}
+          {hasButtons && (
+            <Text style={styles.questionText}>
+              {nextPlayerName},{" "}
+              {choice === "dare"
+                ? "was the dare completed?"
+                : "was the question answered honestly?"}
+            </Text>
+          )}
         </View>
+        {hasButtons && (
+          <View style={styles.buttonsRow}>
+            <TouchableOpacity
+              style={styles.confirmButton}
+              onPress={handleConfirm}
+              activeOpacity={0.7}
+            >
+              <MaterialIcons
+                name="check"
+                size={isTablet ? 24 : 22}
+                color="#FFF"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={handleCancel}
+              activeOpacity={0.7}
+            >
+              <MaterialIcons
+                name="close"
+                size={isTablet ? 24 : 22}
+                color="#FFF"
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -77,6 +139,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
+    gap: 12,
   },
   avatarContainer: {
     width: 32,
@@ -101,5 +164,43 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#FFF",
     fontWeight: "400",
+  },
+  questionText: {
+    fontSize: 13,
+    color: "#999",
+    fontWeight: "500",
+    fontStyle: "italic",
+    marginTop: 8,
+  },
+  buttonsRow: {
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
+  },
+  confirmButton: {
+    width: isTablet ? 48 : 44,
+    height: isTablet ? 48 : 44,
+    borderRadius: isTablet ? 24 : 22,
+    backgroundColor: "#50C878",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  cancelButton: {
+    width: isTablet ? 48 : 44,
+    height: isTablet ? 48 : 44,
+    borderRadius: isTablet ? 24 : 22,
+    backgroundColor: "#FF6B6B",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
   },
 });
