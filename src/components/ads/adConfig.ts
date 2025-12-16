@@ -2,33 +2,29 @@ import { Platform } from "react-native";
 
 export const USE_TEST_ADS = true;
 
-// Lazy import to avoid loading native module when using test ads
 let TestIds: any;
-if (!USE_TEST_ADS) {
-  try {
-    TestIds = require("react-native-google-mobile-ads").TestIds;
-  } catch (error) {
-    console.warn("react-native-google-mobile-ads not available:", error);
-  }
+try {
+  TestIds = require("react-native-google-mobile-ads").TestIds;
+} catch (error) {
+  console.warn("react-native-google-mobile-ads not available:", error);
 }
 
-//Todo: Create new app in admob
 export const adUnitIDs = {
   banner: Platform.select({
-    ios: "ca-app-pub-5852582960793521/3679843833",
-    android: "ca-app-pub-5852582960793521/8692497364",
+    ios: "ca-app-pub-5852582960793521/2402225991",
+    android: "ca-app-pub-5852582960793521/2617848416",
   }),
   interstitial: Platform.select({
-    ios: "ca-app-pub-5852582960793521/7564116438",
-    android: "ca-app-pub-5852582960793521/2816569678",
+    ios: "ca-app-pub-5852582960793521/5029207574",
+    android: "ca-app-pub-5852582960793521/5575361850",
   }),
   appOpen: Platform.select({
-    ios: "ca-app-pub-5852582960793521/6510055062",
-    android: "ca-app-pub-5852582960793521/4746381400",
+    ios: "ca-app-pub-5852582960793521/6672821109",
+    android: "ca-app-pub-5852582960793521/2758267453",
   }),
   rewarded: Platform.select({
-    ios: "ca-app-pub-5852582960793521/1234567890",
-    android: "ca-app-pub-5852582960793521/0987654321",
+    ios: "ca-app-pub-5852582960793521/1688087733",
+    android: "ca-app-pub-5852582960793521/3716125907",
   }),
 };
 

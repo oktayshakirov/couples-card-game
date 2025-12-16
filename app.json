@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Swipe & Dare",
-    "slug": "swipe-and-dare",
+    "name": "Love Swipe",
+    "slug": "love-swipe",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +15,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.shadev.loveswipe",
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-5852582960793521~5465329102"
+        "googleMobileAdsAppId": "ca-app-pub-5852582960793521~3930930080"
       }
     },
     "android": {
@@ -25,7 +25,7 @@
       },
       "package": "com.shadev.loveswipe",
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-5852582960793521~5465329102"
+        "googleMobileAdsAppId": "ca-app-pub-5852582960793521~9458588930"
       }
     },
     "web": {

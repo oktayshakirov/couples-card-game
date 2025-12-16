@@ -1,20 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, AppState, Text } from "react-native";
-import { getAdUnitId, USE_TEST_ADS } from "./adConfig";
+import { getAdUnitId } from "./adConfig";
 import { useAdConsent } from "./useAdConsent";
 
-// Todo: Replace test placeholder with real ads
 let BannerAd: any;
 let BannerAdSize: any;
 
-if (!USE_TEST_ADS) {
-  try {
-    const adsModule = require("react-native-google-mobile-ads");
-    BannerAd = adsModule.BannerAd;
-    BannerAdSize = adsModule.BannerAdSize;
-  } catch (error) {
-    console.warn("react-native-google-mobile-ads not available:", error);
-  }
+try {
+  const adsModule = require("react-native-google-mobile-ads");
+  BannerAd = adsModule.BannerAd;
+  BannerAdSize = adsModule.BannerAdSize;
+} catch (error) {
+  console.warn("react-native-google-mobile-ads not available:", error);
 }
 
 const BannerAdComponent = () => {
@@ -54,8 +51,7 @@ const BannerAdComponent = () => {
     };
   }, []);
 
-  // Show placeholder when using test ads or when ad fails to load
-  const showPlaceholder = USE_TEST_ADS || !isAdLoaded;
+  const showPlaceholder = !isAdLoaded || !BannerAd || !BannerAdSize;
 
   return (
     <Animated.View
@@ -68,7 +64,7 @@ const BannerAdComponent = () => {
         },
       ]}
     >
-      {showPlaceholder || !BannerAd || !BannerAdSize ? (
+      {showPlaceholder ? (
         <View style={styles.placeholder}>
           <Text style={styles.placeholderText}>Ad Placeholder</Text>
         </View>
