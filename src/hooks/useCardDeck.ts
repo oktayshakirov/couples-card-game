@@ -11,8 +11,28 @@ interface UseCardDeckReturn {
   resetDeck: () => void;
 }
 
+const generateUniqueId = (): string => {
+  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+};
+
+const shuffleAndAssignIds = (cards: Card[]): Card[] => {
+  const shuffled = [...cards];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.map((card) => ({
+    ...card,
+    id: generateUniqueId(),
+  }));
+};
+
 export const useCardDeck = (): UseCardDeckReturn => {
-  const [cards, setCards] = useState<Card[]>(initialCards);
+  const [cards, setCards] = useState<Card[]>(() =>
+    shuffleAndAssignIds(initialCards)
+  );
   const childRefs = useRef<Map<string, React.RefObject<any>>>(new Map());
 
   const getCardRef = (cardId: string): React.RefObject<any> => {
@@ -28,7 +48,8 @@ export const useCardDeck = (): UseCardDeckReturn => {
   };
 
   const resetDeck = () => {
-    setCards(initialCards);
+    const newCards = shuffleAndAssignIds(initialCards);
+    setCards(newCards);
     childRefs.current.clear();
   };
 

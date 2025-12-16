@@ -72,7 +72,6 @@ export const showChoiceToast = ({
   onConfirm,
   onCancel,
 }: ShowChoiceParams & { choice: "truth" | "dare" }): void => {
-  console.log("Showing toast:", { playerName, choice, nextPlayerName });
   Toast.show({
     type: choice === "dare" ? "success" : "info",
     text1: playerName,
