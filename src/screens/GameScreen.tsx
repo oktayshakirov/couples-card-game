@@ -5,11 +5,13 @@ import TinderCard from "react-tinder-card";
 import { SwipeCard } from "../components/Card";
 import { PendingCard } from "../components/PendingCard";
 import { GameHeader } from "../components/GameHeader";
+import { GameMenuModal } from "../components/GameMenuModal";
 import { ActionButtons } from "../components/ActionButtons";
 import { EmptyDeck } from "../components/EmptyDeck";
 import { useGame } from "../contexts/GameContext";
 import { useCardDeck } from "../hooks/useCardDeck";
 import BannerAdComponent from "../components/ads/BannerAd";
+import { COLORS } from "../constants/colors";
 import {
   showSkipCountdown,
   showTruthToast,
@@ -19,11 +21,22 @@ import {
 const MAX_VISIBLE_CARDS = 1;
 const SWIPE_COOLDOWN_MS = 1000;
 
+import { Deck } from "../types/deck";
+
 interface GameScreenProps {
+  selectedDeck?: Deck;
   onBackToSetup?: () => void;
+  onEditPlayers?: () => void;
+  onBackToDecks?: () => void;
 }
 
-export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
+export const GameScreen: React.FC<GameScreenProps> = ({
+  selectedDeck,
+  onBackToSetup,
+  onEditPlayers,
+  onBackToDecks,
+}) => {
+  const [menuVisible, setMenuVisible] = useState(false);
   const {
     gameState,
     updatePlayerStats,
@@ -31,7 +44,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
     canPlayerSkip,
     resetGame,
   } = useGame();
-  const { cards, getCardRef, removeCard, resetDeck } = useCardDeck();
+  const { cards, getCardRef, removeCard, resetDeck } = useCardDeck(
+    selectedDeck?.cards
+  );
   const isSkippingRef = useRef<boolean>(false);
   const topCardRef = useRef<any>(null);
   const lastSwipeTimeRef = useRef<number>(0);
@@ -250,7 +265,22 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
         player2Avatar={gameState.player2Info.avatar}
         player1Color={gameState.player1Info.color}
         player2Color={gameState.player2Info.color}
-        onSettingsPress={onBackToSetup}
+        onMenuPress={() => setMenuVisible(true)}
+      />
+
+      <GameMenuModal
+        visible={menuVisible}
+        onClose={() => setMenuVisible(false)}
+        onEditPlayers={() => {
+          if (onEditPlayers) {
+            onEditPlayers();
+          }
+        }}
+        onChangeDeck={() => {
+          if (onBackToDecks) {
+            onBackToDecks();
+          }
+        }}
       />
 
       <View style={styles.content}>
@@ -355,7 +385,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({ onBackToSetup }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1a0a0f",
+    backgroundColor: COLORS.background,
     overflow: "hidden",
   },
   content: {

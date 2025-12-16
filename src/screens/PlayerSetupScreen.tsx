@@ -15,6 +15,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { Avatar, PlayerInfo, PlayerColor } from "../hooks/useGameState";
 import { hexToRgba } from "../utils/colorUtils";
+import { COLORS } from "../constants/colors";
 
 const { width, height } = Dimensions.get("window");
 const isTablet = width >= 768;
@@ -136,7 +137,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
         {/* Header Row with Title and Close Button */}
         <View style={styles.headerRow}>
           <View style={styles.headerSpacer} />
-          <Text style={[styles.title, { color: currentInfo.color }]}>
+          <Text style={styles.title}>
             {isEditing ? "Edit Players" : "Setup Players"}
           </Text>
           {isEditing && onClose ? (
@@ -145,7 +146,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
               onPress={onClose}
               activeOpacity={0.7}
             >
-              <MaterialIcons name="close" size={28} color="#FFF" />
+              <MaterialIcons name="close" size={24} color="#fff" />
             </TouchableOpacity>
           ) : (
             <View style={styles.headerSpacer} />
@@ -161,10 +162,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
           <TouchableOpacity
             style={[
               styles.playerTab,
-              activePlayer === 1 && [
-                styles.activePlayerTab,
-                { backgroundColor: player1Info.color },
-              ],
+              activePlayer === 1 && styles.activePlayerTab,
             ]}
             onPress={() => setActivePlayer(1)}
           >
@@ -180,10 +178,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
           <TouchableOpacity
             style={[
               styles.playerTab,
-              activePlayer === 2 && [
-                styles.activePlayerTab,
-                { backgroundColor: player2Info.color },
-              ],
+              activePlayer === 2 && styles.activePlayerTab,
             ]}
             onPress={() => setActivePlayer(2)}
           >
@@ -289,7 +284,6 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             style={[
               styles.startButton,
               isButtonDisabled() && styles.startButtonDisabled,
-              !isButtonDisabled() && { backgroundColor: currentInfo.color },
             ]}
             onPress={handleButtonPress}
             disabled={isButtonDisabled()}
@@ -305,7 +299,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1a0a0f",
+    backgroundColor: COLORS.background,
   },
   headerRow: {
     flexDirection: "row",
@@ -318,14 +312,12 @@ const styles = StyleSheet.create({
     height: 44,
   },
   closeButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: isSmallScreen ? 36 : isTablet ? 44 : 40,
+    height: isSmallScreen ? 36 : isTablet ? 44 : 40,
+    borderRadius: isSmallScreen ? 18 : isTablet ? 22 : 20,
     backgroundColor: "rgba(255,255,255,0.1)",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
   },
   scrollContent: {
     paddingHorizontal: isTablet ? 32 : 16,
@@ -335,7 +327,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: isSmallScreen ? 26 : isTablet ? 36 : 30,
     fontWeight: "800",
-    color: "#B19CD9",
+    color: COLORS.primary,
     flex: 1,
     textAlign: "center",
   },
@@ -360,7 +352,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   activePlayerTab: {
-    backgroundColor: "#B19CD9",
+    backgroundColor: COLORS.primary,
   },
   playerTabText: {
     fontSize: isSmallScreen ? 14 : isTablet ? 17 : 15,
@@ -423,8 +415,8 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   activeAvatarButton: {
-    borderColor: "#B19CD9",
-    backgroundColor: "rgba(177,156,217,0.15)",
+    borderColor: COLORS.primary,
+    backgroundColor: hexToRgba(COLORS.primary, 0.15),
   },
   colorContainer: {
     flexDirection: "row",
@@ -462,7 +454,7 @@ const styles = StyleSheet.create({
     borderTopColor: "rgba(177,156,217,0.15)",
   },
   startButton: {
-    backgroundColor: "#B19CD9",
+    backgroundColor: COLORS.primary,
     borderRadius: 12,
     padding: isSmallScreen ? 14 : isTablet ? 20 : 16,
     alignItems: "center",

@@ -1,6 +1,7 @@
-import { Card } from "../types/card";
+import { Deck } from "../../types/deck";
+import { Card } from "../../types/card";
 
-export const initialCards: Card[] = [
+const initialCards: Card[] = [
   {
     id: "1",
     truth: "{player1}, what do you admire most about {player2}?",
@@ -53,3 +54,14 @@ export const initialCards: Card[] = [
     dare: "{player1} and {player2}, make a promise to each other and seal it with a kiss.",
   },
 ];
+
+export const defaultDeck: Deck = {
+  id: "default",
+  name: "Classic",
+  description: "The original truth or dare questions",
+  icon: "favorite",
+  cards: initialCards,
+  isDefault: true,
+};
+
+export { initialCards };

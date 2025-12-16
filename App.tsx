@@ -4,45 +4,139 @@ import Toast from "react-native-toast-message";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GameScreen } from "./src/screens/GameScreen";
 import { PlayerSetupScreen } from "./src/screens/PlayerSetupScreen";
+import { DecksLibraryScreen } from "./src/screens/DecksLibraryScreen";
+import { DeckScreen } from "./src/screens/DeckScreen";
 import { GameProvider, useGame } from "./src/contexts/GameContext";
 import { toastConfig } from "./src/components/Toast";
+import { Deck } from "./src/types/deck";
+import { defaultDeck } from "./src/data/decks";
+
+type Screen = "setup" | "decks" | "deck" | "game";
 
 const AppContent = () => {
   const { gameState, updatePlayerInfo, isSetupComplete } = useGame();
-  const [gameStarted, setGameStarted] = useState(false);
+  const [currentScreen, setCurrentScreen] = useState<Screen>("setup");
+  const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
   const hasGameStartedRef = useRef(false);
 
-  const handleStartGame = () => {
+  const handlePlayerSetupComplete = () => {
     if (isSetupComplete()) {
-      setGameStarted(true);
-      hasGameStartedRef.current = true;
+      setCurrentScreen("decks");
     }
   };
 
+  const handleDeckSelected = (deck: Deck) => {
+    setSelectedDeck(deck);
+    setCurrentScreen("deck");
+  };
+
+  const handleDeckConfirmed = (deck: Deck) => {
+    setSelectedDeck(deck);
+    setCurrentScreen("game");
+    hasGameStartedRef.current = true;
+  };
+
+  const handleBackToDecks = () => {
+    setCurrentScreen("decks");
+    setSelectedDeck(null);
+  };
+
   const handleBackToSetup = () => {
-    setGameStarted(false);
+    if (hasGameStartedRef.current) {
+      setCurrentScreen("decks");
+    } else {
+      setCurrentScreen("setup");
+      setSelectedDeck(null);
+    }
+  };
+
+  const handleEditPlayers = () => {
+    setCurrentScreen("setup");
+  };
+
+  const handleEditPlayersComplete = () => {
+    if (hasGameStartedRef.current) {
+      setCurrentScreen("game");
+    } else {
+      setCurrentScreen("decks");
+    }
+  };
+
+  const handleBackToDeckLibrary = () => {
+    setCurrentScreen("decks");
   };
 
   const handleCloseSetup = () => {
-    setGameStarted(true);
+    if (hasGameStartedRef.current && isSetupComplete()) {
+      if (selectedDeck) {
+        setCurrentScreen("game");
+      } else {
+        setCurrentScreen("decks");
+      }
+    }
+  };
+
+  const handleCloseDeckLibrary = () => {
+    if (hasGameStartedRef.current) {
+      setCurrentScreen("game");
+    }
+  };
+
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case "setup":
+        return (
+          <PlayerSetupScreen
+            player1Info={gameState.player1Info}
+            player2Info={gameState.player2Info}
+            onUpdatePlayer1={(info) => updatePlayerInfo(1, info)}
+            onUpdatePlayer2={(info) => updatePlayerInfo(2, info)}
+            onStartGame={
+              hasGameStartedRef.current
+                ? handleEditPlayersComplete
+                : handlePlayerSetupComplete
+            }
+            isEditing={hasGameStartedRef.current && isSetupComplete()}
+            onClose={handleCloseSetup}
+          />
+        );
+      case "decks":
+        return (
+          <DecksLibraryScreen
+            onSelectDeck={handleDeckSelected}
+            onBack={hasGameStartedRef.current ? handleBackToSetup : undefined}
+            onClose={
+              hasGameStartedRef.current ? handleCloseDeckLibrary : undefined
+            }
+            isEditing={hasGameStartedRef.current}
+          />
+        );
+      case "deck":
+        return selectedDeck ? (
+          <DeckScreen
+            deck={selectedDeck}
+            onSelectDeck={handleDeckConfirmed}
+            onBack={handleBackToDeckLibrary}
+          />
+        ) : null;
+      case "game":
+        return (
+          <GameScreen
+            selectedDeck={selectedDeck || defaultDeck}
+            onBackToSetup={handleBackToSetup}
+            onEditPlayers={handleEditPlayers}
+            onBackToDecks={handleBackToDeckLibrary}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   return (
     <>
       <StatusBar style="light" />
-      {!gameStarted ? (
-        <PlayerSetupScreen
-          player1Info={gameState.player1Info}
-          player2Info={gameState.player2Info}
-          onUpdatePlayer1={(info) => updatePlayerInfo(1, info)}
-          onUpdatePlayer2={(info) => updatePlayerInfo(2, info)}
-          onStartGame={handleStartGame}
-          isEditing={hasGameStartedRef.current && isSetupComplete()}
-          onClose={handleCloseSetup}
-        />
-      ) : (
-        <GameScreen onBackToSetup={handleBackToSetup} />
-      )}
+      {renderScreen()}
       <Toast config={toastConfig} />
     </>
   );

@@ -3,12 +3,13 @@ import {
   View,
   StyleSheet,
   Text,
-  TouchableOpacity,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Avatar, PlayerColor } from "../hooks/useGameState";
 import { hexToRgba } from "../utils/colorUtils";
+import { COLORS } from "../constants/colors";
 
 const { width, height } = Dimensions.get("window");
 const isTablet = width >= 768;
@@ -28,7 +29,7 @@ interface GameHeaderProps {
   player2Avatar: Avatar;
   player1Color: PlayerColor;
   player2Color: PlayerColor;
-  onSettingsPress?: () => void;
+  onMenuPress?: () => void;
 }
 
 export const GameHeader: React.FC<GameHeaderProps> = ({
@@ -45,18 +46,19 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   player2Avatar,
   player1Color,
   player2Color,
-  onSettingsPress,
+  onMenuPress,
 }) => {
   return (
     <View style={styles.header}>
-      {onSettingsPress && (
+      {onMenuPress && (
         <TouchableOpacity
-          style={styles.settingsButton}
-          onPress={onSettingsPress}
+          style={styles.menuButton}
+          onPress={onMenuPress}
+          activeOpacity={0.7}
         >
           <MaterialIcons
-            name="people"
-            size={isSmallScreen ? 18 : isTablet ? 24 : 20}
+            name="menu"
+            size={isSmallScreen ? 24 : isTablet ? 28 : 26}
             color="#999"
           />
         </TouchableOpacity>
@@ -202,7 +204,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: isSmallScreen ? 12 : isTablet ? 20 : 16,
     paddingVertical: isSmallScreen ? 8 : isTablet ? 16 : 12,
@@ -211,12 +213,12 @@ const styles = StyleSheet.create({
     borderBottomColor: "rgba(177,156,217,0.15)",
     position: "relative",
   },
-  settingsButton: {
+  menuButton: {
     position: "absolute",
-    top: isSmallScreen ? 6 : isTablet ? 12 : 8,
-    right: isSmallScreen ? 6 : isTablet ? 12 : 8,
-    width: isSmallScreen ? 32 : isTablet ? 44 : 36,
-    height: isSmallScreen ? 32 : isTablet ? 44 : 36,
+    top: isSmallScreen ? 8 : isTablet ? 16 : 12,
+    right: isSmallScreen ? 12 : isTablet ? 20 : 16,
+    width: isSmallScreen ? 36 : isTablet ? 44 : 40,
+    height: isSmallScreen ? 36 : isTablet ? 44 : 40,
     alignItems: "center",
     justifyContent: "center",
     zIndex: 10,
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
   vsText: {
     fontSize: isSmallScreen ? 12 : isTablet ? 16 : 14,
     fontWeight: "800",
-    color: "#B19CD9",
+    color: COLORS.primary,
     letterSpacing: 1,
   },
 });

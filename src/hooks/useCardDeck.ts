@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import React from "react";
 import { Card } from "../types/card";
-import { initialCards } from "../data/cards";
+import { initialCards } from "../data/decks/default";
 
 interface UseCardDeckReturn {
   cards: Card[];
@@ -29,11 +29,13 @@ const shuffleAndAssignIds = (cards: Card[]): Card[] => {
   }));
 };
 
-export const useCardDeck = (): UseCardDeckReturn => {
+export const useCardDeck = (deckCards?: Card[]): UseCardDeckReturn => {
+  const cardsToUse = deckCards || initialCards;
   const [cards, setCards] = useState<Card[]>(() =>
-    shuffleAndAssignIds(initialCards)
+    shuffleAndAssignIds(cardsToUse)
   );
   const childRefs = useRef<Map<string, React.RefObject<any>>>(new Map());
+  const deckCardsRef = useRef<Card[]>(cardsToUse);
 
   const getCardRef = (cardId: string): React.RefObject<any> => {
     if (!childRefs.current.has(cardId)) {
@@ -48,7 +50,7 @@ export const useCardDeck = (): UseCardDeckReturn => {
   };
 
   const resetDeck = () => {
-    const newCards = shuffleAndAssignIds(initialCards);
+    const newCards = shuffleAndAssignIds(deckCardsRef.current);
     setCards(newCards);
     childRefs.current.clear();
   };

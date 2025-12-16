@@ -26,15 +26,20 @@ export const adUnitIDs = {
     ios: "ca-app-pub-5852582960793521/6510055062",
     android: "ca-app-pub-5852582960793521/4746381400",
   }),
+  rewarded: Platform.select({
+    ios: "ca-app-pub-5852582960793521/1234567890",
+    android: "ca-app-pub-5852582960793521/0987654321",
+  }),
 };
 
 export const testAdUnitIDs = {
   banner: TestIds?.BANNER || "test-banner",
   interstitial: TestIds?.INTERSTITIAL || "test-interstitial",
   appOpen: TestIds?.APP_OPEN || "test-app-open",
+  rewarded: TestIds?.REWARDED || "test-rewarded",
 };
 
-type AdType = "banner" | "interstitial" | "appOpen";
+type AdType = "banner" | "interstitial" | "appOpen" | "rewarded";
 
 export function getAdUnitId(type: AdType): string | undefined {
   return USE_TEST_ADS ? testAdUnitIDs[type] : adUnitIDs[type];
