@@ -6,6 +6,8 @@ import {
   Text,
   Dimensions,
 } from "react-native";
+import { hexToRgba } from "../utils/colorUtils";
+import { COLORS } from "../constants/colors";
 
 const { width, height } = Dimensions.get("window");
 const isTablet = width >= 768;
@@ -35,8 +37,11 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
       <TouchableOpacity
         style={[styles.button, styles.leftButton]}
         onPress={onSwipeLeft}
+        activeOpacity={0.7}
       >
-        <Text style={styles.buttonText}>←</Text>
+        <Text style={[styles.buttonText, { color: COLORS.accent.blue }]}>
+          ←
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -59,8 +64,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
       <TouchableOpacity
         style={[styles.button, styles.rightButton]}
         onPress={onSwipeRight}
+        activeOpacity={0.7}
       >
-        <Text style={styles.buttonText}>→</Text>
+        <Text style={[styles.buttonText, { color: COLORS.accent.red }]}>→</Text>
       </TouchableOpacity>
     </View>
   );
@@ -79,20 +85,24 @@ const styles = StyleSheet.create({
     borderRadius: isSmallScreen ? 25 : isTablet ? 36 : 30,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.4,
     shadowRadius: 8,
-    elevation: 8,
+    elevation: 10,
   },
   leftButton: {
-    backgroundColor: "#4A90E2",
+    backgroundColor: COLORS.background,
+    borderColor: COLORS.accent.blue,
   },
   skipButton: {
-    backgroundColor: "#666",
+    backgroundColor: COLORS.background,
+    borderColor: "#666",
   },
   rightButton: {
-    backgroundColor: "#FF6B6B",
+    backgroundColor: COLORS.background,
+    borderColor: COLORS.accent.red,
   },
   buttonText: {
     fontSize: isSmallScreen ? 24 : isTablet ? 32 : 28,
@@ -100,10 +110,11 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   disabledButton: {
-    backgroundColor: "#333",
+    backgroundColor: COLORS.background,
+    borderColor: "#333",
     opacity: 0.5,
   },
   disabledButtonText: {
-    color: "#999",
+    color: "#666",
   },
 });
