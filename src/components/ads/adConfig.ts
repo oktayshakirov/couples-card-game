@@ -3,10 +3,10 @@ import { Platform } from "react-native";
 export const USE_TEST_ADS = true;
 
 let TestIds: any;
-try {
-  TestIds = require("react-native-google-mobile-ads").TestIds;
-} catch (error) {
-  console.warn("react-native-google-mobile-ads not available:", error);
+  try {
+    TestIds = require("react-native-google-mobile-ads").TestIds;
+  } catch (error) {
+    console.warn("react-native-google-mobile-ads not available:", error);
 }
 
 export const adUnitIDs = {

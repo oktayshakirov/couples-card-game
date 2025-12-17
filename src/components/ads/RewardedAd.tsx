@@ -14,7 +14,7 @@ try {
   console.warn("react-native-google-mobile-ads not available:", error);
 }
 
-let rewardedAd: RewardedAd | null = null;
+let rewardedAd: any = null;
 let isAdLoaded = false;
 let isShowingAd = false;
 let isLoadingRewarded = false;

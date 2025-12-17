@@ -1,25 +1,49 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, AppState, Text } from "react-native";
+import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
+import { MaterialIcons } from "@expo/vector-icons";
 import { getAdUnitId } from "./adConfig";
 import { useAdConsent } from "./useAdConsent";
+import { COLORS } from "../../constants/colors";
 
 let BannerAd: any;
 let BannerAdSize: any;
+let MobileAds: any;
 
-try {
-  const adsModule = require("react-native-google-mobile-ads");
-  BannerAd = adsModule.BannerAd;
-  BannerAdSize = adsModule.BannerAdSize;
-} catch (error) {
-  console.warn("react-native-google-mobile-ads not available:", error);
+  try {
+    const adsModule = require("react-native-google-mobile-ads");
+    BannerAd = adsModule.BannerAd;
+    BannerAdSize = adsModule.BannerAdSize;
+  MobileAds = adsModule.MobileAds;
+  } catch (error) {
+  // Native module not available
 }
 
 const BannerAdComponent = () => {
   const { requestNonPersonalizedAdsOnly } = useAdConsent();
   const [isAdLoaded, setIsAdLoaded] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
   const [fadeAnim] = useState(new Animated.Value(0));
   const [adKey, setAdKey] = useState(0);
   const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    const initializeAds = async () => {
+      if (MobileAds && !isInitialized) {
+        try {
+          await MobileAds().initialize();
+          setIsInitialized(true);
+        } catch {
+          setIsInitialized(true);
+        }
+      } else if (!MobileAds) {
+        setIsInitialized(true);
+      }
+    };
+
+    initializeAds();
+  }, [isInitialized]);
 
   const handleAdLoaded = () => {
     setIsAdLoaded(true);
@@ -35,6 +59,22 @@ const BannerAdComponent = () => {
   };
 
   useEffect(() => {
+    const checkConnectivity = async () => {
+      try {
+        const state = await NetInfo.fetch();
+        setIsOnline(state.isConnected ?? false);
+      } catch {
+        setIsOnline(false);
+      }
+    };
+
+    checkConnectivity();
+    const unsubscribeNetInfo = NetInfo.addEventListener(
+      (state: NetInfoState) => {
+        setIsOnline(state.isConnected ?? false);
+      }
+    );
+
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (
         appState.current.match(/inactive|background/) &&
@@ -42,36 +82,69 @@ const BannerAdComponent = () => {
       ) {
         setIsAdLoaded(false);
         setAdKey((prev) => prev + 1);
+        checkConnectivity();
       }
       appState.current = nextAppState;
     });
 
     return () => {
       subscription.remove();
+      unsubscribeNetInfo();
     };
   }, []);
 
-  const showPlaceholder = !isAdLoaded || !BannerAd || !BannerAdSize;
+  const renderOfflineMessage = () => (
+    <View style={styles.offlineContainer}>
+      <MaterialIcons name="wifi-off" size={16} color={COLORS.primary} />
+      <Text style={styles.placeholderText}>
+        Connect to internet for the best experience
+      </Text>
+    </View>
+  );
+
+  const canShowAd = BannerAd && BannerAdSize && isInitialized;
+  const adUnitId = getAdUnitId("banner");
+  const showPlaceholder = !canShowAd || !adUnitId;
+
+  if (showPlaceholder) {
+    return (
+      <View style={styles.bannerContainer}>
+        <View style={styles.placeholder}>
+          {!isOnline ? (
+            renderOfflineMessage()
+          ) : (
+            <Text style={styles.placeholderText}>Loading ad...</Text>
+          )}
+        </View>
+      </View>
+    );
+  }
 
   return (
     <Animated.View
       style={[
         styles.bannerContainer,
         {
-          opacity: showPlaceholder ? 1 : fadeAnim,
-          height: showPlaceholder ? 70 : isAdLoaded ? "auto" : 0,
+          opacity: isAdLoaded ? fadeAnim : 1,
+          height: isAdLoaded ? "auto" : 70,
           overflow: "hidden",
         },
       ]}
     >
-      {showPlaceholder ? (
+      <View style={StyleSheet.absoluteFill}>
+        {!isAdLoaded && (
         <View style={styles.placeholder}>
-          <Text style={styles.placeholderText}>Ad Placeholder</Text>
+            {!isOnline ? (
+              renderOfflineMessage()
+            ) : (
+              <Text style={styles.placeholderText}>Loading ad...</Text>
+            )}
+          </View>
+        )}
         </View>
-      ) : (
         <BannerAd
           key={adKey}
-          unitId={getAdUnitId("banner")!}
+        unitId={adUnitId!}
           size={BannerAdSize.ADAPTIVE_BANNER}
           requestOptions={{
             requestNonPersonalizedAdsOnly,
@@ -79,7 +152,6 @@ const BannerAdComponent = () => {
           onAdLoaded={handleAdLoaded}
           onAdFailedToLoad={handleAdFailedToLoad}
         />
-      )}
     </Animated.View>
   );
 };
@@ -102,6 +174,12 @@ const styles = StyleSheet.create({
     color: "#999",
     fontSize: 12,
     fontWeight: "500",
+  },
+  offlineContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
   },
 });
 

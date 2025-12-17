@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -6,18 +6,25 @@ import { GameScreen } from "./src/screens/GameScreen";
 import { PlayerSetupScreen } from "./src/screens/PlayerSetupScreen";
 import { DecksLibraryScreen } from "./src/screens/DecksLibraryScreen";
 import { DeckScreen } from "./src/screens/DeckScreen";
+import { DeckUnlockedScreen } from "./src/screens/DeckUnlockedScreen";
 import { GameProvider, useGame } from "./src/contexts/GameContext";
 import { toastConfig } from "./src/components/Toast";
 import { Deck } from "./src/types/deck";
 import { defaultDeck } from "./src/data/decks";
+import {
+  initializeGlobalAds,
+  useGlobalAds,
+} from "./src/components/ads/adsManager";
 
-type Screen = "setup" | "decks" | "deck" | "game";
+type Screen = "setup" | "decks" | "deck" | "deckUnlocked" | "game";
 
 const AppContent = () => {
   const { gameState, updatePlayerInfo, isSetupComplete } = useGame();
   const [currentScreen, setCurrentScreen] = useState<Screen>("setup");
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
   const hasGameStartedRef = useRef(false);
+
+  useGlobalAds();
 
   const handlePlayerSetupComplete = () => {
     if (isSetupComplete()) {
@@ -34,6 +41,18 @@ const AppContent = () => {
     setSelectedDeck(deck);
     setCurrentScreen("game");
     hasGameStartedRef.current = true;
+  };
+
+  const handleDeckUnlocked = (deck: Deck) => {
+    setSelectedDeck(deck);
+    setCurrentScreen("deckUnlocked");
+  };
+
+  const handleDeckUnlockedContinue = () => {
+    if (selectedDeck) {
+      setCurrentScreen("game");
+      hasGameStartedRef.current = true;
+    }
   };
 
   const handleBackToDecks = () => {
@@ -82,6 +101,10 @@ const AppContent = () => {
     }
   };
 
+  useEffect(() => {
+    initializeGlobalAds();
+  }, []);
+
   const renderScreen = () => {
     switch (currentScreen) {
       case "setup":
@@ -116,7 +139,15 @@ const AppContent = () => {
           <DeckScreen
             deck={selectedDeck}
             onSelectDeck={handleDeckConfirmed}
+            onDeckUnlocked={handleDeckUnlocked}
             onBack={handleBackToDeckLibrary}
+          />
+        ) : null;
+      case "deckUnlocked":
+        return selectedDeck ? (
+          <DeckUnlockedScreen
+            deck={selectedDeck}
+            onContinue={handleDeckUnlockedContinue}
           />
         ) : null;
       case "game":

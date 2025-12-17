@@ -8,6 +8,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
+import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Deck } from "../types/deck";
@@ -15,7 +16,13 @@ import { isDeckUnlocked, unlockDeck } from "../utils/deckStorage";
 import {
   showRewardedAd,
   ensureRewardedLoaded,
+  isRewardedReady,
 } from "../components/ads/RewardedAd";
+import {
+  showGlobalInterstitial,
+  trackRewardedAdShown,
+} from "../components/ads/adsManager";
+import { ensureInterstitialLoaded } from "../components/ads/InterstitialAd";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 
@@ -26,22 +33,49 @@ const isSmallScreen = height < 700;
 interface DeckScreenProps {
   deck: Deck;
   onSelectDeck: (deck: Deck) => void;
+  onDeckUnlocked?: (deck: Deck) => void;
   onBack: () => void;
 }
 
 export const DeckScreen: React.FC<DeckScreenProps> = ({
   deck,
   onSelectDeck,
+  onDeckUnlocked,
   onBack,
 }) => {
   const [unlocked, setUnlocked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [unlocking, setUnlocking] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
+  const [adReady, setAdReady] = useState(false);
+  const [adLoading, setAdLoading] = useState(false);
 
   useEffect(() => {
     checkUnlockStatus();
-    preloadAd();
+    checkConnectivity();
+    const unsubscribe = NetInfo.addEventListener((state: NetInfoState) => {
+      setIsOnline(state.isConnected ?? false);
+    });
+    return () => {
+      unsubscribe();
+    };
   }, [deck.id]);
+
+  useEffect(() => {
+    if (!loading) {
+      preloadAd();
+    }
+  }, [loading, unlocked]);
+
+  useEffect(() => {
+    if (!unlocked && !deck.isDefault && !loading) {
+      checkAdReady();
+      const interval = setInterval(() => {
+        checkAdReady();
+      }, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [unlocked, loading, deck.isDefault]);
 
   const checkUnlockStatus = async () => {
     const isUnlocked = await isDeckUnlocked(deck.id);
@@ -49,22 +83,86 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     setLoading(false);
   };
 
+  const checkConnectivity = async () => {
+    try {
+      const state = await NetInfo.fetch();
+      setIsOnline(state.isConnected ?? false);
+    } catch {
+      setIsOnline(false);
+    }
+  };
+
+  const checkAdReady = async () => {
+    if (isRewardedReady()) {
+      setAdReady(true);
+      setAdLoading(false);
+    } else {
+      setAdReady(false);
+      if (!adLoading) {
+        setAdLoading(true);
+        try {
+          await ensureRewardedLoaded();
+          if (isRewardedReady()) {
+            setAdReady(true);
+          }
+        } catch {
+          setAdReady(false);
+        } finally {
+          setAdLoading(false);
+        }
+      }
+    }
+  };
+
   const preloadAd = async () => {
-    if (!deck.isDefault) {
+    if (unlocked || deck.isDefault) {
+      try {
+        await ensureInterstitialLoaded();
+      } catch {}
+    } else {
+      setAdLoading(true);
       try {
         await ensureRewardedLoaded();
-      } catch {}
+        setAdReady(isRewardedReady());
+      } catch {
+        setAdReady(false);
+      } finally {
+        setAdLoading(false);
+      }
     }
   };
 
   const handleUnlock = async () => {
-    if (unlocking) return;
+    if (unlocking || !isOnline || !adReady) return;
+
+    if (!isRewardedReady()) {
+      setAdLoading(true);
+      try {
+        await ensureRewardedLoaded();
+        if (!isRewardedReady()) {
+          setAdLoading(false);
+          return;
+        }
+      } catch {
+        setAdLoading(false);
+        return;
+      }
+    }
 
     setUnlocking(true);
+    setAdLoading(false);
     try {
-      const success = await showRewardedAd(async (reward) => {
+      const success = await showRewardedAd(async () => {
         await unlockDeck(deck.id);
+        await trackRewardedAdShown();
         setUnlocked(true);
+        setTimeout(() => {
+          if (onDeckUnlocked) {
+            onDeckUnlocked(deck);
+          } else {
+            onSelectDeck(deck);
+          }
+        }, 500);
       });
 
       if (!success) {
@@ -75,8 +173,11 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     }
   };
 
-  const handleSelectDeck = () => {
+  const handleSelectDeck = async () => {
     if (unlocked || deck.isDefault) {
+      try {
+        await showGlobalInterstitial();
+      } catch {}
       onSelectDeck(deck);
     }
   };
@@ -133,15 +234,44 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
             <Text style={styles.lockedDescription}>
               Watch a short ad to unlock this deck
             </Text>
+            {!isOnline && (
+              <View style={styles.warningContainer}>
+                <MaterialIcons
+                  name="wifi-off"
+                  size={isTablet ? 32 : 28}
+                  color="#FF6B6B"
+                />
+                <Text style={styles.warningText}>
+                  Internet connection required
+                </Text>
+                <Text style={styles.warningSubtext}>
+                  Please turn on your internet to unlock this deck
+                </Text>
+              </View>
+            )}
+            {isOnline && !adReady && !adLoading && (
+              <View style={styles.warningContainer}>
+                <MaterialIcons
+                  name="hourglass-empty"
+                  size={isTablet ? 32 : 28}
+                  color="#FFA500"
+                />
+                <Text style={styles.warningText}>Ad is loading...</Text>
+                <Text style={styles.warningSubtext}>
+                  Please wait a moment and try again
+                </Text>
+              </View>
+            )}
             <TouchableOpacity
               style={[
                 styles.unlockButton,
-                unlocking && styles.unlockButtonDisabled,
+                (unlocking || !isOnline || (!adReady && !adLoading)) &&
+                  styles.unlockButtonDisabled,
               ]}
               onPress={handleUnlock}
-              disabled={unlocking}
+              disabled={unlocking || !isOnline || (!adReady && !adLoading)}
             >
-              {unlocking ? (
+              {unlocking || adLoading ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
                 <>
@@ -151,7 +281,11 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                     color="#fff"
                   />
                   <Text style={styles.unlockButtonText}>
-                    Watch Ad to Unlock
+                    {!isOnline
+                      ? "Internet Required"
+                      : !adReady
+                      ? "Loading Ad..."
+                      : "Watch Ad to Unlock"}
                   </Text>
                 </>
               )}
@@ -194,18 +328,14 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           </View>
         )}
 
-        <TouchableOpacity
-          style={[
-            styles.selectButton,
-            !canSelect && styles.selectButtonDisabled,
-          ]}
-          onPress={handleSelectDeck}
-          disabled={!canSelect}
-        >
-          <Text style={styles.selectButtonText}>
-            {canSelect ? "Select This Deck" : "Unlock to Select"}
-          </Text>
-        </TouchableOpacity>
+        {canSelect && (
+          <TouchableOpacity
+            style={styles.selectButton}
+            onPress={handleSelectDeck}
+          >
+            <Text style={styles.selectButtonText}>Select This Deck</Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -288,12 +418,12 @@ const styles = StyleSheet.create({
   },
   lockedContainer: {
     alignItems: "center",
-    backgroundColor: hexToRgba("#666", 0.1),
+    backgroundColor: hexToRgba(COLORS.primary, 0.08),
     borderRadius: isSmallScreen ? 16 : isTablet ? 24 : 20,
     padding: isSmallScreen ? 24 : isTablet ? 40 : 32,
     marginBottom: isSmallScreen ? 20 : isTablet ? 32 : 24,
     borderWidth: 2,
-    borderColor: hexToRgba("#666", 0.3),
+    borderColor: hexToRgba(COLORS.primary, 0.25),
   },
   lockedTitle: {
     fontSize: isSmallScreen ? 22 : isTablet ? 32 : 26,
@@ -325,6 +455,30 @@ const styles = StyleSheet.create({
     fontSize: isSmallScreen ? 16 : isTablet ? 20 : 18,
     fontWeight: "700",
     color: "#fff",
+  },
+  warningContainer: {
+    alignItems: "center",
+    marginBottom: isSmallScreen ? 16 : isTablet ? 24 : 20,
+    paddingVertical: isSmallScreen ? 12 : isTablet ? 16 : 14,
+    paddingHorizontal: isSmallScreen ? 16 : isTablet ? 24 : 20,
+    backgroundColor: hexToRgba("#FF6B6B", 0.1),
+    borderRadius: isSmallScreen ? 12 : isTablet ? 16 : 14,
+    borderWidth: 1,
+    borderColor: hexToRgba("#FF6B6B", 0.3),
+    width: "100%",
+  },
+  warningText: {
+    fontSize: isSmallScreen ? 16 : isTablet ? 20 : 18,
+    fontWeight: "700",
+    color: "#FF6B6B",
+    marginTop: isSmallScreen ? 8 : 10,
+    textAlign: "center",
+  },
+  warningSubtext: {
+    fontSize: isSmallScreen ? 13 : isTablet ? 16 : 14,
+    color: "#ccc",
+    marginTop: isSmallScreen ? 4 : 6,
+    textAlign: "center",
   },
   previewContainer: {
     marginBottom: isSmallScreen ? 20 : isTablet ? 32 : 24,
