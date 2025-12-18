@@ -9,9 +9,9 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { Avatar } from "../hooks/useGameState";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 const { width } = Dimensions.get("window");
-const isTablet = width >= 768;
 
 interface CustomToastProps {
   text1?: string;
@@ -57,7 +57,7 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
           <View style={[styles.avatarContainer, { borderColor: playerColor }]}>
             <MaterialIcons
               name={playerAvatar as any}
-              size={20}
+              size={moderateScale(16)}
               color={playerColor}
             />
           </View>
@@ -85,7 +85,7 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
             >
               <MaterialIcons
                 name="check"
-                size={isTablet ? 24 : 22}
+                size={moderateScale(18)}
                 color="#FFF"
               />
             </TouchableOpacity>
@@ -96,7 +96,7 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
             >
               <MaterialIcons
                 name="close"
-                size={isTablet ? 24 : 22}
+                size={moderateScale(18)}
                 color="#FFF"
               />
             </TouchableOpacity>
@@ -121,12 +121,12 @@ export const toastConfig = {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: 120,
-    width: "95%",
-    borderRadius: 12,
-    borderLeftWidth: 4,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    minHeight: verticalScale(90),
+    width: "98%",
+    borderRadius: scale(12),
+    borderLeftWidth: 3,
+    paddingHorizontal: scale(14),
+    paddingVertical: verticalScale(10),
     flexDirection: "row",
     alignItems: "center",
     shadowColor: "#000",
@@ -139,16 +139,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
-    gap: 12,
+    gap: scale(10),
   },
   avatarContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: scale(28),
+    height: scale(28),
+    borderRadius: scale(14),
     borderWidth: 2,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 12,
+    marginRight: scale(10),
     backgroundColor: "rgba(255, 255, 255, 0.05)",
   },
   textContainer: {
@@ -156,31 +156,31 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   text1: {
-    fontSize: 16,
+    fontSize: moderateScale(15),
     fontWeight: "700",
-    marginBottom: 4,
+    marginBottom: verticalScale(3),
   },
   text2: {
-    fontSize: 14,
+    fontSize: moderateScale(13),
     color: "#FFF",
     fontWeight: "400",
   },
   questionText: {
-    fontSize: 13,
+    fontSize: moderateScale(12),
     color: "#999",
     fontWeight: "500",
     fontStyle: "italic",
-    marginTop: 8,
+    marginTop: verticalScale(6),
   },
   buttonsRow: {
     flexDirection: "row",
-    gap: 12,
+    gap: scale(10),
     alignItems: "center",
   },
   confirmButton: {
-    width: isTablet ? 48 : 44,
-    height: isTablet ? 48 : 44,
-    borderRadius: isTablet ? 24 : 22,
+    width: scale(38),
+    height: scale(38),
+    borderRadius: scale(19),
     backgroundColor: "#50C878",
     alignItems: "center",
     justifyContent: "center",
@@ -191,9 +191,9 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   cancelButton: {
-    width: isTablet ? 48 : 44,
-    height: isTablet ? 48 : 44,
-    borderRadius: isTablet ? 24 : 22,
+    width: scale(38),
+    height: scale(38),
+    borderRadius: scale(19),
     backgroundColor: "#FF6B6B",
     alignItems: "center",
     justifyContent: "center",

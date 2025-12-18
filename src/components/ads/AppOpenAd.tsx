@@ -21,9 +21,7 @@ function cleanupAdInstance() {
   if (appOpenAd) {
     try {
       appOpenAd.removeAllListeners();
-    } catch {
-      // Ignore cleanup errors
-    }
+    } catch {}
   }
   detachListeners();
   appOpenAd = null;
@@ -95,9 +93,7 @@ async function createAppOpenInstance() {
       if (ad) {
         try {
           ad.load();
-        } catch {
-          // Ignore reload errors
-        }
+        } catch {}
       }
     })
   );
@@ -124,7 +120,6 @@ export async function loadAppOpenAd(force = false, backgroundTime?: number) {
       isLoadingAppOpenAd = false;
       isAppOpenAdLoaded = false;
       adLoadTimestamp = 0;
-      // Reset promise so retries can happen
       initializingPromise = null;
       throw error;
     }

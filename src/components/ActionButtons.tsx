@@ -9,9 +9,7 @@ import {
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 
-const { width, height } = Dimensions.get("window");
-const isTablet = width >= 768;
-const isSmallScreen = height < 700;
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 interface ActionButtonsProps {
   onSwipeLeft: () => void;
@@ -77,12 +75,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    gap: isSmallScreen ? 20 : isTablet ? 40 : 30,
+    gap: scale(30),
   },
   button: {
-    width: isSmallScreen ? 50 : isTablet ? 72 : 60,
-    height: isSmallScreen ? 50 : isTablet ? 72 : 60,
-    borderRadius: isSmallScreen ? 25 : isTablet ? 36 : 30,
+    width: scale(52),
+    height: scale(52),
+    borderRadius: scale(26),
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
@@ -105,7 +103,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.accent.red,
   },
   buttonText: {
-    fontSize: isSmallScreen ? 24 : isTablet ? 32 : 28,
+    fontSize: moderateScale(24),
     color: "#FFF",
     fontWeight: "700",
   },

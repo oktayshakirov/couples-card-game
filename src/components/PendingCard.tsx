@@ -2,10 +2,9 @@ import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 const { width, height } = Dimensions.get("window");
-const isTablet = width >= 768;
-const isSmallScreen = height < 700;
 
 interface PendingCardProps {
   player1Name: string;
@@ -51,27 +50,19 @@ export const PendingCard: React.FC<PendingCardProps> = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: isSmallScreen
-      ? width * 0.92
-      : isTablet
-      ? width * 0.75
-      : width * 0.88,
-    height: isSmallScreen
-      ? height * 0.48
-      : isTablet
-      ? height * 0.52
-      : height * 0.55,
-    borderRadius: isSmallScreen ? 28 : isTablet ? 40 : 36,
+    width: width >= 768 ? width * 0.75 : width * 0.92,
+    height: width >= 768 ? height * 0.58 : height * 0.55,
+    borderRadius: scale(32),
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.5,
-    shadowRadius: 30,
-    elevation: 24,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 24,
+    elevation: 20,
   },
   card: {
     flex: 1,
     backgroundColor: COLORS.background,
-    borderRadius: isSmallScreen ? 28 : isTablet ? 40 : 36,
+    borderRadius: scale(36),
     borderWidth: 2.5,
     borderColor: hexToRgba(COLORS.primary, 0.35),
     overflow: "hidden",
@@ -79,8 +70,8 @@ const styles = StyleSheet.create({
   cardGradient: {
     flex: 1,
     backgroundColor: COLORS.background,
-    borderRadius: isSmallScreen ? 28 : isTablet ? 40 : 36,
-    padding: isSmallScreen ? 20 : isTablet ? 36 : 28,
+    borderRadius: scale(36),
+    padding: scale(28),
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1.5,
@@ -92,16 +83,16 @@ const styles = StyleSheet.create({
   content: {
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: isSmallScreen ? 24 : isTablet ? 44 : 34,
+    paddingHorizontal: scale(34),
   },
   iconContainer: {
-    width: isSmallScreen ? 64 : isTablet ? 104 : 84,
-    height: isSmallScreen ? 64 : isTablet ? 104 : 84,
-    borderRadius: isSmallScreen ? 32 : isTablet ? 52 : 42,
-    borderWidth: 3,
+    width: scale(72),
+    height: scale(72),
+    borderRadius: scale(36),
+    borderWidth: 2.5,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: isSmallScreen ? 24 : isTablet ? 32 : 28,
+    marginBottom: verticalScale(20),
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
@@ -109,24 +100,24 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   icon: {
-    fontSize: isSmallScreen ? 32 : isTablet ? 52 : 40,
+    fontSize: moderateScale(36),
   },
   title: {
-    fontSize: isSmallScreen ? 20 : isTablet ? 32 : 24,
+    fontSize: moderateScale(24),
     fontWeight: "700",
     textAlign: "center",
-    marginBottom: isSmallScreen ? 16 : isTablet ? 24 : 20,
+    marginBottom: verticalScale(20),
     textShadowColor: "rgba(0, 0, 0, 0.4)",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 3,
     letterSpacing: 0.5,
   },
   message: {
-    fontSize: isSmallScreen ? 15 : isTablet ? 22 : 17,
+    fontSize: moderateScale(17),
     fontWeight: "500",
     textAlign: "center",
     color: "#aaa",
-    lineHeight: isSmallScreen ? 24 : isTablet ? 34 : 28,
+    lineHeight: moderateScale(28),
     letterSpacing: 0.2,
   },
 });

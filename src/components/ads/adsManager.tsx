@@ -16,17 +16,13 @@ const AD_TYPES = {
 let MobileAds: any;
 try {
   MobileAds = require("react-native-google-mobile-ads").MobileAds;
-} catch (error) {
-  // Native module not available
-}
+} catch (error) {}
 
 export async function initializeGoogleMobileAds() {
   if (MobileAds) {
     try {
       await MobileAds().initialize();
-    } catch (error) {
-      // Ignore initialization errors
-    }
+    } catch (error) {}
   }
 }
 
@@ -36,9 +32,7 @@ export async function initializeGlobalAds() {
     await Promise.all([initializeInterstitial(), loadAppOpenAd()]);
   } catch (error) {
     setTimeout(() => {
-      initializeGlobalAds().catch(() => {
-        // Ignore retry errors
-      });
+      initializeGlobalAds().catch(() => {});
     }, 5000);
   }
 }
@@ -101,9 +95,7 @@ export async function showGlobalInterstitial(): Promise<boolean> {
       await showInterstitial();
       await updateLastAdShownTime(AD_TYPES.INTERSTITIAL);
       return true;
-    } catch (error) {
-      // Ignore errors
-    }
+    } catch (error) {}
   }
   return false;
 }
@@ -144,9 +136,7 @@ export function useGlobalAds() {
               await showAppOpenAd();
               await updateLastAdShownTime(AD_TYPES.APP_OPEN);
               lastAdShownTime.current = now;
-            } catch (e) {
-              // Ignore errors
-            }
+            } catch (e) {}
           }
         }
 

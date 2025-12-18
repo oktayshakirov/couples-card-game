@@ -1,12 +1,6 @@
 import Toast from "react-native-toast-message";
 import { Avatar } from "../hooks/useGameState";
 
-const DEFAULT_TOAST_CONFIG = {
-  position: "top" as const,
-  topOffset: 140,
-  visibilityTime: 2500,
-};
-
 export interface ShowSkipCountdownParams {
   playerName: string;
   remainingSkips: number;
@@ -34,10 +28,6 @@ export interface ToastConfig {
   props?: Record<string, any>;
 }
 
-/**
- * Shows a toast notification for skip countdown
- * @param params - Player name and remaining skips
- */
 export const showSkipCountdown = ({
   playerName,
   remainingSkips,
@@ -50,8 +40,7 @@ export const showSkipCountdown = ({
     type: "info",
     text1: playerName,
     text2: `has ${remainingSkips} ${skipsText} left`,
-    ...DEFAULT_TOAST_CONFIG,
-    visibilityTime: 2500, // 2500ms for skip
+    visibilityTime: 2500,
     props: {
       playerColor,
       playerAvatar,
@@ -59,10 +48,6 @@ export const showSkipCountdown = ({
   });
 };
 
-/**
- * Shows a toast notification when a player picks Truth or Dare
- * @param params - Player name, color, avatar, and choice type
- */
 export const showChoiceToast = ({
   playerName,
   playerColor,
@@ -77,8 +62,8 @@ export const showChoiceToast = ({
     text1: playerName,
     text2: `Picked ${choice === "dare" ? "Dare" : "Truth"}`,
     position: "top",
-    topOffset: 140,
-    visibilityTime: 999999, // Stay until confirmation (very large number)
+    topOffset: 130,
+    visibilityTime: 999999,
     props: {
       playerColor,
       playerAvatar,
@@ -90,26 +75,14 @@ export const showChoiceToast = ({
   });
 };
 
-/**
- * Shows a toast notification when a player picks Truth
- * @param params - Player name and color
- */
 export const showTruthToast = (params: ShowChoiceParams): void => {
   showChoiceToast({ ...params, choice: "truth" });
 };
 
-/**
- * Shows a toast notification when a player picks Dare
- * @param params - Player name and color
- */
 export const showDareToast = (params: ShowChoiceParams): void => {
   showChoiceToast({ ...params, choice: "dare" });
 };
 
-/**
- * Generic toast utility function
- * @param config - Toast configuration
- */
 export const showToast = (config: ToastConfig): void => {
   Toast.show({
     type: config.type || "info",
@@ -123,9 +96,6 @@ export const showToast = (config: ToastConfig): void => {
   });
 };
 
-/**
- * Show success toast
- */
 export const showSuccessToast = (
   text1: string,
   text2?: string,
@@ -134,9 +104,6 @@ export const showSuccessToast = (
   showToast({ ...options, type: "success", text1, text2 });
 };
 
-/**
- * Show error toast
- */
 export const showErrorToast = (
   text1: string,
   text2?: string,
@@ -145,9 +112,6 @@ export const showErrorToast = (
   showToast({ ...options, type: "error", text1, text2 });
 };
 
-/**
- * Show info toast
- */
 export const showInfoToast = (
   text1: string,
   text2?: string,

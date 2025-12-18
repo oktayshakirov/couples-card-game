@@ -13,9 +13,9 @@ import { Deck } from "../types/deck";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 
-const { width, height } = Dimensions.get("window");
-const isTablet = width >= 768;
-const isSmallScreen = height < 700;
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+
+const { width } = Dimensions.get("window");
 
 interface DeckUnlockedScreenProps {
   deck: Deck;
@@ -49,78 +49,69 @@ export const DeckUnlockedScreen: React.FC<DeckUnlockedScreenProps> = ({
           </View>
 
           <View style={styles.deckInfo}>
-            <View style={styles.glassCard}>
-              <View style={styles.glassTint} />
-              <View style={styles.deckInfoContent}>
-                <View style={styles.iconContainer}>
-                  <MaterialIcons
-                    name={deck.icon as any}
-                    size={isTablet ? 80 : 64}
-                    color={COLORS.primary}
-                  />
-                </View>
-                <Text style={styles.deckName}>{deck.name}</Text>
-                <Text style={styles.deckDescription}>{deck.description}</Text>
-                <View style={styles.statsContainer}>
-                  <View style={styles.stat}>
-                    <MaterialIcons
-                      name="style"
-                      size={20}
-                      color={COLORS.primary}
-                    />
-                    <Text style={styles.statText}>
-                      {deck.cards.length} Cards
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.statusContainer}>
             {!isReady && (
               <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color={COLORS.primary} />
+                <View style={styles.loadingIconContainer}>
+                  <ActivityIndicator size="large" color={COLORS.primary} />
+                </View>
                 <Text style={styles.loadingText}>Preparing your deck...</Text>
               </View>
             )}
 
             {isReady && (
-              <View style={styles.successContainer}>
-                <Text style={styles.successText}>✅ Deck Ready!</Text>
-                <Text style={styles.successDetails}>
-                  Your cards are ready to play
-                </Text>
+              <View style={styles.glassCard}>
+                <View style={styles.glassTint} />
+                <View style={styles.deckInfoContent}>
+                  <View style={styles.iconContainer}>
+                    <View style={styles.iconInnerGlow} />
+                    <MaterialIcons
+                      name={deck.icon as any}
+                      size={width >= 768 ? 48 : moderateScale(44)}
+                      color={COLORS.primary}
+                    />
+                  </View>
+                  <Text style={styles.deckName}>{deck.name}</Text>
+                  <Text style={styles.deckDescription}>{deck.description}</Text>
+                  <View style={styles.statsContainer}>
+                    <View style={styles.stat}>
+                      <MaterialIcons
+                        name="style"
+                        size={18}
+                        color={COLORS.primary}
+                      />
+                      <Text style={styles.statText}>
+                        {deck.cards.length} Cards
+                      </Text>
+                    </View>
+                  </View>
+                </View>
               </View>
             )}
           </View>
+        </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                isReady ? styles.enabledButton : styles.disabledButton,
-              ]}
-              onPress={onContinue}
-              disabled={!isReady}
-            >
-              <View style={styles.buttonContent}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.actionButton,
+              isReady ? styles.enabledButton : styles.disabledButton,
+            ]}
+            onPress={onContinue}
+            disabled={!isReady}
+          >
+            {!isReady ? (
+              <ActivityIndicator size="small" color="#999" />
+            ) : (
+              <>
                 <MaterialIcons
-                  name="play-arrow"
-                  size={isTablet ? 28 : 24}
-                  color={isReady ? COLORS.background : "#999"}
+                  name="style"
+                  size={width >= 768 ? 24 : moderateScale(20)}
+                  color={COLORS.background}
                 />
-                <Text
-                  style={[
-                    styles.actionButtonText,
-                    { color: isReady ? COLORS.background : "#999" },
-                  ]}
-                >
-                  {isReady ? "START PLAYING!" : "LOADING..."}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+                <Text style={styles.actionButtonText}>START PLAYING!</Text>
+              </>
+            )}
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </View>
@@ -141,26 +132,27 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "space-between",
-    paddingHorizontal: isTablet ? 32 : 20,
+    paddingHorizontal: width >= 768 ? 32 : scale(20),
   },
   header: {
     alignItems: "center",
-    paddingTop: isSmallScreen ? 40 : isTablet ? 60 : 50,
-    paddingBottom: isSmallScreen ? 20 : isTablet ? 30 : 25,
+    paddingTop: verticalScale(40),
+    paddingBottom: verticalScale(20),
   },
   headerTitle: {
-    fontSize: isSmallScreen ? 32 : isTablet ? 48 : 40,
-    fontWeight: "700",
+    fontSize: moderateScale(32),
+    fontWeight: "800",
     color: "#fff",
     textAlign: "center",
-    marginBottom: isSmallScreen ? 8 : 12,
+    marginBottom: verticalScale(10),
+    letterSpacing: 0.5,
   },
   headerSubtitle: {
-    fontSize: isSmallScreen ? 18 : isTablet ? 24 : 20,
+    fontSize: moderateScale(16),
     color: "#fff",
     textAlign: "center",
-    opacity: 0.8,
+    opacity: 0.85,
+    fontWeight: "500",
   },
   deckInfo: {
     flex: 1,
@@ -170,120 +162,130 @@ const styles = StyleSheet.create({
   glassCard: {
     position: "relative",
     overflow: "hidden",
-    borderRadius: isSmallScreen ? 18 : isTablet ? 26 : 22,
-    padding: isSmallScreen ? 20 : isTablet ? 32 : 24,
+    borderRadius: scale(24),
+    padding: scale(28),
     borderWidth: 2,
-    borderColor: hexToRgba(COLORS.primary, 0.3),
-    backgroundColor: hexToRgba(COLORS.primary, 0.15),
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 8,
-    width: isSmallScreen ? width * 0.85 : isTablet ? width * 0.6 : width * 0.75,
+    borderColor: hexToRgba(COLORS.primary, 0.4),
+    backgroundColor: hexToRgba(COLORS.primary, 0.18),
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    elevation: 12,
+    width: width >= 768 ? width * 0.65 : width * 0.9,
   },
   glassTint: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: hexToRgba(COLORS.primary, 0.05),
+    backgroundColor: hexToRgba(COLORS.primary, 0.08),
   },
   deckInfoContent: {
     alignItems: "center",
   },
   iconContainer: {
-    width: isTablet ? 120 : 100,
-    height: isTablet ? 120 : 100,
-    borderRadius: isTablet ? 60 : 50,
-    backgroundColor: hexToRgba(COLORS.primary, 0.2),
+    width: width >= 768 ? 100 : scale(80),
+    height: width >= 768 ? 100 : scale(80),
+    borderRadius: width >= 768 ? 50 : scale(40),
+    backgroundColor: hexToRgba(COLORS.primary, 0.25),
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: isSmallScreen ? 16 : isTablet ? 24 : 20,
+    marginBottom: verticalScale(20),
+    position: "relative",
+    borderWidth: 2,
+    borderColor: hexToRgba(COLORS.primary, 0.3),
+  },
+  iconInnerGlow: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: width >= 768 ? 50 : scale(40),
+    backgroundColor: hexToRgba(COLORS.primary, 0.1),
   },
   deckName: {
-    fontSize: isSmallScreen ? 28 : isTablet ? 40 : 32,
+    fontSize: moderateScale(28),
     fontWeight: "700",
     color: "#fff",
     textAlign: "center",
-    marginBottom: isSmallScreen ? 8 : 12,
+    marginBottom: verticalScale(8),
+    letterSpacing: 0.3,
   },
   deckDescription: {
-    fontSize: isSmallScreen ? 15 : isTablet ? 20 : 17,
-    color: "#ccc",
+    fontSize: moderateScale(15),
+    color: "#ddd",
     textAlign: "center",
-    marginBottom: isSmallScreen ? 16 : isTablet ? 24 : 20,
-    paddingHorizontal: isTablet ? 20 : 10,
+    marginBottom: verticalScale(20),
+    paddingHorizontal: width >= 768 ? 20 : scale(10),
+    lineHeight: moderateScale(22),
   },
   statsContainer: {
     flexDirection: "row",
-    gap: isTablet ? 24 : 16,
+    gap: width >= 768 ? 24 : scale(16),
   },
   stat: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    backgroundColor: hexToRgba(COLORS.primary, 0.15),
+    paddingVertical: verticalScale(8),
+    paddingHorizontal: scale(16),
+    borderRadius: scale(20),
+    borderWidth: 1,
+    borderColor: hexToRgba(COLORS.primary, 0.25),
   },
   statText: {
-    fontSize: isSmallScreen ? 14 : isTablet ? 18 : 16,
+    fontSize: moderateScale(15),
     color: "#fff",
     fontWeight: "600",
   },
-  statusContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: isSmallScreen ? 20 : isTablet ? 30 : 25,
-    minHeight: isSmallScreen ? 100 : isTablet ? 140 : 120,
-  },
   loadingContainer: {
     alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingIconContainer: {
+    width: width >= 768 ? 64 : scale(56),
+    height: width >= 768 ? 64 : scale(56),
+    borderRadius: width >= 768 ? 32 : scale(28),
+    backgroundColor: hexToRgba(COLORS.primary, 0.15),
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: verticalScale(16),
+    borderWidth: 2,
+    borderColor: hexToRgba(COLORS.primary, 0.25),
   },
   loadingText: {
-    fontSize: isSmallScreen ? 16 : isTablet ? 20 : 18,
+    fontSize: moderateScale(16),
     color: "#fff",
     textAlign: "center",
-    marginTop: isSmallScreen ? 12 : 16,
-  },
-  successContainer: {
-    alignItems: "center",
-  },
-  successText: {
-    fontSize: isSmallScreen ? 18 : isTablet ? 24 : 20,
-    color: COLORS.primary,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  successDetails: {
-    fontSize: isSmallScreen ? 14 : isTablet ? 18 : 16,
-    color: "#ccc",
-    textAlign: "center",
-    marginTop: isSmallScreen ? 8 : 12,
+    fontWeight: "500",
+    opacity: 0.9,
   },
   buttonContainer: {
-    alignItems: "center",
-    paddingBottom: isSmallScreen ? 20 : isTablet ? 30 : 25,
+    paddingHorizontal: width >= 768 ? 32 : scale(20),
+    paddingVertical: verticalScale(16),
+    paddingBottom: verticalScale(20),
   },
   actionButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: isSmallScreen ? 15 : isTablet ? 20 : 18,
-    paddingHorizontal: isSmallScreen ? 30 : isTablet ? 40 : 35,
-    borderRadius: isSmallScreen ? 25 : isTablet ? 32 : 28,
-    minWidth: isSmallScreen ? 250 : isTablet ? 320 : 280,
-    gap: isSmallScreen ? 8 : 12,
+    paddingVertical: verticalScale(16),
+    paddingHorizontal: scale(32),
+    borderRadius: scale(16),
+    gap: scale(10),
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   enabledButton: {
     backgroundColor: COLORS.primary,
   },
   disabledButton: {
     backgroundColor: "#666",
-    opacity: 0.6,
-  },
-  buttonContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: isSmallScreen ? 8 : 12,
+    opacity: 0.5,
   },
   actionButtonText: {
-    fontSize: isSmallScreen ? 16 : isTablet ? 20 : 18,
+    fontSize: moderateScale(18),
     fontWeight: "700",
+    color: COLORS.background,
+    letterSpacing: 0.5,
   },
 });

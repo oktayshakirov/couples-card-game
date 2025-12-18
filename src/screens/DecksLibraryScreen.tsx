@@ -16,9 +16,26 @@ import { hexToRgba } from "../utils/colorUtils";
 import { useGame } from "../contexts/GameContext";
 import { COLORS } from "../constants/colors";
 
-const { width, height } = Dimensions.get("window");
-const isTablet = width >= 768;
-const isSmallScreen = height < 700;
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+
+const { width } = Dimensions.get("window");
+
+const CARDS_PER_ROW = 2;
+const getCardDimensions = () => {
+  const screenPadding = width >= 768 ? 32 : scale(16);
+  const gap = scale(16);
+  const availableWidth = width - screenPadding * 2;
+  const totalGapWidth = gap * (CARDS_PER_ROW - 1);
+  const cardWidth = (availableWidth - totalGapWidth) / CARDS_PER_ROW;
+  const cardHeight = cardWidth * 1.3;
+  return {
+    width: Math.floor(cardWidth),
+    height: Math.floor(cardHeight),
+  };
+};
+
+const CARD_DIMENSIONS = getCardDimensions();
+const CARD_GAP = scale(16);
 
 interface DecksLibraryScreenProps {
   onSelectDeck: (deck: Deck) => void;
@@ -85,40 +102,80 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {allDecks.map((deck) => {
-          const isUnlocked = unlockedDecks.includes(deck.id) || deck.isDefault;
-          return (
-            <TouchableOpacity
-              key={deck.id}
-              style={[styles.deckCard, !isUnlocked && styles.deckCardLocked]}
-              onPress={() => handleDeckPress(deck)}
-              activeOpacity={0.7}
-            >
-              <View style={styles.deckIconContainer}>
-                <MaterialIcons
-                  name={deck.icon as any}
-                  size={isTablet ? 48 : 40}
-                  color={isUnlocked ? COLORS.primary : "#666"}
-                />
-              </View>
-              <View style={styles.deckInfo}>
-                <View style={styles.deckHeader}>
-                  <Text style={styles.deckName}>{deck.name}</Text>
-                  {!isUnlocked && (
-                    <MaterialIcons name="lock" size={20} color="#666" />
-                  )}
+        <View style={styles.cardsGrid}>
+          {allDecks.map((deck, index) => {
+            const isUnlocked =
+              unlockedDecks.includes(deck.id) || deck.isDefault;
+            const isLastInRow = (index + 1) % CARDS_PER_ROW === 0;
+            return (
+              <TouchableOpacity
+                key={deck.id}
+                style={[
+                  styles.deckCard,
+                  !isUnlocked && styles.deckCardLocked,
+                  isLastInRow && styles.deckCardLastInRow,
+                ]}
+                onPress={() => handleDeckPress(deck)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.cardContent}>
+                  <View style={styles.cardTopSection}>
+                    <View
+                      style={[
+                        styles.deckIconContainer,
+                        isUnlocked && styles.deckIconContainerUnlocked,
+                      ]}
+                    >
+                      <MaterialIcons
+                        name={deck.icon as any}
+                        size={moderateScale(CARD_DIMENSIONS.width * 0.24)}
+                        color={isUnlocked ? COLORS.primary : "#666"}
+                      />
+                      {!isUnlocked && (
+                        <View style={styles.videoOverlay}>
+                          <View style={styles.videoOverlayInner} />
+                          <MaterialIcons
+                            name="lock"
+                            size={moderateScale(18)}
+                            color="#fff"
+                          />
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                  <View style={styles.textContainer}>
+                    <View style={styles.deckNameContainer}>
+                      <Text
+                        style={[
+                          styles.deckName,
+                          !isUnlocked && styles.deckNameLocked,
+                        ]}
+                      >
+                        {deck.name}
+                      </Text>
+                    </View>
+                    <View style={styles.deckCountContainer}>
+                      <MaterialIcons
+                        name="style"
+                        size={moderateScale(12)}
+                        color={isUnlocked ? "#999" : "#666"}
+                      />
+                      <Text
+                        style={[
+                          styles.deckCount,
+                          !isUnlocked && styles.deckCountLocked,
+                        ]}
+                        numberOfLines={1}
+                      >
+                        {deck.cards.length} cards
+                      </Text>
+                    </View>
+                  </View>
                 </View>
-                <Text style={styles.deckDescription}>{deck.description}</Text>
-                <Text style={styles.deckCount}>{deck.cards.length} cards</Text>
-              </View>
-              <MaterialIcons
-                name="chevron-right"
-                size={24}
-                color={isUnlocked ? COLORS.primary : "#666"}
-              />
-            </TouchableOpacity>
-          );
-        })}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -133,16 +190,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: isTablet ? 32 : 16,
-    paddingVertical: isSmallScreen ? 12 : 16,
+    paddingHorizontal: width >= 768 ? 32 : scale(16),
+    paddingVertical: verticalScale(14),
   },
   backButton: {
     padding: 8,
   },
   closeButton: {
-    width: isSmallScreen ? 36 : isTablet ? 44 : 40,
-    height: isSmallScreen ? 36 : isTablet ? 44 : 40,
-    borderRadius: isSmallScreen ? 18 : isTablet ? 22 : 20,
+    width: scale(40),
+    height: verticalScale(40),
+    borderRadius: scale(20),
     backgroundColor: "rgba(255,255,255,0.1)",
     alignItems: "center",
     justifyContent: "center",
@@ -150,15 +207,15 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: "center",
     flex: 1,
-    gap: isSmallScreen ? 4 : isTablet ? 8 : 6,
+    gap: verticalScale(6),
   },
   title: {
-    fontSize: isSmallScreen ? 22 : isTablet ? 32 : 26,
+    fontSize: moderateScale(26),
     fontWeight: "700",
     color: COLORS.primary,
   },
   subtitle: {
-    fontSize: isSmallScreen ? 22 : isTablet ? 32 : 26,
+    fontSize: moderateScale(26),
     fontWeight: "700",
     color: "#fff",
   },
@@ -169,55 +226,148 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: isTablet ? 32 : 16,
-    paddingBottom: isSmallScreen ? 20 : 32,
+    paddingHorizontal: width >= 768 ? 32 : scale(16),
+    paddingBottom: verticalScale(28),
+  },
+  cardsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    width: "100%",
   },
   deckCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: hexToRgba(COLORS.primary, 0.15),
-    borderRadius: isSmallScreen ? 16 : isTablet ? 24 : 20,
-    padding: isSmallScreen ? 16 : isTablet ? 24 : 20,
-    marginBottom: isSmallScreen ? 12 : isTablet ? 20 : 16,
+    width: CARD_DIMENSIONS.width,
+    height: CARD_DIMENSIONS.height,
+    backgroundColor: hexToRgba(COLORS.primary, 0.12),
+    borderRadius: scale(24),
+    padding: scale(16),
+    marginRight: CARD_GAP,
+    marginBottom: CARD_GAP,
     borderWidth: 2,
-    borderColor: hexToRgba(COLORS.primary, 0.3),
+    borderColor: hexToRgba(COLORS.primary, 0.25),
+    overflow: "hidden",
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
   },
-  deckCardLocked: {
-    backgroundColor: hexToRgba("#666", 0.1),
-    borderColor: hexToRgba("#666", 0.2),
-    opacity: 0.7,
+  cardContent: {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  deckIconContainer: {
-    width: isTablet ? 64 : 56,
-    height: isTablet ? 64 : 56,
-    borderRadius: isTablet ? 32 : 28,
-    backgroundColor: hexToRgba(COLORS.primary, 0.2),
+  cardTopSection: {
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: isSmallScreen ? 12 : isTablet ? 20 : 16,
+    flexShrink: 0,
   },
-  deckInfo: {
-    flex: 1,
+  deckCardLastInRow: {
+    marginRight: 0,
   },
-  deckHeader: {
-    flexDirection: "row",
+  deckCardLocked: {
+    backgroundColor: hexToRgba("#333", 0.15),
+    borderColor: hexToRgba("#666", 0.2),
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+  },
+  deckIconContainer: {
+    width: CARD_DIMENSIONS.width * 0.5,
+    height: CARD_DIMENSIONS.width * 0.5,
+    borderRadius: (CARD_DIMENSIONS.width * 0.5) / 2,
+    backgroundColor: hexToRgba(COLORS.primary, 0.15),
     alignItems: "center",
-    marginBottom: 4,
+    justifyContent: "center",
+    position: "relative",
+    flexShrink: 0,
+    borderWidth: 2,
+    borderColor: hexToRgba(COLORS.primary, 0.2),
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  deckIconContainerUnlocked: {
+    borderColor: hexToRgba(COLORS.primary, 0.4),
+    backgroundColor: hexToRgba(COLORS.primary, 0.2),
+  },
+  textContainer: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flex: 1,
+    paddingTop: verticalScale(10),
+    paddingBottom: verticalScale(4),
+    minHeight: 0,
+  },
+  videoOverlay: {
+    position: "absolute",
+    bottom: -scale(2),
+    right: -scale(2),
+    width: scale(32),
+    height: scale(32),
+    borderRadius: scale(16),
+    backgroundColor: COLORS.primary,
+    borderWidth: 2,
+    borderColor: hexToRgba(COLORS.primary, 0.8),
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  videoOverlayInner: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    borderRadius: scale(16),
+    backgroundColor: hexToRgba(COLORS.primary, 0.2),
+  },
+  deckNameContainer: {
+    width: "100%",
+    height: moderateScale(44),
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: verticalScale(6),
   },
   deckName: {
-    fontSize: isSmallScreen ? 18 : isTablet ? 26 : 22,
+    fontSize: moderateScale(16),
     fontWeight: "700",
     color: "#fff",
-    marginRight: 8,
+    textAlign: "center",
+    width: "100%",
+    paddingHorizontal: scale(4),
+    lineHeight: moderateScale(22),
+    letterSpacing: 0.3,
   },
-  deckDescription: {
-    fontSize: isSmallScreen ? 13 : isTablet ? 18 : 15,
-    color: "#ccc",
-    marginBottom: 4,
+  deckNameLocked: {
+    color: "#aaa",
+  },
+  deckCountContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: scale(4),
+    paddingHorizontal: scale(8),
+    paddingVertical: verticalScale(4),
+    backgroundColor: hexToRgba(COLORS.primary, 0.1),
+    borderRadius: scale(12),
+    borderWidth: 1,
+    borderColor: hexToRgba(COLORS.primary, 0.15),
   },
   deckCount: {
-    fontSize: isSmallScreen ? 12 : isTablet ? 16 : 14,
+    fontSize: moderateScale(12),
     color: "#999",
-    fontWeight: "500",
+    fontWeight: "600",
+    textAlign: "center",
+    flexShrink: 0,
+  },
+  deckCountLocked: {
+    color: "#666",
   },
 });

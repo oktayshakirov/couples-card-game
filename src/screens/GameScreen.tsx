@@ -297,6 +297,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             player2Dares={gameState.player2.dares}
             player2Skipped={gameState.player2.skipped}
             onPlayAgain={handlePlayAgain}
+            onChangeDeck={onBackToDecks}
           />
         ) : (
           renderedCards

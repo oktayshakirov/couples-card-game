@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import React from "react";
 import { Card } from "../types/card";
-import { initialCards } from "../data/decks/default";
+import { defaultDeck } from "../data/decks/default";
 
 interface UseCardDeckReturn {
   cards: Card[];
@@ -30,7 +30,7 @@ const shuffleAndAssignIds = (cards: Card[]): Card[] => {
 };
 
 export const useCardDeck = (deckCards?: Card[]): UseCardDeckReturn => {
-  const cardsToUse = deckCards || initialCards;
+  const cardsToUse = deckCards || defaultDeck.cards;
   const [cards, setCards] = useState<Card[]>(() =>
     shuffleAndAssignIds(cardsToUse)
   );

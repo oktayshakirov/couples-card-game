@@ -21,9 +21,7 @@ function cleanupAdInstance() {
   if (interstitial) {
     try {
       interstitial.removeAllListeners();
-    } catch {
-      // Ignore cleanup errors
-    }
+    } catch {}
   }
   detachListeners();
   interstitial = null;
@@ -95,9 +93,7 @@ async function createInterstitialInstance() {
       if (ad) {
         try {
           ad.load();
-        } catch {
-          // Ignore reload errors
-        }
+        } catch {}
       }
     })
   );

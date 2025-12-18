@@ -5,7 +5,6 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
   Dimensions,
 } from "react-native";
 import {
@@ -16,26 +15,30 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Avatar, PlayerInfo, PlayerColor } from "../hooks/useGameState";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
-const { width, height } = Dimensions.get("window");
-const isTablet = width >= 768;
-const isSmallScreen = height < 700;
+const { width } = Dimensions.get("window");
 
-// Calculate button size for 5 items per row
 const ITEMS_PER_ROW = 5;
-const getButtonSize = () => {
-  const screenPadding = isTablet ? 32 : 16;
-  const sectionPadding = isSmallScreen ? 16 : isTablet ? 24 : 18;
-  const gap = isSmallScreen ? 8 : isTablet ? 16 : 10;
-  // Available width = screen width - screen padding - section padding (both sides)
+
+const getResponsiveValues = () => {
+  const screenPadding = width >= 768 ? 32 : scale(16);
+  const sectionPadding = width >= 768 ? 24 : scale(16);
+  const gap = width >= 768 ? 16 : scale(8);
+
   const availableWidth = width - screenPadding * 2 - sectionPadding * 2;
   const totalGapWidth = gap * (ITEMS_PER_ROW - 1);
   const buttonSize = (availableWidth - totalGapWidth) / ITEMS_PER_ROW;
-  return Math.floor(buttonSize);
+
+  return {
+    screenPadding,
+    sectionPadding,
+    gap: Math.floor(gap),
+    buttonSize: Math.floor(buttonSize),
+  };
 };
 
-const BUTTON_SIZE = getButtonSize();
-const GAP_SIZE = isSmallScreen ? 8 : isTablet ? 16 : 10;
+const responsive = getResponsiveValues();
 
 interface PlayerSetupScreenProps {
   player1Info: PlayerInfo;
@@ -61,16 +64,16 @@ const avatars: { value: Avatar; icon: string }[] = [
 ];
 
 const colors: PlayerColor[] = [
-  "#B19CD9", // Pastel Purple
-  "#7FCDCD", // Pastel Teal
-  "#8DB4D4", // Pastel Blue
-  "#8FBC8F", // Pastel Green
-  "#D4A5A5", // Pastel Rose
-  "#A0A0A0", // Grey
-  "#E6A8D3", // Pastel Pink
-  "#F4A460", // Pastel Peach
-  "#B8E6B8", // Pastel Mint
-  "#FFD4A3", // Pastel Apricot
+  "#B19CD9",
+  "#7FCDCD",
+  "#8DB4D4",
+  "#8FBC8F",
+  "#D4A5A5",
+  "#A0A0A0",
+  "#E6A8D3",
+  "#F4A460",
+  "#B8E6B8",
+  "#FFD4A3",
 ];
 
 export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
@@ -126,15 +129,9 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-      <ScrollView
-        contentContainerStyle={[
-          styles.scrollContent,
-          { paddingBottom: Math.max(insets.bottom + 20, 40) },
-        ]}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
+      <View
+        style={[styles.content, { paddingBottom: Math.max(insets.bottom, 20) }]}
       >
-        {/* Header Row with Title and Close Button */}
         <View style={styles.headerRow}>
           <View style={styles.headerSpacer} />
           <Text style={styles.title}>
@@ -146,7 +143,11 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
               onPress={onClose}
               activeOpacity={0.7}
             >
-              <MaterialIcons name="close" size={24} color="#fff" />
+              <MaterialIcons
+                name="close"
+                size={moderateScale(24)}
+                color="#fff"
+              />
             </TouchableOpacity>
           ) : (
             <View style={styles.headerSpacer} />
@@ -157,7 +158,6 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             ? "Update your profiles and continue the game"
             : "Customize your profiles before starting the game"}
         </Text>
-        {/* Player Selector */}
         <View style={styles.playerSelector}>
           <TouchableOpacity
             style={[
@@ -192,9 +192,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             </Text>
           </TouchableOpacity>
         </View>
-        {/* Current Player Setup */}
         <View style={styles.setupSection}>
-          {/* Name Input */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Name</Text>
             <TextInput
@@ -208,7 +206,6 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             />
           </View>
 
-          {/* Avatar Selection */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Avatar</Text>
             <View style={styles.avatarContainer}>
@@ -236,7 +233,9 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
                   >
                     <MaterialIcons
                       name={avatar.icon as any}
-                      size={Math.floor(BUTTON_SIZE * 0.5)}
+                      size={moderateScale(
+                        Math.floor(responsive.buttonSize * 0.5)
+                      )}
                       color={
                         currentInfo.avatar === avatar.value
                           ? currentInfo.color
@@ -249,7 +248,6 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             </View>
           </View>
 
-          {/* Color Selection */}
           <View style={[styles.inputGroup, styles.lastInputGroup]}>
             <Text style={styles.label}>Color</Text>
             <View style={styles.colorContainer}>
@@ -278,7 +276,6 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
           </View>
         </View>
 
-        {/* Start Game Button */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[
@@ -291,7 +288,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             <Text style={styles.startButtonText}>{getButtonText()}</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -301,53 +298,54 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
+  content: {
+    flex: 1,
+    paddingHorizontal: responsive.screenPadding,
+    paddingTop: verticalScale(20),
+    minHeight: 0,
+  },
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: isSmallScreen ? 8 : isTablet ? 12 : 10,
+    marginBottom: verticalScale(6),
   },
   headerSpacer: {
-    width: 44,
-    height: 44,
+    width: scale(44),
+    height: verticalScale(44),
   },
   closeButton: {
-    width: isSmallScreen ? 36 : isTablet ? 44 : 40,
-    height: isSmallScreen ? 36 : isTablet ? 44 : 40,
-    borderRadius: isSmallScreen ? 18 : isTablet ? 22 : 20,
+    width: scale(40),
+    height: verticalScale(40),
+    borderRadius: scale(20),
     backgroundColor: "rgba(255,255,255,0.1)",
     alignItems: "center",
     justifyContent: "center",
   },
-  scrollContent: {
-    paddingHorizontal: isTablet ? 32 : 16,
-    paddingTop: isSmallScreen ? 16 : isTablet ? 24 : 20,
-    paddingBottom: isSmallScreen ? 24 : isTablet ? 32 : 28,
-  },
   title: {
-    fontSize: isSmallScreen ? 26 : isTablet ? 36 : 30,
+    fontSize: moderateScale(30),
     fontWeight: "800",
     color: COLORS.primary,
     flex: 1,
     textAlign: "center",
   },
   subtitle: {
-    fontSize: isSmallScreen ? 13 : isTablet ? 17 : 15,
+    fontSize: moderateScale(15),
     color: "#999",
     textAlign: "center",
-    marginBottom: isSmallScreen ? 20 : isTablet ? 28 : 24,
-    paddingHorizontal: isTablet ? 20 : 0,
+    marginBottom: verticalScale(14),
+    paddingHorizontal: width >= 768 ? 20 : 0,
   },
   playerSelector: {
     flexDirection: "row",
     backgroundColor: "rgba(255,255,255,0.05)",
     borderRadius: 12,
     padding: 4,
-    marginBottom: isSmallScreen ? 20 : isTablet ? 28 : 24,
+    marginBottom: verticalScale(14),
   },
   playerTab: {
     flex: 1,
-    paddingVertical: isSmallScreen ? 10 : 12,
+    paddingVertical: verticalScale(12),
     alignItems: "center",
     borderRadius: 8,
   },
@@ -355,7 +353,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   playerTabText: {
-    fontSize: isSmallScreen ? 14 : isTablet ? 17 : 15,
+    fontSize: moderateScale(15),
     fontWeight: "600",
     color: "#999",
   },
@@ -363,29 +361,32 @@ const styles = StyleSheet.create({
     color: "#FFF",
   },
   setupSection: {
+    flex: 1,
     backgroundColor: "rgba(255,255,255,0.03)",
     borderRadius: 16,
-    padding: isSmallScreen ? 16 : isTablet ? 24 : 18,
-    marginBottom: isSmallScreen ? 20 : isTablet ? 28 : 24,
+    padding: responsive.sectionPadding,
+    marginBottom: verticalScale(12),
+    minHeight: 0,
   },
   inputGroup: {
-    marginBottom: isSmallScreen ? 18 : isTablet ? 26 : 22,
+    marginBottom: verticalScale(14),
+    flexShrink: 1,
   },
   lastInputGroup: {
     marginBottom: 0,
   },
   label: {
-    fontSize: isSmallScreen ? 12 : isTablet ? 15 : 13,
+    fontSize: moderateScale(13),
     fontWeight: "600",
     color: "#FFF",
-    marginBottom: isSmallScreen ? 6 : 8,
+    marginBottom: verticalScale(6),
     letterSpacing: 0.5,
   },
   input: {
     backgroundColor: "rgba(255,255,255,0.08)",
     borderRadius: 12,
-    padding: isSmallScreen ? 12 : isTablet ? 18 : 14,
-    fontSize: isSmallScreen ? 14 : isTablet ? 17 : 15,
+    padding: scale(14),
+    fontSize: moderateScale(15),
     color: "#FFF",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.1)",
@@ -397,16 +398,16 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   avatarButton: {
-    width: BUTTON_SIZE,
-    height: BUTTON_SIZE,
+    width: responsive.buttonSize,
+    height: responsive.buttonSize,
     backgroundColor: "rgba(255,255,255,0.05)",
-    borderRadius: BUTTON_SIZE / 2,
+    borderRadius: responsive.buttonSize / 2,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
     borderColor: "rgba(255,255,255,0.1)",
-    marginRight: GAP_SIZE,
-    marginBottom: GAP_SIZE,
+    marginRight: responsive.gap,
+    marginBottom: responsive.gap,
   },
   avatarButtonLastInRow: {
     marginRight: 0,
@@ -425,13 +426,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   colorButton: {
-    width: BUTTON_SIZE,
-    height: BUTTON_SIZE,
-    borderRadius: BUTTON_SIZE / 2,
+    width: responsive.buttonSize,
+    height: responsive.buttonSize,
+    borderRadius: responsive.buttonSize / 2,
     borderWidth: 2,
     borderColor: "rgba(255,255,255,0.2)",
-    marginRight: GAP_SIZE,
-    marginBottom: GAP_SIZE,
+    marginRight: responsive.gap,
+    marginBottom: responsive.gap,
   },
   colorButtonLastInRow: {
     marginRight: 0,
@@ -448,15 +449,16 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   buttonContainer: {
-    marginTop: isSmallScreen ? 24 : isTablet ? 32 : 28,
-    paddingTop: isSmallScreen ? 20 : isTablet ? 28 : 24,
+    marginTop: verticalScale(12),
+    paddingTop: verticalScale(16),
     borderTopWidth: 1,
     borderTopColor: "rgba(177,156,217,0.15)",
+    flexShrink: 0,
   },
   startButton: {
     backgroundColor: COLORS.primary,
     borderRadius: 12,
-    padding: isSmallScreen ? 14 : isTablet ? 20 : 16,
+    padding: scale(16),
     alignItems: "center",
   },
   startButtonDisabled: {
@@ -464,7 +466,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   startButtonText: {
-    fontSize: isSmallScreen ? 16 : isTablet ? 20 : 17,
+    fontSize: moderateScale(17),
     fontWeight: "700",
     color: "#FFF",
   },

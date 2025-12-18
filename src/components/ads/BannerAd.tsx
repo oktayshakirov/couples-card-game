@@ -15,9 +15,7 @@ let MobileAds: any;
     BannerAd = adsModule.BannerAd;
     BannerAdSize = adsModule.BannerAdSize;
   MobileAds = adsModule.MobileAds;
-  } catch (error) {
-  // Native module not available
-}
+  } catch (error) {}
 
 const BannerAdComponent = () => {
   const { requestNonPersonalizedAdsOnly } = useAdConsent();
