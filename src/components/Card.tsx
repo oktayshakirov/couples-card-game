@@ -1,5 +1,11 @@
 import React, { useMemo } from "react";
-import { View, Text, StyleSheet, useWindowDimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  useWindowDimensions,
+  ScrollView,
+} from "react-native";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 
@@ -48,81 +54,82 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
   return (
     <View style={stylesMemo.cardContainer}>
       <View style={[stylesMemo.card, blurred && stylesMemo.blurredCard]}>
-        <View style={stylesMemo.cardGradient}>
-          <View style={stylesMemo.truthSection}>
-            <View style={stylesMemo.sectionLabelContainer}>
-              <Text style={stylesMemo.sectionLabel}>TRUTH</Text>
-            </View>
-            <Text
-              style={[stylesMemo.truthText, { color: currentPlayerColor }]}
-              adjustsFontSizeToFit
-              numberOfLines={4}
-              minimumFontScale={0.6}
-            >
-              {formattedTruth}
-            </Text>
-            <View style={stylesMemo.swipeHint}>
+        <ScrollView
+          style={stylesMemo.scrollView}
+          contentContainerStyle={stylesMemo.scrollContent}
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+        >
+          <View style={stylesMemo.cardGradient}>
+            <View style={stylesMemo.truthSection}>
+              <View style={stylesMemo.sectionLabelContainer}>
+                <Text style={stylesMemo.sectionLabel}>TRUTH</Text>
+              </View>
               <Text
-                style={[stylesMemo.swipeArrow, { color: currentPlayerColor }]}
+                style={[stylesMemo.truthText, { color: currentPlayerColor }]}
               >
-                ←
+                {formattedTruth}
               </Text>
-              <Text
-                style={[
-                  stylesMemo.swipeHintText,
-                  { color: currentPlayerColor },
-                ]}
-              >
-                swipe left
-              </Text>
+              <View style={stylesMemo.swipeHint}>
+                <Text
+                  style={[stylesMemo.swipeArrow, { color: currentPlayerColor }]}
+                >
+                  ←
+                </Text>
+                <Text
+                  style={[
+                    stylesMemo.swipeHintText,
+                    { color: currentPlayerColor },
+                  ]}
+                >
+                  swipe left
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={stylesMemo.divider}>
-            <View
-              style={[
-                stylesMemo.dividerLine,
-                { backgroundColor: hexToRgba(currentPlayerColor, 0.4) },
-              ]}
-            />
-            <Text style={stylesMemo.dividerEmoji}>❤️</Text>
-            <View
-              style={[
-                stylesMemo.dividerLine,
-                { backgroundColor: hexToRgba(currentPlayerColor, 0.4) },
-              ]}
-            />
-          </View>
-
-          <View style={stylesMemo.dareSection}>
-            <View style={stylesMemo.sectionLabelContainer}>
-              <Text style={stylesMemo.sectionLabel}>DARE</Text>
-            </View>
-            <Text
-              style={[stylesMemo.dareText, { color: currentPlayerColor }]}
-              adjustsFontSizeToFit
-              numberOfLines={4}
-              minimumFontScale={0.6}
-            >
-              {formattedDare}
-            </Text>
-            <View style={stylesMemo.swipeHint}>
-              <Text
+            <View style={stylesMemo.divider}>
+              <View
                 style={[
-                  stylesMemo.swipeHintText,
-                  { color: currentPlayerColor },
+                  stylesMemo.dividerLine,
+                  { backgroundColor: hexToRgba(currentPlayerColor, 0.4) },
                 ]}
-              >
-                swipe right
-              </Text>
+              />
+              <Text style={stylesMemo.dividerEmoji}>❤️</Text>
+              <View
+                style={[
+                  stylesMemo.dividerLine,
+                  { backgroundColor: hexToRgba(currentPlayerColor, 0.4) },
+                ]}
+              />
+            </View>
+
+            <View style={stylesMemo.dareSection}>
+              <View style={stylesMemo.sectionLabelContainer}>
+                <Text style={stylesMemo.sectionLabel}>DARE</Text>
+              </View>
               <Text
-                style={[stylesMemo.swipeArrow, { color: currentPlayerColor }]}
+                style={[stylesMemo.dareText, { color: currentPlayerColor }]}
               >
-                →
+                {formattedDare}
               </Text>
+              <View style={stylesMemo.swipeHint}>
+                <Text
+                  style={[
+                    stylesMemo.swipeHintText,
+                    { color: currentPlayerColor },
+                  ]}
+                >
+                  swipe right
+                </Text>
+                <Text
+                  style={[stylesMemo.swipeArrow, { color: currentPlayerColor }]}
+                >
+                  →
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -148,6 +155,13 @@ const createStyles = (width: number, height: number) =>
       borderColor: hexToRgba(COLORS.primary, 0.35),
       overflow: "hidden",
     },
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      flexGrow: 1,
+      minHeight: "100%",
+    },
     cardGradient: {
       flex: 1,
       backgroundColor: COLORS.background,
@@ -156,14 +170,15 @@ const createStyles = (width: number, height: number) =>
       justifyContent: "space-between",
       borderWidth: 1.5,
       borderColor: hexToRgba(COLORS.primary, 0.25),
+      minHeight: "100%",
     },
     blurredCard: {
       opacity: 0.3,
     },
     truthSection: {
-      flex: 1,
+      flexShrink: 0,
       justifyContent: "flex-start",
-      minHeight: 0,
+      marginBottom: verticalScale(8),
     },
     sectionLabelContainer: {
       alignSelf: "flex-start",
@@ -183,15 +198,15 @@ const createStyles = (width: number, height: number) =>
       letterSpacing: 2,
     },
     truthText: {
-      fontSize: moderateScale(24),
+      fontSize: moderateScale(width >= 768 ? 24 : 20),
       fontWeight: "700",
-      lineHeight: moderateScale(32),
+      lineHeight: moderateScale(width >= 768 ? 28 : 26),
       textAlign: "center",
       marginBottom: verticalScale(10),
       textShadowColor: "rgba(0, 0, 0, 0.3)",
       textShadowOffset: { width: 0, height: 1 },
       textShadowRadius: 2,
-      flexShrink: 1,
+      flexShrink: 0,
     },
     divider: {
       flexDirection: "row",
@@ -209,14 +224,14 @@ const createStyles = (width: number, height: number) =>
       marginHorizontal: scale(12),
     },
     dareSection: {
-      flex: 1,
+      flexShrink: 0,
       justifyContent: "flex-start",
-      minHeight: 0,
+      marginTop: verticalScale(8),
     },
     dareText: {
-      fontSize: moderateScale(24),
+      fontSize: moderateScale(width >= 768 ? 24 : 20),
       fontWeight: "600",
-      lineHeight: moderateScale(32),
+      lineHeight: moderateScale(width >= 768 ? 28 : 26),
       textAlign: "center",
       fontStyle: "italic",
       marginBottom: verticalScale(10),
@@ -224,7 +239,7 @@ const createStyles = (width: number, height: number) =>
       textShadowOffset: { width: 0, height: 2 },
       textShadowRadius: 3,
       letterSpacing: 0.2,
-      flexShrink: 1,
+      flexShrink: 0,
     },
     swipeHint: {
       flexDirection: "row",
