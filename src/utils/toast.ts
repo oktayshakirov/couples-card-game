@@ -2,7 +2,10 @@ import { Dimensions } from "react-native";
 import Toast from "react-native-toast-message";
 import { Avatar } from "../hooks/useGameState";
 
-const { width } = Dimensions.get("window");
+const getTopOffset = () => {
+  const { width } = Dimensions.get("window");
+  return width >= 768 ? 100 : 130;
+};
 
 export interface ShowSkipCountdownParams {
   playerName: string;
@@ -44,7 +47,7 @@ export const showSkipCountdown = ({
     text1: playerName,
     text2: `has ${remainingSkips} ${skipsText} left`,
     position: "top",
-    topOffset: width >= 768 ? 100 : 130,
+    topOffset: getTopOffset(),
     visibilityTime: 2500,
     props: {
       playerColor,
@@ -67,7 +70,7 @@ export const showChoiceToast = ({
     text1: playerName,
     text2: `Picked ${choice === "dare" ? "Dare" : "Truth"}`,
     position: "top",
-    topOffset: width >= 768 ? 100 : 130,
+    topOffset: getTopOffset(),
     visibilityTime: 999999,
     props: {
       playerColor,

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
+  useWindowDimensions,
   ActivityIndicator,
 } from "react-native";
 import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
@@ -28,8 +28,6 @@ import { COLORS } from "../constants/colors";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
-const { width } = Dimensions.get("window");
-
 interface DeckScreenProps {
   deck: Deck;
   onSelectDeck: (deck: Deck) => void;
@@ -43,6 +41,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
   onDeckUnlocked,
   onBack,
 }) => {
+  const { width } = useWindowDimensions();
   const [unlocked, setUnlocked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [unlocking, setUnlocking] = useState(false);
@@ -69,11 +68,8 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
 
   useEffect(() => {
     if (!unlocked && !deck.isDefault && !loading) {
+      // Check ad readiness once, then rely on ad load events instead of polling
       checkAdReady();
-      const interval = setInterval(() => {
-        checkAdReady();
-      }, 2000);
-      return () => clearInterval(interval);
     }
   }, [unlocked, loading, deck.isDefault]);
 
@@ -181,10 +177,12 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     }
   };
 
+  const stylesMemo = useMemo(() => createStyles(width), [width]);
+
   if (loading) {
     return (
-      <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-        <View style={styles.loadingContainer}>
+      <SafeAreaView style={stylesMemo.container} edges={["top", "bottom"]}>
+        <View style={stylesMemo.loadingContainer}>
           <ActivityIndicator size="large" color={COLORS.primary} />
         </View>
       </SafeAreaView>
@@ -194,60 +192,60 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
   const canSelect = unlocked || deck.isDefault;
 
   return (
-    <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+    <SafeAreaView style={stylesMemo.container} edges={["top", "bottom"]}>
+      <View style={stylesMemo.header}>
+        <TouchableOpacity onPress={onBack} style={stylesMemo.backButton}>
           <MaterialIcons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.title}>{deck.name}</Text>
-        <View style={styles.placeholder} />
+        <Text style={stylesMemo.title}>{deck.name}</Text>
+        <View style={stylesMemo.placeholder} />
       </View>
 
       <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
+        style={stylesMemo.scrollView}
+        contentContainerStyle={stylesMemo.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.deckHeader}>
-          <View style={styles.iconContainer}>
+          <View style={stylesMemo.iconContainer}>
             <MaterialIcons
               name={deck.icon as any}
               size={width >= 768 ? 48 : moderateScale(44)}
               color={COLORS.primary}
             />
           </View>
-          <Text style={styles.deckName}>{deck.name}</Text>
-          <Text style={styles.deckDescription}>{deck.description}</Text>
-          <View style={styles.statsContainer}>
-            <View style={styles.stat}>
+          <Text style={stylesMemo.deckName}>{deck.name}</Text>
+          <Text style={stylesMemo.deckDescription}>{deck.description}</Text>
+          <View style={stylesMemo.statsContainer}>
+            <View style={stylesMemo.stat}>
               <MaterialIcons name="style" size={20} color={COLORS.primary} />
-              <Text style={styles.statText}>{deck.cards.length} Cards</Text>
+              <Text style={stylesMemo.statText}>{deck.cards.length} Cards</Text>
             </View>
           </View>
         </View>
 
         {!canSelect && (
-          <View style={styles.lockedContainer}>
+          <View style={stylesMemo.lockedContainer}>
             <MaterialIcons
               name="lock"
               size={width >= 768 ? 40 : moderateScale(36)}
               color="#666"
             />
-            <Text style={styles.lockedTitle}>Deck Locked</Text>
-            <Text style={styles.lockedDescription}>
+            <Text style={stylesMemo.lockedTitle}>Deck Locked</Text>
+            <Text style={stylesMemo.lockedDescription}>
               Watch a short ad to unlock this deck
             </Text>
             {!isOnline && (
-              <View style={styles.warningContainer}>
+              <View style={stylesMemo.warningContainer}>
                 <MaterialIcons
                   name="wifi-off"
                   size={width >= 768 ? 28 : moderateScale(24)}
                   color="#FF6B6B"
                 />
-                <Text style={styles.warningText}>
+                <Text style={stylesMemo.warningText}>
                   Internet connection required
                 </Text>
-                <Text style={styles.warningSubtext}>
+                <Text style={stylesMemo.warningSubtext}>
                   Please turn on your internet to unlock this deck
                 </Text>
               </View>
@@ -256,13 +254,13 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         )}
       </ScrollView>
 
-      <View style={styles.buttonContainer}>
+      <View style={stylesMemo.buttonContainer}>
         <TouchableOpacity
           style={[
-            styles.selectButton,
+            stylesMemo.selectButton,
             !canSelect &&
               (unlocking || !isOnline || (!adReady && !adLoading)) &&
-              styles.selectButtonDisabled,
+              stylesMemo.selectButtonDisabled,
           ]}
           onPress={handleSelectDeck}
           disabled={
@@ -272,7 +270,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           {unlocking || (adLoading && !canSelect) ? (
             <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <Text style={styles.selectButtonText}>
+            <Text style={stylesMemo.selectButtonText}>
               {canSelect
                 ? "Select This Deck"
                 : !isOnline
@@ -288,149 +286,152 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: width >= 768 ? 32 : scale(16),
-    paddingVertical: verticalScale(14),
-  },
-  backButton: {
-    padding: 8,
-  },
-  title: {
-    fontSize: moderateScale(26),
-    fontWeight: "700",
-    color: "#fff",
-  },
-  placeholder: {
-    width: 40,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: width >= 768 ? 32 : scale(16),
-    paddingBottom: verticalScale(28),
-  },
-  buttonContainer: {
-    paddingHorizontal: width >= 768 ? 32 : scale(16),
-    paddingVertical: verticalScale(16),
-    paddingBottom: verticalScale(20),
-    backgroundColor: COLORS.background,
-    borderTopWidth: 1,
-    borderTopColor: hexToRgba(COLORS.primary, 0.1),
-  },
-  deckHeader: {
-    alignItems: "center",
-    marginBottom: verticalScale(28),
-  },
-  iconContainer: {
-    width: width >= 768 ? 100 : scale(80),
-    height: width >= 768 ? 100 : scale(80),
-    borderRadius: width >= 768 ? 50 : scale(40),
-    backgroundColor: hexToRgba("#FF6B9D", 0.2),
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: verticalScale(18),
-  },
-  deckName: {
-    fontSize: moderateScale(32),
-    fontWeight: "700",
-    color: "#fff",
-    marginBottom: verticalScale(10),
-  },
-  deckDescription: {
-    fontSize: moderateScale(17),
-    color: "#ccc",
-    textAlign: "center",
-    marginBottom: verticalScale(18),
-    paddingHorizontal: width >= 768 ? 40 : scale(20),
-  },
-  statsContainer: {
-    flexDirection: "row",
-    gap: width >= 768 ? 24 : scale(16),
-  },
-  stat: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  statText: {
-    fontSize: moderateScale(16),
-    color: "#fff",
-    fontWeight: "600",
-  },
-  lockedContainer: {
-    alignItems: "center",
-    backgroundColor: hexToRgba(COLORS.primary, 0.08),
-    borderRadius: scale(20),
-    padding: scale(20),
-    marginBottom: verticalScale(16),
-    borderWidth: 2,
-    borderColor: hexToRgba(COLORS.primary, 0.25),
-  },
-  lockedTitle: {
-    fontSize: moderateScale(20),
-    fontWeight: "700",
-    color: "#fff",
-    marginTop: verticalScale(10),
-    marginBottom: verticalScale(6),
-  },
-  lockedDescription: {
-    fontSize: moderateScale(14),
-    color: "#ccc",
-    textAlign: "center",
-    marginBottom: verticalScale(12),
-  },
-  warningContainer: {
-    alignItems: "center",
-    marginBottom: verticalScale(10),
-    paddingVertical: verticalScale(10),
-    paddingHorizontal: scale(20),
-    backgroundColor: hexToRgba("#FF6B6B", 0.1),
-    borderRadius: scale(14),
-    borderWidth: 1,
-    borderColor: hexToRgba("#FF6B6B", 0.3),
-    width: "100%",
-  },
-  warningText: {
-    fontSize: moderateScale(16),
-    fontWeight: "700",
-    color: "#FF6B6B",
-    marginTop: verticalScale(5),
-    textAlign: "center",
-  },
-  warningSubtext: {
-    fontSize: moderateScale(13),
-    color: "#ccc",
-    marginTop: verticalScale(3),
-    textAlign: "center",
-  },
-  selectButton: {
-    backgroundColor: COLORS.primary,
-    borderRadius: scale(14),
-    paddingVertical: verticalScale(14),
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  selectButtonDisabled: {
-    backgroundColor: "#666",
-    opacity: 0.5,
-  },
-  selectButtonText: {
-    fontSize: moderateScale(20),
-    fontWeight: "700",
-    color: "#fff",
-  },
-});
+const createStyles = (width: number) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: COLORS.background,
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: width >= 768 ? 32 : scale(16),
+      paddingVertical: verticalScale(14),
+    },
+    backButton: {
+      padding: 8,
+    },
+    title: {
+      fontSize: moderateScale(26),
+      fontWeight: "700",
+      color: "#fff",
+    },
+    placeholder: {
+      width: 40,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingHorizontal: width >= 768 ? 32 : scale(16),
+      paddingBottom: verticalScale(28),
+    },
+    buttonContainer: {
+      paddingHorizontal: width >= 768 ? 32 : scale(16),
+      paddingVertical: verticalScale(16),
+      paddingBottom: verticalScale(20),
+      backgroundColor: COLORS.background,
+      borderTopWidth: 1,
+      borderTopColor: hexToRgba(COLORS.primary, 0.1),
+    },
+    deckHeader: {
+      alignItems: "center",
+      marginBottom: verticalScale(28),
+    },
+    iconContainer: {
+      width: width >= 768 ? 100 : scale(80),
+      height: width >= 768 ? 100 : scale(80),
+      borderRadius: width >= 768 ? 50 : scale(40),
+      backgroundColor: hexToRgba("#FF6B9D", 0.2),
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: verticalScale(18),
+    },
+    deckName: {
+      fontSize: moderateScale(32),
+      fontWeight: "700",
+      color: "#fff",
+      marginBottom: verticalScale(10),
+    },
+    deckDescription: {
+      fontSize: moderateScale(17),
+      color: "#ccc",
+      textAlign: "center",
+      marginBottom: verticalScale(18),
+      paddingHorizontal: width >= 768 ? 40 : scale(20),
+    },
+    statsContainer: {
+      flexDirection: "row",
+      gap: width >= 768 ? 24 : scale(16),
+    },
+    stat: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
+    statText: {
+      fontSize: moderateScale(16),
+      color: "#fff",
+      fontWeight: "600",
+    },
+    lockedContainer: {
+      alignItems: "center",
+      backgroundColor: hexToRgba(COLORS.primary, 0.08),
+      borderRadius: scale(20),
+      padding: scale(20),
+      marginBottom: verticalScale(16),
+      borderWidth: 2,
+      borderColor: hexToRgba(COLORS.primary, 0.25),
+    },
+    lockedTitle: {
+      fontSize: moderateScale(20),
+      fontWeight: "700",
+      color: "#fff",
+      marginTop: verticalScale(10),
+      marginBottom: verticalScale(6),
+    },
+    lockedDescription: {
+      fontSize: moderateScale(14),
+      color: "#ccc",
+      textAlign: "center",
+      marginBottom: verticalScale(12),
+    },
+    warningContainer: {
+      alignItems: "center",
+      marginBottom: verticalScale(10),
+      paddingVertical: verticalScale(10),
+      paddingHorizontal: scale(20),
+      backgroundColor: hexToRgba("#FF6B6B", 0.1),
+      borderRadius: scale(14),
+      borderWidth: 1,
+      borderColor: hexToRgba("#FF6B6B", 0.3),
+      width: "100%",
+    },
+    warningText: {
+      fontSize: moderateScale(16),
+      fontWeight: "700",
+      color: "#FF6B6B",
+      marginTop: verticalScale(5),
+      textAlign: "center",
+    },
+    warningSubtext: {
+      fontSize: moderateScale(13),
+      color: "#ccc",
+      marginTop: verticalScale(3),
+      textAlign: "center",
+    },
+    selectButton: {
+      backgroundColor: COLORS.primary,
+      borderRadius: scale(14),
+      paddingVertical: verticalScale(14),
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    selectButtonDisabled: {
+      backgroundColor: "#666",
+      opacity: 0.5,
+    },
+    selectButtonText: {
+      fontSize: moderateScale(20),
+      fontWeight: "700",
+      color: "#fff",
+    },
+  });
+
+const styles = createStyles(0); // Will be recalculated in component

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import React from "react";
 import { Card } from "../types/card";
 import { defaultDeck } from "../data/decks/default";
@@ -55,7 +55,10 @@ export const useCardDeck = (deckCards?: Card[]): UseCardDeckReturn => {
     childRefs.current.clear();
   };
 
-  const currentCard = cards.length > 0 ? cards[cards.length - 1] : null;
+  const currentCard = useMemo(() => 
+    cards.length > 0 ? cards[cards.length - 1] : null,
+    [cards]
+  );
 
   return {
     cards,

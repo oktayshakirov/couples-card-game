@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Modal,
-  Dimensions,
+  useWindowDimensions,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
@@ -16,8 +16,6 @@ import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-
-const { width } = Dimensions.get("window");
 
 interface GameMenuModalProps {
   visible: boolean;
@@ -32,7 +30,19 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
   onEditPlayers,
   onChangeDeck,
 }) => {
+  const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const stylesMemo = useMemo(() => createStyles(width), [width]);
+
+  const handleEditPlayers = () => {
+    onEditPlayers();
+    onClose();
+  };
+
+  const handleChangeDeck = () => {
+    onChangeDeck();
+    onClose();
+  };
 
   return (
     <Modal
@@ -42,47 +52,44 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
       onRequestClose={onClose}
     >
       <TouchableOpacity
-        style={styles.overlay}
+        style={stylesMemo.overlay}
         activeOpacity={1}
         onPress={onClose}
       >
-        <View style={styles.container}>
+        <View style={stylesMemo.container}>
           <TouchableOpacity
             activeOpacity={1}
             onPress={(e) => e.stopPropagation()}
             style={[
-              styles.menuContainer,
+              stylesMemo.menuContainer,
               {
                 paddingTop: Math.max(insets.top, verticalScale(20)),
               },
             ]}
           >
-            <View style={styles.header}>
-              <Text style={styles.title}>Menu</Text>
-              <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <View style={stylesMemo.header}>
+              <Text style={stylesMemo.title}>Menu</Text>
+              <TouchableOpacity onPress={onClose} style={stylesMemo.closeButton}>
                 <MaterialIcons name="close" size={24} color="#fff" />
               </TouchableOpacity>
             </View>
 
-            <View style={styles.optionsContainer}>
+            <View style={stylesMemo.optionsContainer}>
               <TouchableOpacity
-                style={styles.option}
-                onPress={() => {
-                  onEditPlayers();
-                  onClose();
-                }}
+                style={stylesMemo.option}
+                onPress={handleEditPlayers}
                 activeOpacity={0.7}
               >
-                <View style={styles.optionIconContainer}>
+                <View style={stylesMemo.optionIconContainer}>
                   <MaterialIcons
                     name="people"
                     size={moderateScale(28)}
                     color={COLORS.primary}
                   />
                 </View>
-                <View style={styles.optionContent}>
-                  <Text style={styles.optionTitle}>Edit Players</Text>
-                  <Text style={styles.optionDescription}>
+                <View style={stylesMemo.optionContent}>
+                  <Text style={stylesMemo.optionTitle}>Edit Players</Text>
+                  <Text style={stylesMemo.optionDescription}>
                     Change player names, avatars, or colors
                   </Text>
                 </View>
@@ -90,23 +97,20 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.option}
-                onPress={() => {
-                  onChangeDeck();
-                  onClose();
-                }}
+                style={stylesMemo.option}
+                onPress={handleChangeDeck}
                 activeOpacity={0.7}
               >
-                <View style={styles.optionIconContainer}>
+                <View style={stylesMemo.optionIconContainer}>
                   <MaterialIcons
                     name="style"
                     size={moderateScale(28)}
                     color={COLORS.primary}
                   />
                 </View>
-                <View style={styles.optionContent}>
-                  <Text style={styles.optionTitle}>Change Deck</Text>
-                  <Text style={styles.optionDescription}>
+                <View style={stylesMemo.optionContent}>
+                  <Text style={stylesMemo.optionTitle}>Change Deck</Text>
+                  <Text style={stylesMemo.optionDescription}>
                     Select a different card deck
                   </Text>
                 </View>
@@ -120,7 +124,7 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (width: number) => StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.7)",
@@ -192,3 +196,5 @@ const styles = StyleSheet.create({
     color: "#999",
   },
 });
+
+const styles = createStyles(0); // Will be recalculated in component

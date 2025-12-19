@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   View,
   StyleSheet,
   Text,
-  Dimensions,
+  useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -12,8 +12,6 @@ import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-
-const { width } = Dimensions.get("window");
 
 interface GameHeaderProps {
   currentPlayer: 1 | 2;
@@ -48,11 +46,14 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   player2Color,
   onMenuPress,
 }) => {
+  const { width } = useWindowDimensions();
+  const stylesMemo = useMemo(() => createStyles(width), [width]);
+
   return (
-    <View style={styles.header}>
+    <View style={stylesMemo.header}>
       {onMenuPress && (
         <TouchableOpacity
-          style={styles.menuButton}
+          style={stylesMemo.menuButton}
           onPress={onMenuPress}
           activeOpacity={0.7}
         >
@@ -63,17 +64,17 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           />
         </TouchableOpacity>
       )}
-      <View style={styles.playerCard}>
+      <View style={stylesMemo.playerCard}>
         <View
           style={[
-            styles.avatarContainer,
+            stylesMemo.avatarContainer,
             {
               backgroundColor: hexToRgba(player1Color, 0.12),
               borderColor:
                 currentPlayer === 1 ? player1Color : "rgba(255,255,255,0.15)",
             },
             currentPlayer === 1 && [
-              styles.activeAvatarContainer,
+              stylesMemo.activeAvatarContainer,
               {
                 borderColor: player1Color,
                 backgroundColor: hexToRgba(player1Color, 0.15),
@@ -90,58 +91,58 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         </View>
         <Text
           style={[
-            styles.playerLabel,
+            stylesMemo.playerLabel,
             currentPlayer === 1 && [
-              styles.activePlayerLabel,
+              stylesMemo.activePlayerLabel,
               { color: player1Color },
             ],
           ]}
         >
           {player1Name}
         </Text>
-        <View style={styles.statsRow}>
-          <View style={styles.statBadge}>
+        <View style={stylesMemo.statsRow}>
+          <View style={stylesMemo.statBadge}>
             <Ionicons
               name="help-circle"
               size={moderateScale(width >= 768 ? 10 : 12)}
               color="#4A90E2"
             />
-            <Text style={styles.statText}>{player1Truths}</Text>
+            <Text style={stylesMemo.statText}>{player1Truths}</Text>
           </View>
-          <View style={styles.statBadge}>
+          <View style={stylesMemo.statBadge}>
             <Ionicons
               name="flame"
               size={moderateScale(width >= 768 ? 10 : 12)}
               color="#FF6B6B"
             />
-            <Text style={styles.statText}>{player1Dares}</Text>
+            <Text style={stylesMemo.statText}>{player1Dares}</Text>
           </View>
-          <View style={styles.statBadge}>
+          <View style={stylesMemo.statBadge}>
             <Ionicons
               name="close"
               size={moderateScale(width >= 768 ? 10 : 12)}
               color="#999"
             />
-            <Text style={styles.statText}>{player1Skipped}</Text>
+            <Text style={stylesMemo.statText}>{player1Skipped}</Text>
           </View>
         </View>
       </View>
 
-      <View style={styles.vsDivider}>
-        <Text style={styles.vsText}>VS</Text>
+      <View style={stylesMemo.vsDivider}>
+        <Text style={stylesMemo.vsText}>VS</Text>
       </View>
 
-      <View style={styles.playerCard}>
+      <View style={stylesMemo.playerCard}>
         <View
           style={[
-            styles.avatarContainer,
+            stylesMemo.avatarContainer,
             {
               backgroundColor: hexToRgba(player2Color, 0.12),
               borderColor:
                 currentPlayer === 2 ? player2Color : "rgba(255,255,255,0.15)",
             },
             currentPlayer === 2 && [
-              styles.activeAvatarContainer,
+              stylesMemo.activeAvatarContainer,
               {
                 borderColor: player2Color,
                 backgroundColor: hexToRgba(player2Color, 0.15),
@@ -158,39 +159,39 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         </View>
         <Text
           style={[
-            styles.playerLabel,
+            stylesMemo.playerLabel,
             currentPlayer === 2 && [
-              styles.activePlayerLabel,
+              stylesMemo.activePlayerLabel,
               { color: player2Color },
             ],
           ]}
         >
           {player2Name}
         </Text>
-        <View style={styles.statsRow}>
-          <View style={styles.statBadge}>
+        <View style={stylesMemo.statsRow}>
+          <View style={stylesMemo.statBadge}>
             <Ionicons
               name="help-circle"
               size={moderateScale(width >= 768 ? 10 : 12)}
               color="#4A90E2"
             />
-            <Text style={styles.statText}>{player2Truths}</Text>
+            <Text style={stylesMemo.statText}>{player2Truths}</Text>
           </View>
-          <View style={styles.statBadge}>
+          <View style={stylesMemo.statBadge}>
             <Ionicons
               name="flame"
               size={moderateScale(width >= 768 ? 10 : 12)}
               color="#FF6B6B"
             />
-            <Text style={styles.statText}>{player2Dares}</Text>
+            <Text style={stylesMemo.statText}>{player2Dares}</Text>
           </View>
-          <View style={styles.statBadge}>
+          <View style={stylesMemo.statBadge}>
             <Ionicons
               name="close"
               size={moderateScale(width >= 768 ? 10 : 12)}
               color="#999"
             />
-            <Text style={styles.statText}>{player2Skipped}</Text>
+            <Text style={stylesMemo.statText}>{player2Skipped}</Text>
           </View>
         </View>
       </View>
@@ -198,85 +199,88 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: scale(16),
-    paddingVertical: width >= 768 ? verticalScale(4) : verticalScale(8),
-    backgroundColor: "rgba(255,255,255,0.03)",
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(177,156,217,0.15)",
-    position: "relative",
-  },
-  menuButton: {
-    position: "absolute",
-    top: width >= 768 ? verticalScale(4) : verticalScale(8),
-    right: scale(16),
-    width: width >= 768 ? scale(32) : scale(36),
-    height: width >= 768 ? verticalScale(32) : verticalScale(36),
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 10,
-  },
-  playerCard: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: width >= 768 ? verticalScale(1) : verticalScale(2),
-  },
-  avatarContainer: {
-    width: width >= 768 ? scale(36) : scale(42),
-    height: width >= 768 ? scale(36) : scale(42),
-    borderRadius: width >= 768 ? scale(18) : scale(21),
-    borderWidth: 2,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: width >= 768 ? verticalScale(2) : verticalScale(4),
-  },
-  activeAvatarContainer: {
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  playerLabel: {
-    fontSize: width >= 768 ? moderateScale(9) : moderateScale(10),
-    fontWeight: "600",
-    color: "#888",
-    marginBottom: width >= 768 ? verticalScale(2) : verticalScale(4),
-    letterSpacing: 0.5,
-  },
-  activePlayerLabel: {
-    fontWeight: "700",
-  },
-  statsRow: {
-    flexDirection: "row",
-    gap: width >= 768 ? scale(5) : scale(7),
-  },
-  statBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: scale(3),
-    backgroundColor: "rgba(255,255,255,0.05)",
-    paddingHorizontal: width >= 768 ? scale(5) : scale(6),
-    paddingVertical: width >= 768 ? verticalScale(2) : verticalScale(3),
-    borderRadius: 8,
-    minWidth: width >= 768 ? scale(24) : scale(28),
-    justifyContent: "center",
-  },
-  statText: {
-    fontSize: width >= 768 ? moderateScale(10) : moderateScale(11),
-    fontWeight: "700",
-    color: "#FFF",
-  },
-  vsDivider: {
-    paddingHorizontal: scale(10),
-  },
-  vsText: {
-    fontSize: moderateScale(14),
-    fontWeight: "800",
-    color: COLORS.primary,
-    letterSpacing: 1,
-  },
-});
+const createStyles = (width: number) =>
+  StyleSheet.create({
+    header: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: scale(16),
+      paddingVertical: width >= 768 ? verticalScale(4) : verticalScale(8),
+      backgroundColor: "rgba(255,255,255,0.03)",
+      borderBottomWidth: 1,
+      borderBottomColor: "rgba(177,156,217,0.15)",
+      position: "relative",
+    },
+    menuButton: {
+      position: "absolute",
+      top: width >= 768 ? verticalScale(4) : verticalScale(8),
+      right: scale(16),
+      width: width >= 768 ? scale(32) : scale(36),
+      height: width >= 768 ? verticalScale(32) : verticalScale(36),
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 10,
+    },
+    playerCard: {
+      flex: 1,
+      alignItems: "center",
+      paddingVertical: width >= 768 ? verticalScale(1) : verticalScale(2),
+    },
+    avatarContainer: {
+      width: width >= 768 ? scale(36) : scale(42),
+      height: width >= 768 ? scale(36) : scale(42),
+      borderRadius: width >= 768 ? scale(18) : scale(21),
+      borderWidth: 2,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: width >= 768 ? verticalScale(2) : verticalScale(4),
+    },
+    activeAvatarContainer: {
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.4,
+      shadowRadius: 8,
+      elevation: 6,
+    },
+    playerLabel: {
+      fontSize: width >= 768 ? moderateScale(9) : moderateScale(10),
+      fontWeight: "600",
+      color: "#888",
+      marginBottom: width >= 768 ? verticalScale(2) : verticalScale(4),
+      letterSpacing: 0.5,
+    },
+    activePlayerLabel: {
+      fontWeight: "700",
+    },
+    statsRow: {
+      flexDirection: "row",
+      gap: width >= 768 ? scale(5) : scale(7),
+    },
+    statBadge: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: scale(3),
+      backgroundColor: "rgba(255,255,255,0.05)",
+      paddingHorizontal: width >= 768 ? scale(5) : scale(6),
+      paddingVertical: width >= 768 ? verticalScale(2) : verticalScale(3),
+      borderRadius: 8,
+      minWidth: width >= 768 ? scale(24) : scale(28),
+      justifyContent: "center",
+    },
+    statText: {
+      fontSize: width >= 768 ? moderateScale(10) : moderateScale(11),
+      fontWeight: "700",
+      color: "#FFF",
+    },
+    vsDivider: {
+      paddingHorizontal: scale(10),
+    },
+    vsText: {
+      fontSize: moderateScale(14),
+      fontWeight: "800",
+      color: COLORS.primary,
+      letterSpacing: 1,
+    },
+  });
+
+const styles = createStyles(0); // Will be recalculated in component

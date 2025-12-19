@@ -1,17 +1,15 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
+  useWindowDimensions,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { Avatar } from "../hooks/useGameState";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-
-const { width } = Dimensions.get("window");
 
 interface CustomToastProps {
   text1?: string;
@@ -27,6 +25,7 @@ interface CustomToastProps {
 }
 
 const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
+  const { width } = useWindowDimensions();
   const playerColor = props?.playerColor || "#666";
   const playerAvatar = props?.playerAvatar;
   const nextPlayerName = props?.nextPlayerName;
@@ -34,6 +33,8 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
   const onConfirm = props?.onConfirm;
   const onCancel = props?.onCancel;
   const hasButtons = onConfirm && onCancel && nextPlayerName && choice;
+
+  const stylesMemo = useMemo(() => createStyles(width), [width]);
 
   const handleConfirm = () => {
     onConfirm?.();
@@ -48,13 +49,15 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
   return (
     <View
       style={[
-        styles.container,
+        stylesMemo.container,
         { borderLeftColor: playerColor, backgroundColor: "#1a0a0f" },
       ]}
     >
-      <View style={styles.contentRow}>
+      <View style={stylesMemo.contentRow}>
         {playerAvatar && (
-          <View style={[styles.avatarContainer, { borderColor: playerColor }]}>
+          <View
+            style={[stylesMemo.avatarContainer, { borderColor: playerColor }]}
+          >
             <MaterialIcons
               name={playerAvatar as any}
               size={moderateScale(16)}
@@ -62,13 +65,15 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
             />
           </View>
         )}
-        <View style={styles.textContainer}>
+        <View style={stylesMemo.textContainer}>
           {text1 && (
-            <Text style={[styles.text1, { color: playerColor }]}>{text1}</Text>
+            <Text style={[stylesMemo.text1, { color: playerColor }]}>
+              {text1}
+            </Text>
           )}
-          {text2 && <Text style={styles.text2}>{text2}</Text>}
+          {text2 && <Text style={stylesMemo.text2}>{text2}</Text>}
           {hasButtons && (
-            <Text style={styles.questionText}>
+            <Text style={stylesMemo.questionText}>
               {nextPlayerName},{" "}
               {choice === "dare"
                 ? "was the dare completed?"
@@ -77,9 +82,9 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
           )}
         </View>
         {hasButtons && (
-          <View style={styles.buttonsRow}>
+          <View style={stylesMemo.buttonsRow}>
             <TouchableOpacity
-              style={styles.confirmButton}
+              style={stylesMemo.confirmButton}
               onPress={handleConfirm}
               activeOpacity={0.7}
             >
@@ -90,7 +95,7 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.cancelButton}
+              style={stylesMemo.cancelButton}
               onPress={handleCancel}
               activeOpacity={0.7}
             >
@@ -119,88 +124,91 @@ export const toastConfig = {
   ),
 };
 
-const styles = StyleSheet.create({
-  container: {
-    minHeight: verticalScale(90),
-    width: "98%",
-    borderRadius: scale(12),
-    borderLeftWidth: 3,
-    paddingHorizontal: scale(14),
-    paddingVertical: verticalScale(10),
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  contentRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-    gap: scale(10),
-  },
-  avatarContainer: {
-    width: scale(28),
-    height: scale(28),
-    borderRadius: scale(14),
-    borderWidth: 2,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: scale(10),
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
-  },
-  textContainer: {
-    flex: 1,
-    flexDirection: "column",
-  },
-  text1: {
-    fontSize: moderateScale(15),
-    fontWeight: "700",
-    marginBottom: verticalScale(3),
-  },
-  text2: {
-    fontSize: moderateScale(13),
-    color: "#FFF",
-    fontWeight: "400",
-  },
-  questionText: {
-    fontSize: moderateScale(12),
-    color: "#999",
-    fontWeight: "500",
-    fontStyle: "italic",
-    marginTop: verticalScale(6),
-  },
-  buttonsRow: {
-    flexDirection: "row",
-    gap: scale(10),
-    alignItems: "center",
-  },
-  confirmButton: {
-    width: scale(38),
-    height: scale(38),
-    borderRadius: scale(19),
-    backgroundColor: "#50C878",
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  cancelButton: {
-    width: scale(38),
-    height: scale(38),
-    borderRadius: scale(19),
-    backgroundColor: "#FF6B6B",
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-});
+const createStyles = (width: number) =>
+  StyleSheet.create({
+    container: {
+      minHeight: verticalScale(90),
+      width: "98%",
+      borderRadius: scale(12),
+      borderLeftWidth: 3,
+      paddingHorizontal: scale(14),
+      paddingVertical: verticalScale(10),
+      flexDirection: "row",
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 8,
+    },
+    contentRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+      gap: scale(10),
+    },
+    avatarContainer: {
+      width: scale(28),
+      height: scale(28),
+      borderRadius: scale(14),
+      borderWidth: 2,
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: scale(10),
+      backgroundColor: "rgba(255, 255, 255, 0.05)",
+    },
+    textContainer: {
+      flex: 1,
+      flexDirection: "column",
+    },
+    text1: {
+      fontSize: moderateScale(15),
+      fontWeight: "700",
+      marginBottom: verticalScale(3),
+    },
+    text2: {
+      fontSize: moderateScale(13),
+      color: "#FFF",
+      fontWeight: "400",
+    },
+    questionText: {
+      fontSize: moderateScale(12),
+      color: "#999",
+      fontWeight: "500",
+      fontStyle: "italic",
+      marginTop: verticalScale(6),
+    },
+    buttonsRow: {
+      flexDirection: "row",
+      gap: scale(10),
+      alignItems: "center",
+    },
+    confirmButton: {
+      width: scale(38),
+      height: scale(38),
+      borderRadius: scale(19),
+      backgroundColor: "#50C878",
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 4,
+    },
+    cancelButton: {
+      width: scale(38),
+      height: scale(38),
+      borderRadius: scale(19),
+      backgroundColor: "#FF6B6B",
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 4,
+    },
+  });
+
+const styles = createStyles(0); // Will be recalculated in component

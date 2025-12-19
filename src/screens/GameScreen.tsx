@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useMemo, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TinderCard from "react-tinder-card";
@@ -64,7 +64,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   } | null>(null);
   const [restoredCardId, setRestoredCardId] = useState<string | null>(null);
 
-  const getCurrentPlayerInfo = () => {
+  const getCurrentPlayerInfo = useCallback(() => {
     const currentPlayer = gameState.currentPlayer;
     const playerInfo =
       currentPlayer === 1 ? gameState.player1Info : gameState.player2Info;
@@ -77,9 +77,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       avatar: playerInfo.avatar,
       stats: playerStats,
     };
-  };
+  }, [gameState]);
 
-  const getNextPlayerInfo = () => {
+  const getNextPlayerInfo = useCallback(() => {
     const nextPlayer = gameState.currentPlayer === 1 ? 2 : 1;
     return {
       player: nextPlayer,
@@ -88,7 +88,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           ? gameState.player1Info.name
           : gameState.player2Info.name,
     };
-  };
+  }, [gameState]);
 
   const clearConfirmationState = () => {
     pendingConfirmationRef.current = null;
@@ -200,17 +200,17 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     removeCard(cardId);
   };
 
-  const swipeLeft = () => {
+  const swipeLeft = useCallback(() => {
     if (!topCardRef.current || !canSwipe()) return;
     topCardRef.current.swipe("left");
-  };
+  }, []);
 
-  const swipeRight = () => {
+  const swipeRight = useCallback(() => {
     if (!topCardRef.current || !canSwipe()) return;
     topCardRef.current.swipe("right");
-  };
+  }, []);
 
-  const skip = () => {
+  const skip = useCallback(() => {
     if (
       !topCardRef.current ||
       !canPlayerSkip(gameState.currentPlayer) ||
@@ -219,9 +219,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       return;
     isSkippingRef.current = true;
     topCardRef.current.swipe("left");
-  };
+  }, [gameState.currentPlayer, canPlayerSkip]);
 
-  const getVisibleCards = () => {
+  const visibleCards = useMemo(() => {
     if (pendingConfirmation) {
       const pendingCard = cards.find(
         (card) => card.id === pendingConfirmation.cardId
@@ -237,16 +237,14 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     }
 
     return cards.slice(0, MAX_VISIBLE_CARDS);
-  };
-
-  const visibleCards = getVisibleCards();
+  }, [cards, pendingConfirmation, restoredCardId]);
 
   const renderedCards = visibleCards.slice().reverse();
 
-  const handlePlayAgain = () => {
+  const handlePlayAgain = useCallback(() => {
     resetGame();
     resetDeck();
-  };
+  }, [resetGame, resetDeck]);
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
