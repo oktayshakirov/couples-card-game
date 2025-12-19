@@ -39,6 +39,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
 
   const formattedTruth = replacePlaceholders(truth);
   const formattedDare = replacePlaceholders(dare);
+
   return (
     <View style={styles.cardContainer}>
       <View style={[styles.card, blurred && styles.blurredCard]}>
@@ -47,7 +48,12 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
             <View style={styles.sectionLabelContainer}>
               <Text style={styles.sectionLabel}>TRUTH</Text>
             </View>
-            <Text style={[styles.truthText, { color: currentPlayerColor }]}>
+            <Text
+              style={[styles.truthText, { color: currentPlayerColor }]}
+              adjustsFontSizeToFit
+              numberOfLines={4}
+              minimumFontScale={0.6}
+            >
               {formattedTruth}
             </Text>
             <View style={styles.swipeHint}>
@@ -82,7 +88,12 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
             <View style={styles.sectionLabelContainer}>
               <Text style={styles.sectionLabel}>DARE</Text>
             </View>
-            <Text style={[styles.dareText, { color: currentPlayerColor }]}>
+            <Text
+              style={[styles.dareText, { color: currentPlayerColor }]}
+              adjustsFontSizeToFit
+              numberOfLines={4}
+              minimumFontScale={0.6}
+            >
               {formattedDare}
             </Text>
             <View style={styles.swipeHint}>
@@ -105,7 +116,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
 const styles = StyleSheet.create({
   cardContainer: {
     width: width >= 768 ? width * 0.75 : width * 0.92,
-    height: width >= 768 ? height * 0.58 : height * 0.55,
+    height: width >= 768 ? height * 0.64 : height * 0.55,
     borderRadius: scale(32),
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 8 },

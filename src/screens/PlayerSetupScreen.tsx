@@ -19,7 +19,7 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 const { width } = Dimensions.get("window");
 
-const ITEMS_PER_ROW = 5;
+const ITEMS_PER_ROW = width >= 768 ? 10 : 5;
 
 const getResponsiveValues = () => {
   const screenPadding = width >= 768 ? 32 : scale(16);
@@ -234,7 +234,9 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
                     <MaterialIcons
                       name={avatar.icon as any}
                       size={moderateScale(
-                        Math.floor(responsive.buttonSize * 0.5)
+                        Math.floor(
+                          responsive.buttonSize * (width >= 768 ? 0.4 : 0.5)
+                        )
                       )}
                       color={
                         currentInfo.avatar === avatar.value

@@ -20,7 +20,7 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 const { width } = Dimensions.get("window");
 
-const CARDS_PER_ROW = 2;
+const CARDS_PER_ROW = width >= 768 ? 3 : 2;
 const getCardDimensions = () => {
   const screenPadding = width >= 768 ? 32 : scale(16);
   const gap = scale(16);
@@ -36,6 +36,11 @@ const getCardDimensions = () => {
 
 const CARD_DIMENSIONS = getCardDimensions();
 const CARD_GAP = scale(16);
+
+const LOCK_ICON_SIZE = width >= 768 ? scale(24) : scale(32);
+const LOCK_ICON_BORDER_RADIUS = width >= 768 ? scale(12) : scale(16);
+const LOCK_ICON_BORDER_WIDTH = width >= 768 ? 1.5 : 2;
+const LOCK_ICON_ICON_SIZE = width >= 768 ? 14 : 18;
 
 interface DecksLibraryScreenProps {
   onSelectDeck: (deck: Deck) => void;
@@ -136,7 +141,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
                           <View style={styles.videoOverlayInner} />
                           <MaterialIcons
                             name="lock"
-                            size={moderateScale(18)}
+                            size={moderateScale(LOCK_ICON_ICON_SIZE)}
                             color="#fff"
                           />
                         </View>
@@ -307,11 +312,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: -scale(2),
     right: -scale(2),
-    width: scale(32),
-    height: scale(32),
-    borderRadius: scale(16),
+    width: LOCK_ICON_SIZE,
+    height: LOCK_ICON_SIZE,
+    borderRadius: LOCK_ICON_BORDER_RADIUS,
     backgroundColor: COLORS.primary,
-    borderWidth: 2,
+    borderWidth: LOCK_ICON_BORDER_WIDTH,
     borderColor: hexToRgba(COLORS.primary, 0.8),
     alignItems: "center",
     justifyContent: "center",
@@ -325,7 +330,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     height: "100%",
-    borderRadius: scale(16),
+    borderRadius: LOCK_ICON_BORDER_RADIUS,
     backgroundColor: hexToRgba(COLORS.primary, 0.2),
   },
   deckNameContainer: {

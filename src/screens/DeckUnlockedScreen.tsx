@@ -105,7 +105,7 @@ export const DeckUnlockedScreen: React.FC<DeckUnlockedScreenProps> = ({
               <>
                 <MaterialIcons
                   name="style"
-                  size={width >= 768 ? 24 : moderateScale(20)}
+                  size={width >= 768 ? 48 : moderateScale(20)}
                   color={COLORS.background}
                 />
                 <Text style={styles.actionButtonText}>START PLAYING!</Text>

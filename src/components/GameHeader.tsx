@@ -13,6 +13,8 @@ import { COLORS } from "../constants/colors";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
+const { width } = Dimensions.get("window");
+
 interface GameHeaderProps {
   currentPlayer: 1 | 2;
   player1Dares: number;
@@ -54,7 +56,11 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           onPress={onMenuPress}
           activeOpacity={0.7}
         >
-          <MaterialIcons name="menu" size={moderateScale(22)} color="#999" />
+          <MaterialIcons
+            name="menu"
+            size={moderateScale(width >= 768 ? 20 : 22)}
+            color="#999"
+          />
         </TouchableOpacity>
       )}
       <View style={styles.playerCard}>
@@ -78,7 +84,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         >
           <MaterialIcons
             name={player1Avatar as any}
-            size={moderateScale(22)}
+            size={moderateScale(width >= 768 ? 18 : 22)}
             color={currentPlayer === 1 ? player1Color : "#999"}
           />
         </View>
@@ -97,17 +103,25 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           <View style={styles.statBadge}>
             <Ionicons
               name="help-circle"
-              size={moderateScale(12)}
+              size={moderateScale(width >= 768 ? 10 : 12)}
               color="#4A90E2"
             />
             <Text style={styles.statText}>{player1Truths}</Text>
           </View>
           <View style={styles.statBadge}>
-            <Ionicons name="flame" size={moderateScale(12)} color="#FF6B6B" />
+            <Ionicons
+              name="flame"
+              size={moderateScale(width >= 768 ? 10 : 12)}
+              color="#FF6B6B"
+            />
             <Text style={styles.statText}>{player1Dares}</Text>
           </View>
           <View style={styles.statBadge}>
-            <Ionicons name="close" size={moderateScale(12)} color="#999" />
+            <Ionicons
+              name="close"
+              size={moderateScale(width >= 768 ? 10 : 12)}
+              color="#999"
+            />
             <Text style={styles.statText}>{player1Skipped}</Text>
           </View>
         </View>
@@ -138,7 +152,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         >
           <MaterialIcons
             name={player2Avatar as any}
-            size={moderateScale(22)}
+            size={moderateScale(width >= 768 ? 18 : 22)}
             color={currentPlayer === 2 ? player2Color : "#999"}
           />
         </View>
@@ -157,17 +171,25 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           <View style={styles.statBadge}>
             <Ionicons
               name="help-circle"
-              size={moderateScale(12)}
+              size={moderateScale(width >= 768 ? 10 : 12)}
               color="#4A90E2"
             />
             <Text style={styles.statText}>{player2Truths}</Text>
           </View>
           <View style={styles.statBadge}>
-            <Ionicons name="flame" size={moderateScale(12)} color="#FF6B6B" />
+            <Ionicons
+              name="flame"
+              size={moderateScale(width >= 768 ? 10 : 12)}
+              color="#FF6B6B"
+            />
             <Text style={styles.statText}>{player2Dares}</Text>
           </View>
           <View style={styles.statBadge}>
-            <Ionicons name="close" size={moderateScale(12)} color="#999" />
+            <Ionicons
+              name="close"
+              size={moderateScale(width >= 768 ? 10 : 12)}
+              color="#999"
+            />
             <Text style={styles.statText}>{player2Skipped}</Text>
           </View>
         </View>
@@ -182,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: scale(16),
-    paddingVertical: verticalScale(8),
+    paddingVertical: width >= 768 ? verticalScale(4) : verticalScale(8),
     backgroundColor: "rgba(255,255,255,0.03)",
     borderBottomWidth: 1,
     borderBottomColor: "rgba(177,156,217,0.15)",
@@ -190,10 +212,10 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     position: "absolute",
-    top: verticalScale(8),
+    top: width >= 768 ? verticalScale(4) : verticalScale(8),
     right: scale(16),
-    width: scale(36),
-    height: verticalScale(36),
+    width: width >= 768 ? scale(32) : scale(36),
+    height: width >= 768 ? verticalScale(32) : verticalScale(36),
     alignItems: "center",
     justifyContent: "center",
     zIndex: 10,
@@ -201,16 +223,16 @@ const styles = StyleSheet.create({
   playerCard: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: verticalScale(2),
+    paddingVertical: width >= 768 ? verticalScale(1) : verticalScale(2),
   },
   avatarContainer: {
-    width: scale(42),
-    height: scale(42),
-    borderRadius: scale(21),
+    width: width >= 768 ? scale(36) : scale(42),
+    height: width >= 768 ? scale(36) : scale(42),
+    borderRadius: width >= 768 ? scale(18) : scale(21),
     borderWidth: 2,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: verticalScale(4),
+    marginBottom: width >= 768 ? verticalScale(2) : verticalScale(4),
   },
   activeAvatarContainer: {
     shadowOffset: { width: 0, height: 0 },
@@ -219,10 +241,10 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   playerLabel: {
-    fontSize: moderateScale(10),
+    fontSize: width >= 768 ? moderateScale(9) : moderateScale(10),
     fontWeight: "600",
     color: "#888",
-    marginBottom: verticalScale(4),
+    marginBottom: width >= 768 ? verticalScale(2) : verticalScale(4),
     letterSpacing: 0.5,
   },
   activePlayerLabel: {
@@ -230,21 +252,21 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: "row",
-    gap: scale(7),
+    gap: width >= 768 ? scale(5) : scale(7),
   },
   statBadge: {
     flexDirection: "row",
     alignItems: "center",
     gap: scale(3),
     backgroundColor: "rgba(255,255,255,0.05)",
-    paddingHorizontal: scale(6),
-    paddingVertical: verticalScale(3),
+    paddingHorizontal: width >= 768 ? scale(5) : scale(6),
+    paddingVertical: width >= 768 ? verticalScale(2) : verticalScale(3),
     borderRadius: 8,
-    minWidth: scale(28),
+    minWidth: width >= 768 ? scale(24) : scale(28),
     justifyContent: "center",
   },
   statText: {
-    fontSize: moderateScale(11),
+    fontSize: width >= 768 ? moderateScale(10) : moderateScale(11),
     fontWeight: "700",
     color: "#FFF",
   },

@@ -35,10 +35,20 @@ export const PendingCard: React.FC<PendingCardProps> = ({
             >
               <Text style={styles.icon}>⏳</Text>
             </View>
-            <Text style={[styles.title, { color: currentPlayerColor }]}>
+            <Text
+              style={[styles.title, { color: currentPlayerColor }]}
+              adjustsFontSizeToFit
+              numberOfLines={2}
+              minimumFontScale={0.7}
+            >
               Waiting for confirmation
             </Text>
-            <Text style={styles.message}>
+            <Text
+              style={styles.message}
+              adjustsFontSizeToFit
+              numberOfLines={3}
+              minimumFontScale={0.7}
+            >
               The next card will appear once {nextPlayerName} confirms.
             </Text>
           </View>
@@ -51,7 +61,7 @@ export const PendingCard: React.FC<PendingCardProps> = ({
 const styles = StyleSheet.create({
   cardContainer: {
     width: width >= 768 ? width * 0.75 : width * 0.92,
-    height: width >= 768 ? height * 0.58 : height * 0.55,
+    height: width >= 768 ? height * 0.55 : height * 0.55,
     borderRadius: scale(32),
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 8 },
@@ -103,7 +113,7 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(36),
   },
   title: {
-    fontSize: moderateScale(24),
+    fontSize: moderateScale(width >= 768 ? 20 : 24),
     fontWeight: "700",
     textAlign: "center",
     marginBottom: verticalScale(20),
@@ -113,11 +123,11 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   message: {
-    fontSize: moderateScale(17),
+    fontSize: moderateScale(width >= 768 ? 15 : 17),
     fontWeight: "500",
     textAlign: "center",
     color: "#aaa",
-    lineHeight: moderateScale(28),
+    lineHeight: moderateScale(width >= 768 ? 24 : 28),
     letterSpacing: 0.2,
   },
 });

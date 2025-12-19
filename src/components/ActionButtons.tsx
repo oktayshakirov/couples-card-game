@@ -11,6 +11,8 @@ import { COLORS } from "../constants/colors";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
+const { width } = Dimensions.get("window");
+
 interface ActionButtonsProps {
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
@@ -75,12 +77,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    gap: scale(30),
+    gap: width >= 768 ? scale(20) : scale(30),
   },
   button: {
-    width: scale(52),
-    height: scale(52),
-    borderRadius: scale(26),
+    width: width >= 768 ? scale(44) : scale(52),
+    height: width >= 768 ? scale(44) : scale(52),
+    borderRadius: width >= 768 ? scale(22) : scale(26),
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
@@ -103,7 +105,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.accent.red,
   },
   buttonText: {
-    fontSize: moderateScale(24),
+    fontSize: width >= 768 ? moderateScale(20) : moderateScale(24),
     color: "#FFF",
     fontWeight: "700",
   },
