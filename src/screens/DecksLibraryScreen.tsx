@@ -236,7 +236,7 @@ const createStyles = (width: number) =>
     },
     closeButton: {
       width: scale(40),
-      height: verticalScale(40),
+      height: scale(40),
       borderRadius: scale(20),
       backgroundColor: "rgba(255,255,255,0.1)",
       alignItems: "center",
@@ -276,7 +276,7 @@ const createStyles = (width: number) =>
     deckCard: {
       backgroundColor: hexToRgba(COLORS.primary, 0.12),
       borderRadius: scale(24),
-      padding: scale(16),
+      padding: width >= 768 ? scale(8) : scale(16),
       borderWidth: 2,
       borderColor: hexToRgba(COLORS.primary, 0.25),
       overflow: "hidden",

@@ -66,7 +66,7 @@ const createStyles = (width: number, height: number) =>
   StyleSheet.create({
     cardContainer: {
       width: width >= 768 ? width * 0.75 : width * 0.92,
-      height: width >= 768 ? height * 0.55 : height * 0.55,
+      height: width >= 768 ? height * 0.64 : height * 0.55,
       borderRadius: scale(32),
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 8 },

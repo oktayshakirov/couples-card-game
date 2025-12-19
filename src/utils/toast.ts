@@ -4,7 +4,7 @@ import { Avatar } from "../hooks/useGameState";
 
 const getTopOffset = () => {
   const { width } = Dimensions.get("window");
-  return width >= 768 ? 100 : 130;
+  return width >= 768 ? 115 : 130;
 };
 
 export interface ShowSkipCountdownParams {

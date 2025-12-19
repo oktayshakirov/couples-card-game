@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
   Keyboard,
   TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import {
   SafeAreaView,
@@ -68,25 +69,6 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
   const [activePlayer, setActivePlayer] = useState<1 | 2>(1);
   const insets = useSafeAreaInsets();
 
-  const itemsPerRow = useMemo(() => (width >= 768 ? 10 : 5), [width]);
-
-  const responsive = useMemo(() => {
-    const screenPadding = width >= 768 ? 32 : scale(16);
-    const sectionPadding = width >= 768 ? 24 : scale(16);
-    const gap = width >= 768 ? 16 : scale(8);
-
-    const availableWidth = width - screenPadding * 2 - sectionPadding * 2;
-    const totalGapWidth = gap * (itemsPerRow - 1);
-    const buttonSize = (availableWidth - totalGapWidth) / itemsPerRow;
-
-    return {
-      screenPadding,
-      sectionPadding,
-      gap: Math.floor(gap),
-      buttonSize: Math.floor(buttonSize),
-    };
-  }, [width, itemsPerRow]);
-
   const currentInfo = activePlayer === 1 ? player1Info : player2Info;
   const updateCurrentPlayer =
     activePlayer === 1 ? onUpdatePlayer1 : onUpdatePlayer2;
@@ -96,10 +78,10 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
 
   const canContinue = currentInfo.name.trim() !== "";
 
-  const stylesMemo = useMemo(
-    () => createStyles(width, responsive),
-    [width, responsive]
-  );
+  const { stylesMemo, iconSize } = useMemo(() => {
+    const result = createStyles(width);
+    return { stylesMemo: result.styles, iconSize: result.iconSize };
+  }, [width]);
 
   const getButtonText = () => {
     if (isEditing) {
@@ -133,104 +115,114 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
 
   return (
     <SafeAreaView style={stylesMemo.container} edges={["top", "bottom"]}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View
-          style={[
-            stylesMemo.content,
-            { paddingBottom: Math.max(insets.bottom, 20) },
-          ]}
-        >
-          <View style={stylesMemo.headerRow}>
-            <View style={stylesMemo.headerSpacer} />
-            <Text style={stylesMemo.title}>
-              {isEditing ? "Edit Players" : "Setup Players"}
+      <View style={stylesMemo.header}>
+        <View style={stylesMemo.headerSpacer} />
+        <Text style={stylesMemo.title}>
+          {isEditing ? "Edit Players" : "Setup Players"}
+        </Text>
+        {isEditing && onClose ? (
+          <TouchableOpacity
+            style={stylesMemo.closeButton}
+            onPress={onClose}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons name="close" size={moderateScale(24)} color="#fff" />
+          </TouchableOpacity>
+        ) : (
+          <View style={stylesMemo.headerSpacer} />
+        )}
+      </View>
+
+      <ScrollView
+        style={stylesMemo.scrollView}
+        contentContainerStyle={[
+          stylesMemo.scrollContent,
+          { paddingBottom: Math.max(insets.bottom, 20) },
+        ]}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View>
+            <Text style={stylesMemo.subtitle}>
+              {isEditing
+                ? "Update your profiles and continue the game"
+                : "Customize your profiles before starting the game"}
             </Text>
-            {isEditing && onClose ? (
+
+            <View style={stylesMemo.playerSelector}>
               <TouchableOpacity
-                style={stylesMemo.closeButton}
-                onPress={onClose}
-                activeOpacity={0.7}
+                style={[
+                  stylesMemo.playerTab,
+                  activePlayer === 1 && stylesMemo.activePlayerTab,
+                ]}
+                onPress={() => setActivePlayer(1)}
               >
                 <MaterialIcons
-                  name="close"
-                  size={moderateScale(24)}
-                  color="#fff"
+                  name="person"
+                  size={moderateScale(18)}
+                  color={activePlayer === 1 ? "#FFF" : "#999"}
+                  style={stylesMemo.playerTabIcon}
                 />
+                <Text
+                  style={[
+                    stylesMemo.playerTabText,
+                    activePlayer === 1 && stylesMemo.activePlayerTabText,
+                  ]}
+                >
+                  Player 1
+                </Text>
               </TouchableOpacity>
-            ) : (
-              <View style={stylesMemo.headerSpacer} />
-            )}
-          </View>
-          <Text style={stylesMemo.subtitle}>
-            {isEditing
-              ? "Update your profiles and continue the game"
-              : "Customize your profiles before starting the game"}
-          </Text>
-          <View style={stylesMemo.playerSelector}>
-            <TouchableOpacity
-              style={[
-                stylesMemo.playerTab,
-                activePlayer === 1 && stylesMemo.activePlayerTab,
-              ]}
-              onPress={() => setActivePlayer(1)}
-            >
-              <Text
+              <TouchableOpacity
                 style={[
-                  stylesMemo.playerTabText,
-                  activePlayer === 1 && stylesMemo.activePlayerTabText,
+                  stylesMemo.playerTab,
+                  activePlayer === 2 && stylesMemo.activePlayerTab,
                 ]}
+                onPress={() => setActivePlayer(2)}
               >
-                Player 1
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                stylesMemo.playerTab,
-                activePlayer === 2 && stylesMemo.activePlayerTab,
-              ]}
-              onPress={() => setActivePlayer(2)}
-            >
-              <Text
-                style={[
-                  stylesMemo.playerTabText,
-                  activePlayer === 2 && stylesMemo.activePlayerTabText,
-                ]}
-              >
-                Player 2
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={stylesMemo.setupSection}>
-            <View style={stylesMemo.inputGroup}>
-              <Text style={stylesMemo.label}>Name</Text>
-              <TextInput
-                style={stylesMemo.input}
-                placeholder={`Enter Player ${activePlayer}'s name`}
-                placeholderTextColor="#666"
-                value={currentInfo.name}
-                onChangeText={(text) => updateCurrentPlayer({ name: text })}
-                autoCorrect={false}
-                autoCapitalize="words"
-                returnKeyType="done"
-                onSubmitEditing={Keyboard.dismiss}
-              />
+                <MaterialIcons
+                  name="person"
+                  size={moderateScale(18)}
+                  color={activePlayer === 2 ? "#FFF" : "#999"}
+                  style={stylesMemo.playerTabIcon}
+                />
+                <Text
+                  style={[
+                    stylesMemo.playerTabText,
+                    activePlayer === 2 && stylesMemo.activePlayerTabText,
+                  ]}
+                >
+                  Player 2
+                </Text>
+              </TouchableOpacity>
             </View>
 
-            <View style={stylesMemo.inputGroup}>
-              <Text style={stylesMemo.label}>Avatar</Text>
-              <View style={stylesMemo.avatarContainer}>
-                {avatars.map((avatar, index) => {
-                  const isLastInRow = (index + 1) % itemsPerRow === 0;
-                  const isInLastRow = index >= avatars.length - itemsPerRow;
-                  return (
+            <View style={stylesMemo.setupCard}>
+              <View style={stylesMemo.section}>
+                <Text style={stylesMemo.label}>Name</Text>
+                <TextInput
+                  style={stylesMemo.input}
+                  placeholder={`Enter Player ${activePlayer}'s name`}
+                  placeholderTextColor="#666"
+                  value={currentInfo.name}
+                  onChangeText={(text) => updateCurrentPlayer({ name: text })}
+                  autoCorrect={false}
+                  autoCapitalize="words"
+                  returnKeyType="done"
+                  onSubmitEditing={Keyboard.dismiss}
+                />
+              </View>
+
+              <View style={stylesMemo.section}>
+                <Text style={stylesMemo.label}>Avatar</Text>
+                <View style={stylesMemo.optionsContainer}>
+                  {avatars.map((avatar) => (
                     <TouchableOpacity
                       key={avatar.value}
                       style={[
-                        stylesMemo.avatarButton,
-                        isLastInRow && stylesMemo.avatarButtonLastInRow,
-                        isInLastRow && stylesMemo.avatarButtonLastRow,
+                        stylesMemo.optionButton,
                         currentInfo.avatar === avatar.value && [
-                          stylesMemo.activeAvatarButton,
+                          stylesMemo.activeOptionButton,
                           {
                             borderColor: currentInfo.color,
                             backgroundColor: hexToRgba(currentInfo.color, 0.15),
@@ -243,11 +235,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
                     >
                       <MaterialIcons
                         name={avatar.icon as any}
-                        size={moderateScale(
-                          Math.floor(
-                            responsive.buttonSize * (width >= 768 ? 0.4 : 0.5)
-                          )
-                        )}
+                        size={iconSize}
                         color={
                           currentInfo.avatar === avatar.value
                             ? currentInfo.color
@@ -255,125 +243,124 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
                         }
                       />
                     </TouchableOpacity>
-                  );
-                })}
+                  ))}
+                </View>
               </View>
-            </View>
 
-            <View style={[stylesMemo.inputGroup, stylesMemo.lastInputGroup]}>
-              <Text style={stylesMemo.label}>Color</Text>
-              <View style={stylesMemo.colorContainer}>
-                {colors.map((color, index) => {
-                  const isLastInRow = (index + 1) % itemsPerRow === 0;
-                  const isInLastRow = index >= colors.length - itemsPerRow;
-                  return (
+              <View style={stylesMemo.section}>
+                <Text style={stylesMemo.label}>Color</Text>
+                <View style={stylesMemo.optionsContainer}>
+                  {colors.map((color) => (
                     <TouchableOpacity
                       key={color}
                       style={[
                         stylesMemo.colorButton,
-                        isLastInRow && stylesMemo.colorButtonLastInRow,
-                        isInLastRow && stylesMemo.colorButtonLastRow,
+                        { backgroundColor: color },
                         currentInfo.color === color &&
                           stylesMemo.activeColorButton,
-                        { backgroundColor: color },
-                        currentInfo.color === color && {
-                          borderWidth: 3,
-                          borderColor: "#FFF",
-                        },
                       ]}
                       onPress={() => updateCurrentPlayer({ color })}
                     />
-                  );
-                })}
+                  ))}
+                </View>
               </View>
             </View>
-          </View>
 
-          <View style={stylesMemo.buttonContainer}>
             <TouchableOpacity
               style={[
-                stylesMemo.startButton,
-                isButtonDisabled() && stylesMemo.startButtonDisabled,
+                stylesMemo.actionButton,
+                isButtonDisabled() && stylesMemo.actionButtonDisabled,
               ]}
               onPress={handleButtonPress}
               disabled={isButtonDisabled()}
             >
-              <Text style={stylesMemo.startButtonText}>{getButtonText()}</Text>
+              <Text style={stylesMemo.actionButtonText}>{getButtonText()}</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
-const createStyles = (
-  width: number,
-  responsive: {
-    screenPadding: number;
-    sectionPadding: number;
-    gap: number;
-    buttonSize: number;
-  }
-) =>
-  StyleSheet.create({
+const createStyles = (width: number) => {
+  const isTablet = width >= 768;
+  const padding = isTablet ? scale(32) : scale(20);
+  const cardPadding = isTablet ? scale(24) : scale(20);
+  const maxContentWidth = isTablet ? 600 : width - padding * 2;
+
+  // Calculate button size: 5 items per row with consistent spacing
+  const itemsPerRow = 5;
+  const gap = isTablet ? scale(12) : scale(10);
+  const availableWidth = maxContentWidth - cardPadding * 2;
+  const totalGapWidth = gap * (itemsPerRow - 1);
+  const buttonSize = Math.floor((availableWidth - totalGapWidth) / itemsPerRow);
+  const iconSize = Math.floor(buttonSize * 0.5);
+
+  const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: COLORS.background,
     },
-    content: {
-      flex: 1,
-      paddingHorizontal: responsive.screenPadding,
-      paddingTop: verticalScale(20),
-      minHeight: 0,
-    },
-    headerRow: {
+    header: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      marginBottom: verticalScale(6),
+      paddingHorizontal: padding,
+      paddingTop: verticalScale(16),
+      paddingBottom: verticalScale(4),
     },
     headerSpacer: {
       width: scale(44),
-      height: verticalScale(44),
     },
     closeButton: {
       width: scale(40),
-      height: verticalScale(40),
+      height: scale(40),
       borderRadius: scale(20),
       backgroundColor: "rgba(255,255,255,0.1)",
       alignItems: "center",
       justifyContent: "center",
     },
     title: {
-      fontSize: moderateScale(30),
+      fontSize: moderateScale(28),
       fontWeight: "800",
       color: COLORS.primary,
-      flex: 1,
       textAlign: "center",
+      flex: 1,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingHorizontal: padding,
+      paddingTop: verticalScale(2),
     },
     subtitle: {
-      fontSize: moderateScale(15),
+      fontSize: moderateScale(14),
       color: "#999",
       textAlign: "center",
-      marginBottom: verticalScale(14),
-      paddingHorizontal: width >= 768 ? 20 : 0,
+      marginBottom: verticalScale(8),
     },
     playerSelector: {
       flexDirection: "row",
       backgroundColor: "rgba(255,255,255,0.05)",
       borderRadius: 12,
       padding: 4,
-      marginBottom: verticalScale(14),
+      marginBottom: verticalScale(20),
     },
     playerTab: {
       flex: 1,
+      flexDirection: "row",
       paddingVertical: verticalScale(12),
       alignItems: "center",
+      justifyContent: "center",
       borderRadius: 8,
     },
     activePlayerTab: {
       backgroundColor: COLORS.primary,
+    },
+    playerTabIcon: {
+      marginRight: scale(6),
     },
     playerTabText: {
       fontSize: moderateScale(15),
@@ -383,121 +370,86 @@ const createStyles = (
     activePlayerTabText: {
       color: "#FFF",
     },
-    setupSection: {
-      flex: 1,
+    setupCard: {
       backgroundColor: "rgba(255,255,255,0.03)",
       borderRadius: 16,
-      padding: responsive.sectionPadding,
-      marginBottom: verticalScale(12),
-      minHeight: 0,
+      padding: cardPadding,
+      marginBottom: verticalScale(24),
+      maxWidth: maxContentWidth,
+      alignSelf: "center",
+      width: "100%",
     },
-    inputGroup: {
-      marginBottom: verticalScale(14),
-      flexShrink: 1,
-    },
-    lastInputGroup: {
-      marginBottom: 0,
+    section: {
+      marginBottom: verticalScale(24),
     },
     label: {
-      fontSize: moderateScale(13),
+      fontSize: moderateScale(14),
       fontWeight: "600",
       color: "#FFF",
-      marginBottom: verticalScale(6),
-      letterSpacing: 0.5,
+      marginBottom: verticalScale(12),
     },
     input: {
       backgroundColor: "rgba(255,255,255,0.08)",
       borderRadius: 12,
       padding: scale(14),
-      fontSize: moderateScale(15),
+      fontSize: moderateScale(16),
       color: "#FFF",
       borderWidth: 1,
       borderColor: "rgba(255,255,255,0.1)",
     },
-    avatarContainer: {
+    optionsContainer: {
       flexDirection: "row",
       flexWrap: "wrap",
-      justifyContent: "flex-start",
-      width: "100%",
+      gap: gap,
     },
-    avatarButton: {
-      width: responsive.buttonSize,
-      height: responsive.buttonSize,
+    optionButton: {
+      width: buttonSize,
+      height: buttonSize,
       backgroundColor: "rgba(255,255,255,0.05)",
-      borderRadius: responsive.buttonSize / 2,
+      borderRadius: buttonSize / 2,
       alignItems: "center",
       justifyContent: "center",
       borderWidth: 2,
       borderColor: "rgba(255,255,255,0.1)",
-      marginRight: responsive.gap,
-      marginBottom: responsive.gap,
     },
-    avatarButtonLastInRow: {
-      marginRight: 0,
-    },
-    avatarButtonLastRow: {
-      marginBottom: 0,
-    },
-    activeAvatarButton: {
-      borderColor: COLORS.primary,
-      backgroundColor: hexToRgba(COLORS.primary, 0.15),
-    },
-    colorContainer: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "flex-start",
-      width: "100%",
+    activeOptionButton: {
+      borderWidth: 2,
     },
     colorButton: {
-      width: responsive.buttonSize,
-      height: responsive.buttonSize,
-      borderRadius: responsive.buttonSize / 2,
+      width: buttonSize,
+      height: buttonSize,
+      borderRadius: buttonSize / 2,
       borderWidth: 2,
       borderColor: "rgba(255,255,255,0.2)",
-      marginRight: responsive.gap,
-      marginBottom: responsive.gap,
-    },
-    colorButtonLastInRow: {
-      marginRight: 0,
-    },
-    colorButtonLastRow: {
-      marginBottom: 0,
     },
     activeColorButton: {
-      transform: [{ scale: 1.15 }],
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
-      elevation: 5,
+      borderWidth: 3,
+      borderColor: "#FFF",
+      transform: [{ scale: 1.1 }],
     },
-    buttonContainer: {
-      marginTop: verticalScale(12),
-      paddingTop: verticalScale(16),
-      borderTopWidth: 1,
-      borderTopColor: "rgba(177,156,217,0.15)",
-      flexShrink: 0,
-    },
-    startButton: {
+    actionButton: {
       backgroundColor: COLORS.primary,
       borderRadius: 12,
       padding: scale(16),
       alignItems: "center",
+      marginBottom: verticalScale(20),
+      maxWidth: maxContentWidth,
+      alignSelf: "center",
+      width: "100%",
     },
-    startButtonDisabled: {
+    actionButtonDisabled: {
       backgroundColor: "#444",
       opacity: 0.5,
     },
-    startButtonText: {
+    actionButtonText: {
       fontSize: moderateScale(17),
       fontWeight: "700",
       color: "#FFF",
     },
   });
 
-const styles = createStyles(0, {
-  screenPadding: 0,
-  sectionPadding: 0,
-  gap: 0,
-  buttonSize: 0,
-}); // Will be recalculated in component
+  return {
+    styles,
+    iconSize,
+  };
+};
