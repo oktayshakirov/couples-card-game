@@ -55,8 +55,8 @@ export const useCardDeck = (deckCards?: Card[]): UseCardDeckReturn => {
     childRefs.current.clear();
   };
 
-  const currentCard = useMemo(() => 
-    cards.length > 0 ? cards[cards.length - 1] : null,
+  const currentCard = useMemo(
+    () => (cards.length > 0 ? cards[cards.length - 1] : null),
     [cards]
   );
 

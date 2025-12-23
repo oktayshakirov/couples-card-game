@@ -7,16 +7,16 @@ export interface PlayerStats {
 }
 
 export type Avatar =
-  | "person"
-  | "auto-awesome"
-  | "mood"
-  | "favorite"
-  | "local-florist"
-  | "bedtime"
-  | "pets"
-  | "local-fire-department"
-  | "star"
-  | "celebration";
+  | "face-man"
+  | "face-woman"
+  | "cat"
+  | "dog"
+  | "alien"
+  | "account-cowboy-hat"
+  | "skull"
+  | "flower"
+  | "paw"
+  | "heart";
 
 export type PlayerColor =
   | "#B19CD9"
@@ -71,12 +71,12 @@ const initialGameState: GameState = {
   currentPlayer: 1,
   player1Info: {
     name: "",
-    avatar: "person",
+    avatar: "face-man",
     color: "#B19CD9",
   },
   player2Info: {
     name: "",
-    avatar: "auto-awesome",
+    avatar: "face-woman",
     color: "#8DB4D4",
   },
 };

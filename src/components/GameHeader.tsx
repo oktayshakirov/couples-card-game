@@ -6,7 +6,11 @@ import {
   useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { Avatar, PlayerColor } from "../hooks/useGameState";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
@@ -83,7 +87,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
             ],
           ]}
         >
-          <MaterialIcons
+          <MaterialCommunityIcons
             name={player1Avatar as any}
             size={moderateScale(width >= 768 ? 18 : 22)}
             color={currentPlayer === 1 ? player1Color : "#999"}
@@ -151,7 +155,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
             ],
           ]}
         >
-          <MaterialIcons
+          <MaterialCommunityIcons
             name={player2Avatar as any}
             size={moderateScale(width >= 768 ? 18 : 22)}
             color={currentPlayer === 2 ? player2Color : "#999"}

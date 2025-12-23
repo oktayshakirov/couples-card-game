@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { Avatar } from "../hooks/useGameState";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
@@ -58,7 +58,7 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
           <View
             style={[stylesMemo.avatarContainer, { borderColor: playerColor }]}
           >
-            <MaterialIcons
+            <MaterialCommunityIcons
               name={playerAvatar as any}
               size={moderateScale(16)}
               color={playerColor}

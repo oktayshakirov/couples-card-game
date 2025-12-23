@@ -15,7 +15,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Avatar, PlayerInfo, PlayerColor } from "../hooks/useGameState";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
@@ -32,16 +32,16 @@ interface PlayerSetupScreenProps {
 }
 
 const avatars: { value: Avatar; icon: string }[] = [
-  { value: "person", icon: "person" },
-  { value: "auto-awesome", icon: "auto-awesome" },
-  { value: "mood", icon: "mood" },
-  { value: "favorite", icon: "favorite" },
-  { value: "local-florist", icon: "local-florist" },
-  { value: "bedtime", icon: "bedtime" },
-  { value: "pets", icon: "pets" },
-  { value: "local-fire-department", icon: "local-fire-department" },
-  { value: "star", icon: "star" },
-  { value: "celebration", icon: "celebration" },
+  { value: "face-man", icon: "face-man" },
+  { value: "face-woman", icon: "face-woman" },
+  { value: "cat", icon: "cat" },
+  { value: "dog", icon: "dog" },
+  { value: "alien", icon: "alien" },
+  { value: "account-cowboy-hat", icon: "account-cowboy-hat" },
+  { value: "skull", icon: "skull" },
+  { value: "flower", icon: "flower" },
+  { value: "paw", icon: "paw" },
+  { value: "heart", icon: "heart" },
 ];
 
 const colors: PlayerColor[] = [
@@ -273,7 +273,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
                         updateCurrentPlayer({ avatar: avatar.value })
                       }
                     >
-                      <MaterialIcons
+                      <MaterialCommunityIcons
                         name={avatar.icon as any}
                         size={iconSize}
                         color={
