@@ -4,7 +4,7 @@
     "slug": "love-swipe",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/iOS/Icon-1024.png",
     "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -12,6 +12,7 @@
       "backgroundColor": "#1a0a0f"
     },
     "ios": {
+      "icon": "./assets/iOS/Icon-1024.png",
       "supportsTablet": true,
       "bundleIdentifier": "com.shadev.loveswipe",
       "config": {
@@ -19,8 +20,9 @@
       }
     },
     "android": {
+      "icon": "./assets/Android/playstore-icon.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/Android/playstore-icon.png",
         "backgroundColor": "#1a0a0f"
       },
       "package": "com.shadev.loveswipe",
