@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import {
   SafeAreaView,
@@ -67,7 +68,17 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
 }) => {
   const { width } = useWindowDimensions();
   const [activePlayer, setActivePlayer] = useState<1 | 2>(1);
+  const [isLoading, setIsLoading] = useState(true);
   const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    if (width > 0) {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [width]);
 
   const currentInfo = activePlayer === 1 ? player1Info : player2Info;
   const updateCurrentPlayer =
@@ -85,6 +96,9 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
 
   const getButtonText = () => {
     if (isEditing) {
+      if (activePlayer === 1) {
+        return "Continue";
+      }
       return "Save & Continue";
     }
     if (activePlayer === 1) {
@@ -93,9 +107,20 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
     return "Start Game";
   };
 
+  const getButtonIcon = () => {
+    if (activePlayer === 1) {
+      return "arrow-forward";
+    }
+    return "play-arrow";
+  };
+
   const handleButtonPress = () => {
     if (isEditing) {
-      onStartGame();
+      if (activePlayer === 1) {
+        setActivePlayer(2);
+      } else {
+        onStartGame();
+      }
     } else if (activePlayer === 1) {
       setActivePlayer(2);
     } else {
@@ -105,6 +130,9 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
 
   const isButtonDisabled = () => {
     if (isEditing) {
+      if (activePlayer === 1) {
+        return !canContinue;
+      }
       return !canStartGame;
     }
     if (activePlayer === 1) {
@@ -112,6 +140,26 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
     }
     return !canStartGame;
   };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: COLORS.background }}
+        edges={["top", "bottom"]}
+      >
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: COLORS.background,
+          }}
+        >
+          <ActivityIndicator size="large" color={COLORS.primary} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={stylesMemo.container} edges={["top", "bottom"]}>
@@ -135,10 +183,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
 
       <ScrollView
         style={stylesMemo.scrollView}
-        contentContainerStyle={[
-          stylesMemo.scrollContent,
-          { paddingBottom: Math.max(insets.bottom, 20) },
-        ]}
+        contentContainerStyle={stylesMemo.scrollContent}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
@@ -150,55 +195,50 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
                 : "Customize your profiles before starting the game"}
             </Text>
 
-            <View style={stylesMemo.playerSelector}>
-              <TouchableOpacity
-                style={[
-                  stylesMemo.playerTab,
-                  activePlayer === 1 && stylesMemo.activePlayerTab,
-                ]}
-                onPress={() => setActivePlayer(1)}
-              >
-                <MaterialIcons
-                  name="person"
-                  size={moderateScale(18)}
-                  color={activePlayer === 1 ? "#FFF" : "#999"}
-                  style={stylesMemo.playerTabIcon}
-                />
-                <Text
-                  style={[
-                    stylesMemo.playerTabText,
-                    activePlayer === 1 && stylesMemo.activePlayerTabText,
-                  ]}
-                >
-                  Player 1
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  stylesMemo.playerTab,
-                  activePlayer === 2 && stylesMemo.activePlayerTab,
-                ]}
-                onPress={() => setActivePlayer(2)}
-              >
-                <MaterialIcons
-                  name="person"
-                  size={moderateScale(18)}
-                  color={activePlayer === 2 ? "#FFF" : "#999"}
-                  style={stylesMemo.playerTabIcon}
-                />
-                <Text
-                  style={[
-                    stylesMemo.playerTabText,
-                    activePlayer === 2 && stylesMemo.activePlayerTabText,
-                  ]}
-                >
-                  Player 2
-                </Text>
-              </TouchableOpacity>
-            </View>
-
             <View style={stylesMemo.setupCard}>
               <View style={stylesMemo.section}>
+                <View style={stylesMemo.playerIndicatorContainer}>
+                  <TouchableOpacity
+                    style={stylesMemo.playerIndicator}
+                    onPress={() => setActivePlayer(1)}
+                    activeOpacity={0.7}
+                  >
+                    <MaterialIcons
+                      name="person"
+                      size={moderateScale(18)}
+                      color={activePlayer === 1 ? player1Info.color : "#666"}
+                    />
+                    <Text
+                      style={[
+                        stylesMemo.playerIndicatorText,
+                        activePlayer === 1 &&
+                          stylesMemo.playerIndicatorTextActive,
+                      ]}
+                    >
+                      Player 1
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={stylesMemo.playerIndicator}
+                    onPress={() => setActivePlayer(2)}
+                    activeOpacity={0.7}
+                  >
+                    <MaterialIcons
+                      name="person"
+                      size={moderateScale(18)}
+                      color={activePlayer === 2 ? player2Info.color : "#666"}
+                    />
+                    <Text
+                      style={[
+                        stylesMemo.playerIndicatorText,
+                        activePlayer === 2 &&
+                          stylesMemo.playerIndicatorTextActive,
+                      ]}
+                    >
+                      Player 2
+                    </Text>
+                  </TouchableOpacity>
+                </View>
                 <Text style={stylesMemo.label}>Name</Text>
                 <TextInput
                   style={stylesMemo.input}
@@ -265,20 +305,34 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
                 </View>
               </View>
             </View>
-
-            <TouchableOpacity
-              style={[
-                stylesMemo.actionButton,
-                isButtonDisabled() && stylesMemo.actionButtonDisabled,
-              ]}
-              onPress={handleButtonPress}
-              disabled={isButtonDisabled()}
-            >
-              <Text style={stylesMemo.actionButtonText}>{getButtonText()}</Text>
-            </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>
+
+      <View
+        style={[
+          stylesMemo.buttonContainer,
+          { paddingBottom: Math.max(insets.bottom, verticalScale(16)) },
+        ]}
+      >
+        <TouchableOpacity
+          style={[
+            stylesMemo.actionButton,
+            isButtonDisabled() && stylesMemo.actionButtonDisabled,
+          ]}
+          onPress={handleButtonPress}
+          disabled={isButtonDisabled()}
+        >
+          <Text style={stylesMemo.actionButtonText}>{getButtonText()}</Text>
+          {activePlayer === 1 && (
+            <MaterialIcons
+              name={getButtonIcon() as any}
+              size={moderateScale(20)}
+              color="#FFF"
+            />
+          )}
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -289,7 +343,6 @@ const createStyles = (width: number) => {
   const cardPadding = isTablet ? scale(24) : scale(20);
   const maxContentWidth = isTablet ? 600 : width - padding * 2;
 
-  // Calculate button size: 5 items per row with consistent spacing
   const itemsPerRow = 5;
   const gap = isTablet ? scale(12) : scale(10);
   const availableWidth = maxContentWidth - cardPadding * 2;
@@ -334,53 +387,46 @@ const createStyles = (width: number) => {
     scrollContent: {
       paddingHorizontal: padding,
       paddingTop: verticalScale(2),
+      paddingBottom: verticalScale(20),
     },
     subtitle: {
       fontSize: moderateScale(14),
       color: "#999",
       textAlign: "center",
-      marginBottom: verticalScale(8),
+      marginBottom: verticalScale(12),
     },
-    playerSelector: {
+    playerIndicatorContainer: {
       flexDirection: "row",
-      backgroundColor: "rgba(255,255,255,0.05)",
-      borderRadius: 12,
-      padding: 4,
-      marginBottom: verticalScale(20),
-    },
-    playerTab: {
-      flex: 1,
-      flexDirection: "row",
-      paddingVertical: verticalScale(12),
       alignItems: "center",
       justifyContent: "center",
-      borderRadius: 8,
+      marginBottom: verticalScale(16),
+      gap: scale(16),
     },
-    activePlayerTab: {
-      backgroundColor: COLORS.primary,
+    playerIndicator: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: scale(6),
     },
-    playerTabIcon: {
-      marginRight: scale(6),
+    playerIndicatorText: {
+      fontSize: moderateScale(13),
+      fontWeight: "500",
+      color: "#666",
     },
-    playerTabText: {
-      fontSize: moderateScale(15),
-      fontWeight: "600",
-      color: "#999",
-    },
-    activePlayerTabText: {
+    playerIndicatorTextActive: {
       color: "#FFF",
+      fontWeight: "600",
     },
     setupCard: {
       backgroundColor: "rgba(255,255,255,0.03)",
       borderRadius: 16,
       padding: cardPadding,
-      marginBottom: verticalScale(24),
+      marginBottom: verticalScale(20),
       maxWidth: maxContentWidth,
       alignSelf: "center",
       width: "100%",
     },
     section: {
-      marginBottom: verticalScale(24),
+      marginBottom: verticalScale(20),
     },
     label: {
       fontSize: moderateScale(14),
@@ -427,12 +473,18 @@ const createStyles = (width: number) => {
       borderColor: "#FFF",
       transform: [{ scale: 1.1 }],
     },
+    buttonContainer: {
+      paddingHorizontal: padding,
+      paddingTop: verticalScale(16),
+    },
     actionButton: {
+      flexDirection: "row",
       backgroundColor: COLORS.primary,
       borderRadius: 12,
       padding: scale(16),
       alignItems: "center",
-      marginBottom: verticalScale(20),
+      justifyContent: "center",
+      gap: scale(8),
       maxWidth: maxContentWidth,
       alignSelf: "center",
       width: "100%",
@@ -445,6 +497,12 @@ const createStyles = (width: number) => {
       fontSize: moderateScale(17),
       fontWeight: "700",
       color: "#FFF",
+    },
+    loadingContainer: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: COLORS.background,
     },
   });
 

@@ -7,9 +7,9 @@
     "icon": "./assets/iOS/Icon-1024.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash-icon.jpg",
       "resizeMode": "contain",
-      "backgroundColor": "#1a0a0f"
+      "backgroundColor": "#000000"
     },
     "ios": {
       "icon": "./assets/iOS/Icon-1024.png",
