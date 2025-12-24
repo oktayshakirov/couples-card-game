@@ -75,7 +75,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
     if (width > 0 && height > 0) {
       const timer = setTimeout(() => {
         setIsLoading(false);
-      }, 150);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [width, height]);
