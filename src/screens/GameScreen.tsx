@@ -12,6 +12,7 @@ import { EmptyDeck } from "../components/EmptyDeck";
 import { useGame } from "../contexts/GameContext";
 import { useCardDeck } from "../hooks/useCardDeck";
 import BannerAdComponent from "../components/ads/BannerAd";
+import { showInterstitial } from "../components/ads/InterstitialAd";
 import { COLORS } from "../constants/colors";
 import {
   showSkipCountdown,
@@ -51,6 +52,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const isSkippingRef = useRef<boolean>(false);
   const topCardRef = useRef<any>(null);
   const lastSwipeTimeRef = useRef<number>(0);
+  const swipeCountRef = useRef<number>(0);
   const pendingConfirmationRef = useRef<{
     cardId: string;
     player: number;
@@ -98,6 +100,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     setRestoredCardId(null);
   };
 
+  const incrementSwipeCount = () => {
+    swipeCountRef.current += 1;
+    if (swipeCountRef.current % 5 === 0) {
+      showInterstitial();
+    }
+  };
+
   const handleConfirm = (
     player: 1 | 2,
     statType: "dares" | "truths",
@@ -107,6 +116,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     removeCard(cardId);
     clearConfirmationState();
     switchPlayer();
+    incrementSwipeCount();
   };
 
   const handleCancel = (cardId: string) => {
@@ -173,6 +183,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           });
         }
         switchPlayer();
+        incrementSwipeCount();
       } else {
         const pendingData = {
           cardId,
