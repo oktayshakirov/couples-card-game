@@ -6,6 +6,7 @@ import {
   Text,
   useWindowDimensions,
 } from "react-native";
+import * as Haptics from "expo-haptics";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 
@@ -29,15 +30,26 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   const handleSkip = () => {
     if (canSkip) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       onSkip();
     }
+  };
+
+  const handleSwipeLeft = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onSwipeLeft();
+  };
+
+  const handleSwipeRight = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onSwipeRight();
   };
 
   return (
     <View style={stylesMemo.buttonsContainer}>
       <TouchableOpacity
         style={[stylesMemo.button, stylesMemo.leftButton]}
-        onPress={onSwipeLeft}
+        onPress={handleSwipeLeft}
         activeOpacity={0.7}
       >
         <Text style={[stylesMemo.buttonText, { color: COLORS.accent.blue }]}>
@@ -67,7 +79,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
       <TouchableOpacity
         style={[stylesMemo.button, stylesMemo.rightButton]}
-        onPress={onSwipeRight}
+        onPress={handleSwipeRight}
         activeOpacity={0.7}
       >
         <Text style={[stylesMemo.buttonText, { color: COLORS.accent.red }]}>

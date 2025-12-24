@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
+import * as Haptics from "expo-haptics";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { Avatar } from "../hooks/useGameState";
@@ -37,11 +38,13 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
   const stylesMemo = useMemo(() => createStyles(width), [width]);
 
   const handleConfirm = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onConfirm?.();
     Toast.hide();
   };
 
   const handleCancel = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onCancel?.();
     Toast.hide();
   };

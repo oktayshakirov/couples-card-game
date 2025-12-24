@@ -2,6 +2,7 @@ import React, { useRef, useState, useMemo, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TinderCard from "react-tinder-card";
+import * as Haptics from "expo-haptics";
 import { SwipeCard } from "../components/Card";
 import { PendingCard } from "../components/PendingCard";
 import { GameHeader } from "../components/GameHeader";
@@ -130,6 +131,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const onSwipe = (direction: string, cardId: string) => {
     if (!canSwipe()) return;
 
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
     restoredCardIdRef.current = null;
     setRestoredCardId(null);
 
@@ -197,6 +200,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     if (isPending || isRestored) {
       return;
     }
+
     removeCard(cardId);
   };
 
