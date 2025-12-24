@@ -10,18 +10,19 @@ let BannerAd: any;
 let BannerAdSize: any;
 let MobileAds: any;
 
-  try {
-    const adsModule = require("react-native-google-mobile-ads");
-    BannerAd = adsModule.BannerAd;
-    BannerAdSize = adsModule.BannerAdSize;
+try {
+  const adsModule = require("react-native-google-mobile-ads");
+  BannerAd = adsModule.BannerAd;
+  BannerAdSize = adsModule.BannerAdSize;
   MobileAds = adsModule.MobileAds;
-  } catch (error) {}
+} catch (error) {}
 
 const BannerAdComponent = () => {
   const { requestNonPersonalizedAdsOnly } = useAdConsent();
   const [isAdLoaded, setIsAdLoaded] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [adFailed, setAdFailed] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(0));
   const [adKey, setAdKey] = useState(0);
   const appState = useRef(AppState.currentState);
@@ -45,6 +46,7 @@ const BannerAdComponent = () => {
 
   const handleAdLoaded = () => {
     setIsAdLoaded(true);
+    setAdFailed(false);
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 300,
@@ -54,6 +56,7 @@ const BannerAdComponent = () => {
 
   const handleAdFailedToLoad = () => {
     setIsAdLoaded(false);
+    setAdFailed(true);
   };
 
   useEffect(() => {
@@ -79,6 +82,7 @@ const BannerAdComponent = () => {
         nextAppState === "active"
       ) {
         setIsAdLoaded(false);
+        setAdFailed(false);
         setAdKey((prev) => prev + 1);
         checkConnectivity();
       }
@@ -105,15 +109,26 @@ const BannerAdComponent = () => {
   const showPlaceholder = !canShowAd || !adUnitId;
 
   if (showPlaceholder) {
+    return null;
+  }
+
+  if (!isOnline || adFailed) {
+    return null;
+  }
+
+  if (!isAdLoaded) {
     return (
-      <View style={styles.bannerContainer}>
-        <View style={styles.placeholder}>
-          {!isOnline ? (
-            renderOfflineMessage()
-          ) : (
-            <Text style={styles.placeholderText}>Loading ad...</Text>
-          )}
-        </View>
+      <View style={{ height: 0, overflow: "hidden" }}>
+        <BannerAd
+          key={adKey}
+          unitId={adUnitId!}
+          size={BannerAdSize.ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly,
+          }}
+          onAdLoaded={handleAdLoaded}
+          onAdFailedToLoad={handleAdFailedToLoad}
+        />
       </View>
     );
   }
@@ -123,33 +138,20 @@ const BannerAdComponent = () => {
       style={[
         styles.bannerContainer,
         {
-          opacity: isAdLoaded ? fadeAnim : 1,
-          height: isAdLoaded ? "auto" : 70,
-          overflow: "hidden",
+          opacity: fadeAnim,
         },
       ]}
     >
-      <View style={StyleSheet.absoluteFill}>
-        {!isAdLoaded && (
-        <View style={styles.placeholder}>
-            {!isOnline ? (
-              renderOfflineMessage()
-            ) : (
-              <Text style={styles.placeholderText}>Loading ad...</Text>
-            )}
-          </View>
-        )}
-        </View>
-        <BannerAd
-          key={adKey}
+      <BannerAd
+        key={adKey}
         unitId={adUnitId!}
-          size={BannerAdSize.ADAPTIVE_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly,
-          }}
-          onAdLoaded={handleAdLoaded}
-          onAdFailedToLoad={handleAdFailedToLoad}
-        />
+        size={BannerAdSize.ADAPTIVE_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly,
+        }}
+        onAdLoaded={handleAdLoaded}
+        onAdFailedToLoad={handleAdFailedToLoad}
+      />
     </Animated.View>
   );
 };
