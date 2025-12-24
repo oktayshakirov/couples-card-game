@@ -66,19 +66,19 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
   isEditing = false,
   onClose,
 }) => {
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const [activePlayer, setActivePlayer] = useState<1 | 2>(1);
   const [isLoading, setIsLoading] = useState(true);
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    if (width > 0) {
+    if (width > 0 && height > 0) {
       const timer = setTimeout(() => {
         setIsLoading(false);
-      }, 50);
+      }, 150);
       return () => clearTimeout(timer);
     }
-  }, [width]);
+  }, [width, height]);
 
   const currentInfo = activePlayer === 1 ? player1Info : player2Info;
   const updateCurrentPlayer =

@@ -68,7 +68,6 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
 
   useEffect(() => {
     if (!unlocked && !deck.isDefault && !loading) {
-      // Check ad readiness once, then rely on ad load events instead of polling
       checkAdReady();
     }
   }, [unlocked, loading, deck.isDefault]);
