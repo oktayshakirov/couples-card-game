@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { StatusBar } from "expo-status-bar";
 import Toast from "react-native-toast-message";
+import { OnboardingScreen } from "./src/screens/OnboardingScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GameScreen } from "./src/screens/GameScreen";
 import { PlayerSetupScreen } from "./src/screens/PlayerSetupScreen";
@@ -8,6 +9,10 @@ import { DecksLibraryScreen } from "./src/screens/DecksLibraryScreen";
 import { DeckScreen } from "./src/screens/DeckScreen";
 import { DeckUnlockedScreen } from "./src/screens/DeckUnlockedScreen";
 import { GameProvider, useGame } from "./src/contexts/GameContext";
+import {
+  OnboardingProvider,
+  OnboardingService,
+} from "./src/contexts/OnboardingContext";
 import { toastConfig } from "./src/components/Toast";
 import { Deck } from "./src/types/deck";
 import { defaultDeck } from "./src/data/decks";
@@ -16,13 +21,43 @@ import {
   useGlobalAds,
 } from "./src/components/ads/adsManager";
 
-type Screen = "setup" | "decks" | "deck" | "deckUnlocked" | "game";
+type Screen =
+  | "onboarding"
+  | "setup"
+  | "decks"
+  | "deck"
+  | "deckUnlocked"
+  | "game";
 
 const AppContent = () => {
   const { gameState, updatePlayerInfo, isSetupComplete } = useGame();
-  const [currentScreen, setCurrentScreen] = useState<Screen>("setup");
+  const [currentScreen, setCurrentScreen] = useState<Screen>("onboarding");
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
+  const [onboardingChecked, setOnboardingChecked] = useState(false);
   const hasGameStartedRef = useRef(false);
+
+  const completeOnboarding = useCallback(() => {
+    setCurrentScreen("setup");
+  }, []);
+
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      try {
+        const isCompleted = await OnboardingService.isOnboardingCompleted();
+        if (!isCompleted) {
+          setCurrentScreen("onboarding");
+        } else {
+          setCurrentScreen("setup");
+        }
+      } catch (error) {
+        setCurrentScreen("onboarding");
+      } finally {
+        setOnboardingChecked(true);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, []);
 
   useGlobalAds();
 
@@ -106,7 +141,17 @@ const AppContent = () => {
   }, []);
 
   const renderScreen = () => {
+    if (!onboardingChecked) {
+      return null;
+    }
+
     switch (currentScreen) {
+      case "onboarding":
+        return (
+          <OnboardingProvider value={{ completeOnboarding }}>
+            <OnboardingScreen />
+          </OnboardingProvider>
+        );
       case "setup":
         return (
           <PlayerSetupScreen
