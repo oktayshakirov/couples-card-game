@@ -1,4 +1,10 @@
-import React, { useCallback, useState } from "react";
+import React, {
+  useCallback,
+  useState,
+  useMemo,
+  useRef,
+  useEffect,
+} from "react";
 import {
   View,
   Text,
@@ -26,49 +32,60 @@ interface OnboardingStep {
   description: string;
 }
 
+const ONBOARDING_STEPS: OnboardingStep[] = [
+  {
+    icon: "favorite",
+    title: "Welcome to Love Swipe",
+    description: "Here's what you need to know to get started.",
+  },
+  {
+    icon: "person",
+    title: "Set Up Your Profile",
+    description:
+      "Pick an avatar, choose a name, and pick your favorite color. Make it yours.",
+  },
+  {
+    icon: "favorite",
+    title: "Choose a Deck",
+    description:
+      "Pick a deck that matches your vibe. Each one has different questions and dares.",
+  },
+  {
+    icon: "swap-horiz",
+    title: "Swipe to Pick",
+    description:
+      "Swipe left for Truth, swipe right for Dare. One card, your choice.",
+  },
+  {
+    icon: "block",
+    title: "You Get 3 Skips",
+    description:
+      "Each player can skip 3 cards total. Save them for when you really need them.",
+  },
+  {
+    icon: "check-circle",
+    title: "Your Partner Approves",
+    description:
+      "After you finish, your partner decides if it counts. Be honest or no points.",
+  },
+];
+
 export const OnboardingScreen: React.FC = () => {
   const { completeOnboarding } = useOnboarding();
   const { width } = useWindowDimensions();
   const [currentStep, setCurrentStep] = useState(0);
-  const fadeAnim = React.useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const animationRef = useRef<Animated.CompositeAnimation | null>(null);
 
-  const steps: OnboardingStep[] = [
-    {
-      icon: "favorite",
-      title: "Welcome to Love Swipe",
-      description: "Here's what you need to know to get started.",
-    },
-    {
-      icon: "person",
-      title: "Set Up Your Profile",
-      description:
-        "Pick an avatar, choose a name, and pick your favorite color. Make it yours.",
-    },
-    {
-      icon: "favorite",
-      title: "Choose a Deck",
-      description:
-        "Pick a deck that matches your vibe. Each one has different questions and dares.",
-    },
-    {
-      icon: "swap-horiz",
-      title: "Swipe to Pick",
-      description:
-        "Swipe left for Truth, swipe right for Dare. One card, your choice.",
-    },
-    {
-      icon: "block",
-      title: "You Get 3 Skips",
-      description:
-        "Each player can skip 3 cards total. Save them for when you really need them.",
-    },
-    {
-      icon: "check-circle",
-      title: "Your Partner Approves",
-      description:
-        "After you finish, your partner decides if it counts. Be honest or no points.",
-    },
-  ];
+  const steps = ONBOARDING_STEPS;
+
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        animationRef.current.stop();
+      }
+    };
+  }, []);
 
   const handleGetStarted = useCallback(async () => {
     try {
@@ -76,14 +93,19 @@ export const OnboardingScreen: React.FC = () => {
       await OnboardingService.markOnboardingCompleted();
       completeOnboarding();
     } catch (error) {
-      console.error("Error completing onboarding:", error);
+      if (__DEV__) {
+        console.error("Error completing onboarding:", error);
+      }
     }
   }, [completeOnboarding]);
 
   const handleNext = useCallback(() => {
     if (currentStep < steps.length - 1) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      Animated.sequence([
+      if (animationRef.current) {
+        animationRef.current.stop();
+      }
+      animationRef.current = Animated.sequence([
         Animated.timing(fadeAnim, {
           toValue: 0,
           duration: 150,
@@ -94,15 +116,19 @@ export const OnboardingScreen: React.FC = () => {
           duration: 150,
           useNativeDriver: true,
         }),
-      ]).start();
+      ]);
+      animationRef.current.start();
       setCurrentStep(currentStep + 1);
     }
-  }, [currentStep, fadeAnim]);
+  }, [currentStep, fadeAnim, steps.length]);
 
   const handlePrevious = useCallback(() => {
     if (currentStep > 0) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      Animated.sequence([
+      if (animationRef.current) {
+        animationRef.current.stop();
+      }
+      animationRef.current = Animated.sequence([
         Animated.timing(fadeAnim, {
           toValue: 0,
           duration: 150,
@@ -113,15 +139,25 @@ export const OnboardingScreen: React.FC = () => {
           duration: 150,
           useNativeDriver: true,
         }),
-      ]).start();
+      ]);
+      animationRef.current.start();
       setCurrentStep(currentStep - 1);
     }
   }, [currentStep, fadeAnim]);
 
-  const isLastStep = currentStep === steps.length - 1;
-  const isFirstStep = currentStep === 0;
-  const currentStepData = steps[currentStep];
-  const progress = ((currentStep + 1) / steps.length) * 100;
+  const isLastStep = useMemo(
+    () => currentStep === steps.length - 1,
+    [currentStep, steps.length]
+  );
+  const isFirstStep = useMemo(() => currentStep === 0, [currentStep]);
+  const currentStepData = useMemo(
+    () => steps[currentStep],
+    [currentStep, steps]
+  );
+  const progress = useMemo(
+    () => ((currentStep + 1) / steps.length) * 100,
+    [currentStep, steps.length]
+  );
 
   return (
     <View style={styles.container}>
@@ -138,7 +174,7 @@ export const OnboardingScreen: React.FC = () => {
             ]}
           >
             <Image
-              source={require("../../assets/iOS/Icon-1024.png")}
+              source={require("../../assets/images/icon.png")}
               style={styles.logoImage}
               resizeMode="cover"
             />

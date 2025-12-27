@@ -26,12 +26,22 @@ export async function initializeGoogleMobileAds() {
   }
 }
 
+let initializationTimeout: NodeJS.Timeout | null = null;
+
 export async function initializeGlobalAds() {
   try {
+    if (initializationTimeout) {
+      clearTimeout(initializationTimeout);
+      initializationTimeout = null;
+    }
     await initializeGoogleMobileAds();
     await Promise.all([initializeInterstitial(), loadAppOpenAd()]);
   } catch (error) {
-    setTimeout(() => {
+    if (initializationTimeout) {
+      clearTimeout(initializationTimeout);
+    }
+    initializationTimeout = setTimeout(() => {
+      initializationTimeout = null;
       initializeGlobalAds().catch(() => {});
     }, 5000);
   }
