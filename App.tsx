@@ -15,7 +15,7 @@ import {
 } from "./src/contexts/OnboardingContext";
 import { toastConfig } from "./src/components/Toast";
 import { Deck } from "./src/types/deck";
-import { defaultDeck } from "./src/data/decks";
+import { getDefaultDeck } from "./src/data/decks";
 import {
   initializeGlobalAds,
   useGlobalAds,
@@ -198,7 +198,7 @@ const AppContent = () => {
       case "game":
         return (
           <GameScreen
-            selectedDeck={selectedDeck || defaultDeck}
+            selectedDeck={selectedDeck || getDefaultDeck()}
             onBackToSetup={handleBackToSetup}
             onEditPlayers={handleEditPlayers}
             onBackToDecks={handleBackToDeckLibrary}

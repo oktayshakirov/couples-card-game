@@ -1,10 +1,16 @@
 import { Deck } from "../../types/deck";
-import { defaultDeck } from "./default";
-import { romanticDeck } from "./romantic";
-import { funDeck } from "./fun";
+import { cupidDeck } from "./cupid";
+import { heartsDeck } from "./hearts";
 
-export { defaultDeck } from "./default";
-export { romanticDeck } from "./romantic";
-export { funDeck } from "./fun";
+export { cupidDeck } from "./cupid";
+export { heartsDeck } from "./hearts";
 
-export const allDecks: Deck[] = [defaultDeck, romanticDeck, funDeck];
+export const allDecks: Deck[] = [heartsDeck, cupidDeck];
+
+export const getDefaultDeck = (): Deck => {
+  const defaultDeck = allDecks.find((deck) => deck.isDefault);
+  if (!defaultDeck) {
+    return allDecks[0];
+  }
+  return defaultDeck;
+};
