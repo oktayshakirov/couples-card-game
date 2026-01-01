@@ -7,4 +7,5 @@ export interface Deck {
   icon: string;
   cards: Card[];
   isDefault?: boolean;
+  nsfw?: boolean;
 }

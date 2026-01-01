@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   useWindowDimensions,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -15,22 +16,26 @@ import { getUnlockedDecks } from "../utils/deckStorage";
 import { hexToRgba } from "../utils/colorUtils";
 import { useGame } from "../contexts/GameContext";
 import { COLORS } from "../constants/colors";
+import {
+  getDeckIconSource,
+  isImageIcon,
+  getBadgeIconSource,
+} from "../utils/deckIcons";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 const getCardDimensions = (width: number) => {
-  const CARDS_PER_ROW = width >= 768 ? 3 : 2;
+  const CARDS_PER_ROW = 1;
   const screenPadding = width >= 768 ? 32 : scale(16);
   const gap = scale(16);
   const availableWidth = width - screenPadding * 2;
-  const totalGapWidth = gap * (CARDS_PER_ROW - 1);
-  const cardWidth = (availableWidth - totalGapWidth) / CARDS_PER_ROW;
-  const cardHeight = cardWidth * 1.3;
+  const cardWidth = availableWidth;
+  const cardHeight = width >= 768 ? scale(180) : scale(160);
   return {
     width: Math.floor(cardWidth),
     height: Math.floor(cardHeight),
     cardsPerRow: CARDS_PER_ROW,
-    gap: width >= 768 ? 10 : scale(16),
+    gap: gap,
     lockIconSize: width >= 768 ? scale(24) : scale(32),
     lockIconBorderRadius: width >= 768 ? scale(12) : scale(16),
     lockIconBorderWidth: width >= 768 ? 1.5 : 2,
@@ -112,7 +117,6 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
           {allDecks.map((deck, index) => {
             const isUnlocked =
               unlockedDecks.includes(deck.id) || deck.isDefault;
-            const isLastInRow = (index + 1) % cardDimensions.cardsPerRow === 0;
             return (
               <TouchableOpacity
                 key={deck.id}
@@ -121,11 +125,9 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
                   {
                     width: cardDimensions.width,
                     height: cardDimensions.height,
-                    marginRight: cardDimensions.gap,
                     marginBottom: cardDimensions.gap,
                   },
                   !isUnlocked && stylesMemo.deckCardLocked,
-                  isLastInRow && stylesMemo.deckCardLastInRow,
                 ]}
                 onPress={() => handleDeckPress(deck)}
                 activeOpacity={0.7}
@@ -136,18 +138,30 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
                       style={[
                         stylesMemo.deckIconContainer,
                         {
-                          width: cardDimensions.width * 0.5,
-                          height: cardDimensions.width * 0.5,
-                          borderRadius: (cardDimensions.width * 0.5) / 2,
+                          width: width >= 768 ? scale(80) : scale(70),
+                          height: width >= 768 ? scale(80) : scale(70),
+                          borderRadius: width >= 768 ? scale(40) : scale(35),
                         },
                         isUnlocked && stylesMemo.deckIconContainerUnlocked,
                       ]}
                     >
-                      <MaterialIcons
-                        name={deck.icon as any}
-                        size={moderateScale(cardDimensions.width * 0.24)}
-                        color={isUnlocked ? COLORS.primary : "#666"}
-                      />
+                      {isImageIcon(deck.icon) ? (
+                        <Image
+                          source={getDeckIconSource(deck.icon)}
+                          style={{
+                            width: width >= 768 ? scale(64) : scale(56),
+                            height: width >= 768 ? scale(64) : scale(56),
+                            opacity: isUnlocked ? 1 : 0.5,
+                          }}
+                          resizeMode="contain"
+                        />
+                      ) : (
+                        <MaterialIcons
+                          name={deck.icon as any}
+                          size={width >= 768 ? scale(40) : scale(36)}
+                          color={isUnlocked ? COLORS.primary : "#666"}
+                        />
+                      )}
                       {!isUnlocked && (
                         <View
                           style={[
@@ -207,6 +221,23 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
                         {deck.cards.length} cards
                       </Text>
                     </View>
+                    {deck.nsfw !== undefined && (
+                      <View style={stylesMemo.badgeContainer}>
+                        <Image
+                          source={getBadgeIconSource(deck.nsfw)}
+                          style={stylesMemo.badgeIcon}
+                          resizeMode="contain"
+                        />
+                        <Text
+                          style={[
+                            stylesMemo.badgeText,
+                            !isUnlocked && stylesMemo.badgeTextLocked,
+                          ]}
+                        >
+                          {deck.nsfw ? "Spicy" : "Classic"}
+                        </Text>
+                      </View>
+                    )}
                   </View>
                 </View>
               </TouchableOpacity>
@@ -268,9 +299,6 @@ const createStyles = (width: number) =>
       paddingBottom: verticalScale(28),
     },
     cardsGrid: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "flex-start",
       width: "100%",
     },
     deckCard: {
@@ -289,17 +317,42 @@ const createStyles = (width: number) =>
     cardContent: {
       width: "100%",
       height: "100%",
+      flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
+      paddingHorizontal: width >= 768 ? scale(20) : scale(16),
     },
     cardTopSection: {
-      width: "100%",
       alignItems: "center",
       justifyContent: "center",
       flexShrink: 0,
+      marginRight: width >= 768 ? scale(20) : scale(16),
     },
-    deckCardLastInRow: {
-      marginRight: 0,
+    badgeContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: scale(4),
+      width: width >= 768 ? scale(90) : scale(80),
+      paddingHorizontal: scale(8),
+      paddingVertical: verticalScale(4),
+      backgroundColor: hexToRgba(COLORS.primary, 0.1),
+      borderRadius: scale(12),
+      borderWidth: 1,
+      borderColor: hexToRgba(COLORS.primary, 0.15),
+    },
+    badgeIcon: {
+      width: moderateScale(16),
+      height: moderateScale(16),
+    },
+    badgeText: {
+      fontSize: moderateScale(10),
+      fontWeight: "600",
+      color: COLORS.primary,
+      letterSpacing: 0.5,
+    },
+    badgeTextLocked: {
+      color: "#666",
     },
     deckCardLocked: {
       backgroundColor: hexToRgba("#333", 0.15),
@@ -326,12 +379,9 @@ const createStyles = (width: number) =>
       backgroundColor: hexToRgba(COLORS.primary, 0.2),
     },
     textContainer: {
-      width: "100%",
-      alignItems: "center",
-      justifyContent: "flex-start",
       flex: 1,
-      paddingTop: verticalScale(10),
-      paddingBottom: verticalScale(4),
+      alignItems: "flex-start",
+      justifyContent: "center",
       minHeight: 0,
     },
     videoOverlay: {
@@ -356,19 +406,15 @@ const createStyles = (width: number) =>
     },
     deckNameContainer: {
       width: "100%",
-      height: moderateScale(44),
-      justifyContent: "center",
-      alignItems: "center",
-      marginBottom: verticalScale(6),
+      marginBottom: verticalScale(8),
     },
     deckName: {
-      fontSize: moderateScale(16),
+      fontSize: width >= 768 ? moderateScale(20) : moderateScale(18),
       fontWeight: "700",
       color: "#fff",
-      textAlign: "center",
+      textAlign: "left",
       width: "100%",
-      paddingHorizontal: scale(4),
-      lineHeight: moderateScale(22),
+      lineHeight: width >= 768 ? moderateScale(26) : moderateScale(24),
       letterSpacing: 0.3,
     },
     deckNameLocked: {
@@ -377,7 +423,7 @@ const createStyles = (width: number) =>
     deckCountContainer: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "flex-start",
       gap: scale(4),
       paddingHorizontal: scale(8),
       paddingVertical: verticalScale(4),
@@ -385,6 +431,7 @@ const createStyles = (width: number) =>
       borderRadius: scale(12),
       borderWidth: 1,
       borderColor: hexToRgba(COLORS.primary, 0.15),
+      marginBottom: verticalScale(6),
     },
     deckCount: {
       fontSize: moderateScale(12),

@@ -1,11 +1,15 @@
 import { Deck } from "../../types/deck";
-import { cupidDeck } from "./cupid";
-import { heartsDeck } from "./hearts";
+import { cupidDeck } from "./cupid-gw";
+import { heartsDeck } from "./stolen-hearts";
+import { fateDeck } from "./fated-souls";
+import { lustDeck } from "./lust-potion";
 
-export { cupidDeck } from "./cupid";
-export { heartsDeck } from "./hearts";
+export { cupidDeck } from "./cupid-gw";
+export { heartsDeck } from "./stolen-hearts";
+export { fateDeck } from "./fated-souls";
+export { lustDeck } from "./lust-potion";
 
-export const allDecks: Deck[] = [heartsDeck, cupidDeck];
+export const allDecks: Deck[] = [heartsDeck, cupidDeck, fateDeck, lustDeck];
 
 export const getDefaultDeck = (): Deck => {
   const defaultDeck = allDecks.find((deck) => deck.isDefault);

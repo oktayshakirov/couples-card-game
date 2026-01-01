@@ -4,7 +4,8 @@ export const cupidDeck: Deck = {
   id: "cupid",
   name: "Cupid Gone Wild",
   description: "Spicy cards for couples",
-  icon: "favorite",
+  icon: "cupid",
+  nsfw: true,
   cards: [
     {
       id: "c1",
@@ -244,6 +245,34 @@ export const cupidDeck: Deck = {
       truth:
         "{player1}, what's the kinkiest thing you've ever done with someone else?",
       dare: "{player1}, write a short love letter to {player2}'s future self.",
+    },
+    {
+      id: "c46",
+      truth:
+        "{player1}, what's something {player2} does that drives you crazy in the best way?",
+      dare: "{player1}, let {player2} control your hands for 60 seconds — they can move them anywhere.",
+    },
+    {
+      id: "c47",
+      truth: "{player1}, what's your favorite thing about {player2}'s body?",
+      dare: "{player1}, give {player2} a lap dance for 45 seconds.",
+    },
+    {
+      id: "c48",
+      truth:
+        "{player1}, what's the most romantic thing you've ever done for someone?",
+      dare: "{player1}, let {player2} choose what you wear for the next 3 rounds.",
+    },
+    {
+      id: "c49",
+      truth: "{player1}, what's a fantasy you've never shared with anyone?",
+      dare: "{player1}, make {player2} laugh while trying to be seductive.",
+    },
+    {
+      id: "c50",
+      truth:
+        "{player1}, what's the hottest thing {player2} has ever said to you?",
+      dare: "{player1}, create a 30-second video of yourself doing something sexy for {player2}.",
     },
   ],
 };

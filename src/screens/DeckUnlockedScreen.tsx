@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Deck } from "../types/deck";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
+import { getDeckIconSource, isImageIcon } from "../utils/deckIcons";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
@@ -66,11 +68,22 @@ export const DeckUnlockedScreen: React.FC<DeckUnlockedScreenProps> = ({
                 <View style={stylesMemo.deckInfoContent}>
                   <View style={stylesMemo.iconContainer}>
                     <View style={stylesMemo.iconInnerGlow} />
-                    <MaterialIcons
-                      name={deck.icon as any}
-                      size={width >= 768 ? 48 : moderateScale(44)}
-                      color={COLORS.primary}
-                    />
+                    {isImageIcon(deck.icon) ? (
+                      <Image
+                        source={getDeckIconSource(deck.icon)}
+                        style={{
+                          width: width >= 768 ? 80 : moderateScale(64),
+                          height: width >= 768 ? 80 : moderateScale(64),
+                        }}
+                        resizeMode="contain"
+                      />
+                    ) : (
+                      <MaterialIcons
+                        name={deck.icon as any}
+                        size={width >= 768 ? 48 : moderateScale(44)}
+                        color={COLORS.primary}
+                      />
+                    )}
                   </View>
                   <Text style={stylesMemo.deckName}>{deck.name}</Text>
                   <Text style={stylesMemo.deckDescription}>
