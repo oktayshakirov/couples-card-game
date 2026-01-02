@@ -3,7 +3,8 @@ import { Deck } from "../../types/deck";
 export const fateDeck: Deck = {
   id: "fate",
   name: "Fated Souls",
-  description: "Sweet and fun questions for couples",
+  description:
+    "For souls destined to find each other. Deep questions and romantic gestures.",
   icon: "fate",
   isDefault: false,
   nsfw: false,

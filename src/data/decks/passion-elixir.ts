@@ -2,9 +2,10 @@ import { Deck } from "../../types/deck";
 
 export const passionDeck: Deck = {
   id: "passion",
-  name: "Passion Elexir",
-  description: "Sweet and fun questions for couples",
-  icon: "elexir",
+  name: "Passion Elixir",
+  description:
+    "The ultimate elixir for adventurous lovers. Steamy encounters and wild fantasies.",
+  icon: "elixir",
   isDefault: false,
   nsfw: true,
   cards: [

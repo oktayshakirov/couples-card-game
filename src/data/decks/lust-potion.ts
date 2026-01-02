@@ -3,7 +3,8 @@ import { Deck } from "../../types/deck";
 export const lustDeck: Deck = {
   id: "lust",
   name: "Lust Potion",
-  description: "Sweet and fun questions for couples",
+  description:
+    "Unlock your deepest fantasies with seductive dares that push passion's boundaries.",
   icon: "potion",
   isDefault: false,
   nsfw: true,

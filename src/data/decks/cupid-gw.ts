@@ -3,7 +3,8 @@ import { Deck } from "../../types/deck";
 export const cupidDeck: Deck = {
   id: "cupid",
   name: "Cupid Gone Wild",
-  description: "Spicy cards for couples",
+  description:
+    "Cupid's naughty side unleashed. Playful romance meets risqué adventures.",
   icon: "cupid",
   nsfw: true,
   cards: [

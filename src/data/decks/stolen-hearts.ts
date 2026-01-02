@@ -3,7 +3,8 @@ import { Deck } from "../../types/deck";
 export const heartsDeck: Deck = {
   id: "hearts",
   name: "Stolen Hearts",
-  description: "Sweet and fun questions for couples",
+  description:
+    "Playful romance that'll steal your heart. Lighthearted questions and silly dares.",
   icon: "hearts",
   isDefault: true,
   nsfw: false,
