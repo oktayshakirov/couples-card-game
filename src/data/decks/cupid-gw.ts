@@ -73,7 +73,7 @@ export const cupidDeck: Deck = {
     },
     {
       id: "c13",
-      truth: "{player1}, name 3 things on your sexual bucket list.",
+      truth: "{player1}, name 3 things on your s*xual bucket list.",
       dare: "{player1}, nibble on {player2}'s earlobe for 30 seconds.",
     },
     {
@@ -238,7 +238,7 @@ export const cupidDeck: Deck = {
     {
       id: "c44",
       truth:
-        "{player1}, if you could change one thing about your and {player2}'s sex life, what would it be?",
+        "{player1}, if you could change one thing about your and {player2}'s s*x life, what would it be?",
       dare: "{player1}, dress up into something sexy for 3 rounds.",
     },
     {

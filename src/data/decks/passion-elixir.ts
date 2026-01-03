@@ -11,12 +11,12 @@ export const passionDeck: Deck = {
   cards: [
     {
       id: "p1",
-      truth: "{player1}, do you prefer morning sex or night sex?",
+      truth: "{player1}, do you prefer morning s*x or night s*x?",
       dare: "{player1}, let {player2} undress you using only their mouth.",
     },
     {
       id: "p2",
-      truth: "{player1}, what's the most creative place you've ever had sex?",
+      truth: "{player1}, what's the most creative place you've ever had s*x?",
       dare: "{player1}, perform a slow, sensual striptease to music of your choice.",
     },
     {
@@ -26,18 +26,18 @@ export const passionDeck: Deck = {
     },
     {
       id: "p4",
-      truth: "{player1}, what's your biggest sexual turn-off?",
+      truth: "{player1}, what's your biggest s*xual turn-off?",
       dare: "{player1}, give {player2} a full-body kiss from head to toe.",
     },
     {
       id: "p5",
-      truth: "{player1}, do you like dirty talk during sex?",
+      truth: "{player1}, do you like dirty talk during s*x?",
       dare: "{player1}, let {player2} choose what you say during the next intimate moment.",
     },
     {
       id: "p6",
       truth:
-        "{player1}, what's something sexually you're curious about but haven't tried?",
+        "{player1}, what's something s*xually you're curious about but haven't tried?",
       dare: "{player1}, strip down to your underwear and pose seductively for 30 seconds.",
     },
     {
@@ -53,18 +53,18 @@ export const passionDeck: Deck = {
     },
     {
       id: "p9",
-      truth: "{player1}, do you prefer lights on or off during sex?",
+      truth: "{player1}, do you prefer lights on or off during s*x?",
       dare: "{player1}, let {player2} take a naughty photo of you in any pose they want.",
     },
     {
       id: "p10",
       truth:
-        "{player1}, what's the most spontaneous sexual encounter you've had?",
+        "{player1}, what's the most spontaneous s*xual encounter you've had?",
       dare: "{player1}, give {player2} a slow, passionate kiss while grinding against them.",
     },
     {
       id: "p11",
-      truth: "{player1}, have you ever had a threesome or group sex?",
+      truth: "{player1}, have you ever had a threesome or group s*x?",
       dare: "{player1}, strip down to your underwear and dance seductively for {player2}.",
     },
     {
@@ -81,13 +81,13 @@ export const passionDeck: Deck = {
     {
       id: "p14",
       truth:
-        "{player1}, what's the most intense sexual desire you have right now?",
+        "{player1}, what's the most intense s*xual desire you have right now?",
       dare: "{player1}, trace {player2}'s name with your tongue on their skin.",
     },
     {
       id: "p15",
       truth:
-        "{player1}, have you ever had sex while someone else was in the room?",
+        "{player1}, have you ever had s*x while someone else was in the room?",
       dare: "{player1}, let {player2} control your hands for 2 minutes—they can move them anywhere.",
     },
     {
@@ -98,23 +98,23 @@ export const passionDeck: Deck = {
     },
     {
       id: "p17",
-      truth: "{player1}, do you prefer giving or receiving oral sex?",
+      truth: "{player1}, do you prefer giving or receiving oral s*x?",
       dare: "{player1}, let {player2} undress you slowly while you maintain eye contact.",
     },
     {
       id: "p18",
-      truth: "{player1}, have you ever recorded yourself having sex?",
+      truth: "{player1}, have you ever recorded yourself having s*x?",
       dare: "{player1}, give {player2} a lap dance for 60 seconds.",
     },
     {
       id: "p19",
       truth:
-        "{player1}, what's something sexually you're embarrassed to admit you like?",
+        "{player1}, what's something s*xually you're embarrassed to admit you like?",
       dare: "{player1}, let {player2} tie your hands and tease you for 2 minutes.",
     },
     {
       id: "p20",
-      truth: "{player1}, have you ever had sex in a car?",
+      truth: "{player1}, have you ever had s*x in a car?",
       dare: "{player1}, moan {player2}'s name seductively 5 times.",
     },
     {
@@ -135,67 +135,67 @@ export const passionDeck: Deck = {
     },
     {
       id: "p24",
-      truth: "{player1}, do you like being watched or watching during sex?",
+      truth: "{player1}, do you like being watched or watching during s*x?",
       dare: "{player1}, let {player2} choose a roleplay scenario and act it out.",
     },
     {
       id: "p25",
-      truth: "{player1}, have you ever had sex in a shower or bathtub?",
+      truth: "{player1}, have you ever had s*x in a shower or bathtub?",
       dare: "{player1}, let {player2} choose a location in the room and you must make out with them there.",
     },
     {
       id: "p26",
       truth:
-        "{player1}, what's something sexually that makes you feel powerful?",
+        "{player1}, what's something s*xually that makes you feel powerful?",
       dare: "{player1}, strip down completely and let {player2} touch you anywhere for 2 minutes.",
     },
     {
       id: "p27",
-      truth: "{player1}, have you ever had sex while high or drunk?",
+      truth: "{player1}, have you ever had s*x while high or drunk?",
       dare: "{player1}, give {player2} a sensual massage while describing what you want to do to them.",
     },
     {
       id: "p28",
       truth:
-        "{player1}, what's your favorite dirty word or phrase to hear during sex?",
+        "{player1}, what's your favorite dirty word or phrase to hear during s*x?",
       dare: "{player1}, let {player2} blindfold you and feed you something while you're naked.",
     },
     {
       id: "p29",
-      truth: "{player1}, have you ever had sex in a hotel room?",
+      truth: "{player1}, have you ever had s*x in a hotel room?",
       dare: "{player1}, perform a slow, seductive dance while removing each piece of clothing one by one.",
     },
     {
       id: "p30",
       truth:
-        "{player1}, what's something sexually you've always wanted to try but haven't?",
+        "{player1}, what's something s*xually you've always wanted to try but haven't?",
       dare: "{player1}, let {player2} choose a position and hold it for 1 minute while they admire you.",
     },
     {
       id: "p31",
-      truth: "{player1}, do you like it when {player2} is vocal during sex?",
+      truth: "{player1}, do you like it when {player2} is vocal during s*x?",
       dare: "{player1}, give {player2} a sensual kiss while your hands explore every inch of their body.",
     },
     {
       id: "p32",
       truth:
-        "{player1}, have you ever had sex in the morning right after waking up?",
+        "{player1}, have you ever had s*x in the morning right after waking up?",
       dare: "{player1}, strip down to your underwear and let {player2} take control for 3 minutes.",
     },
     {
       id: "p33",
-      truth: "{player1}, what's the most creative way you've initiated sex?",
+      truth: "{player1}, what's the most creative way you've initiated s*x?",
       dare: "{player1}, give {player2} a full-body sensual massage using oil or lotion.",
     },
     {
       id: "p34",
-      truth: "{player1}, have you ever had sex while listening to music?",
+      truth: "{player1}, have you ever had s*x while listening to music?",
       dare: "{player1}, let {player2} tie you up and do whatever they want for 2 minutes.",
     },
     {
       id: "p35",
       truth:
-        "{player1}, what's something sexually that turns you on instantly?",
+        "{player1}, what's something s*xually that turns you on instantly?",
       dare: "{player1}, perform a seductive striptease while {player2} records it.",
     },
     {
@@ -205,25 +205,25 @@ export const passionDeck: Deck = {
     },
     {
       id: "p37",
-      truth: "{player1}, have you ever had sex in a public bathroom?",
+      truth: "{player1}, have you ever had s*x in a public bathroom?",
       dare: "{player1}, strip down completely and pose for {player2} in 5 different positions.",
     },
     {
       id: "p38",
       truth:
-        "{player1}, what's your favorite thing about {player2}'s body during sex?",
+        "{player1}, what's your favorite thing about {player2}'s body during s*x?",
       dare: "{player1}, let {player2} blindfold you and guide you to pleasure them with your mouth.",
     },
     {
       id: "p39",
       truth:
-        "{player1}, have you ever had sex while someone was sleeping nearby?",
+        "{player1}, have you ever had s*x while someone was sleeping nearby?",
       dare: "{player1}, give {player2} a sensual massage while whispering dirty things in their ear.",
     },
     {
       id: "p40",
       truth:
-        "{player1}, what's something sexually you'd never do but fantasize about?",
+        "{player1}, what's something s*xually you'd never do but fantasize about?",
       dare: "{player1}, strip down to your underwear and let {player2} choose what happens next.",
     },
     {
@@ -233,86 +233,86 @@ export const passionDeck: Deck = {
     },
     {
       id: "p42",
-      truth: "{player1}, have you ever had sex in a pool or hot tub?",
+      truth: "{player1}, have you ever had s*x in a pool or hot tub?",
       dare: "{player1}, strip down completely and let {player2} do whatever they want for 3 minutes.",
     },
     {
       id: "p43",
       truth:
-        "{player1}, what's the most intense sexual memory you have with {player2}?",
+        "{player1}, what's the most intense s*xual memory you have with {player2}?",
       dare: "{player1}, let {player2} choose a body part and you must kiss it for 2 minutes.",
     },
     {
       id: "p44",
-      truth: "{player1}, have you ever had sex while watching porn together?",
+      truth: "{player1}, have you ever had s*x while watching porn together?",
       dare: "{player1}, give {player2} a sensual massage while they're blindfolded.",
     },
     {
       id: "p45",
       truth:
-        "{player1}, what's the most intense sexual fantasy you've had about {player2} recently?",
+        "{player1}, what's the most intense s*xual fantasy you've had about {player2} recently?",
       dare: "{player1}, strip down to your underwear and let {player2} control your movements for 2 minutes.",
     },
     {
       id: "p46",
-      truth: "{player1}, have you ever had sex outdoors?",
+      truth: "{player1}, have you ever had s*x outdoors?",
       dare: "{player1}, perform a slow, sensual dance while {player2} watches from different angles.",
     },
     {
       id: "p47",
       truth:
-        "{player1}, what's something sexually you'd love to try but are too nervous to ask {player2}?",
+        "{player1}, what's something s*xually you'd love to try but are too nervous to ask {player2}?",
       dare: "{player1}, let {player2} tie your hands behind your back and tease you for 3 minutes.",
     },
     {
       id: "p48",
       truth:
-        "{player1}, have you ever had sex on a plane or in an airplane bathroom?",
+        "{player1}, have you ever had s*x on a plane or in an airplane bathroom?",
       dare: "{player1}, give {player2} a full-body kiss while they're lying down.",
     },
     {
       id: "p49",
       truth:
-        "{player1}, what's the most intense sexual experience you've had that you still think about?",
+        "{player1}, what's the most intense s*xual experience you've had that you still think about?",
       dare: "{player1}, strip down completely and let {player2} take photos of you in various poses.",
     },
     {
       id: "p50",
       truth:
-        "{player1}, have you ever had sex in a dressing room or fitting room?",
+        "{player1}, have you ever had s*x in a dressing room or fitting room?",
       dare: "{player1}, let {player2} blindfold you and feed you something sensual while you're naked.",
     },
     {
       id: "p51",
       truth:
-        "{player1}, what's something sexually that you find incredibly arousing but haven't told {player2}?",
+        "{player1}, what's something s*xually that you find incredibly arousing but haven't told {player2}?",
       dare: "{player1}, give {player2} a sensual massage using only your tongue.",
     },
     {
       id: "p52",
-      truth: "{player1}, have you ever had sex in an elevator?",
+      truth: "{player1}, have you ever had s*x in an elevator?",
       dare: "{player1}, strip down to your underwear and let {player2} choose what you do next.",
     },
     {
       id: "p53",
       truth:
-        "{player1}, what's your favorite thing about {player2}'s sexual energy?",
+        "{player1}, what's your favorite thing about {player2}'s s*xual energy?",
       dare: "{player1}, perform a seductive dance while removing your clothes piece by piece slowly.",
     },
     {
       id: "p54",
-      truth: "{player1}, have you ever had sex in a movie theater?",
+      truth: "{player1}, have you ever had s*x in a movie theater?",
       dare: "{player1}, let {player2} control your hands and guide them to touch themselves.",
     },
     {
       id: "p55",
       truth:
-        "{player1}, what's something sexually you'd love {player2} to do more often?",
+        "{player1}, what's something s*xually you'd love {player2} to do more often?",
       dare: "{player1}, give {player2} a passionate kiss while your hands explore their entire body sensually.",
     },
     {
       id: "p56",
-      truth: "{player1}, have you ever had sex in a library or bookstore?",
+      truth: "{player1}, have you ever had s*x in a library or bookstore?",
       dare: "{player1}, strip down completely and let {player2} admire you while you touch yourself.",
     },
     {
@@ -323,19 +323,19 @@ export const passionDeck: Deck = {
     },
     {
       id: "p58",
-      truth: "{player1}, have you ever had sex in a gym or locker room?",
+      truth: "{player1}, have you ever had s*x in a gym or locker room?",
       dare: "{player1}, strip down completely and let {player2} explore your entire body with their mouth for 3 minutes.",
     },
     {
       id: "p59",
       truth:
-        "{player1}, what's something sexually you're curious about but haven't explored yet?",
+        "{player1}, what's something s*xually you're curious about but haven't explored yet?",
       dare: "{player1}, let {player2} choose a song and perform a seductive dance to it.",
     },
     {
       id: "p60",
       truth:
-        "{player1}, have you ever had sex in a park or outdoor public space?",
+        "{player1}, have you ever had s*x in a park or outdoor public space?",
       dare: "{player1}, give {player2} a sensual massage while describing in detail what you want to do to them.",
     },
   ],

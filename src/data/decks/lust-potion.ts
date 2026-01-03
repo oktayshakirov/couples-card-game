@@ -48,7 +48,7 @@ export const lustDeck: Deck = {
       id: "l7",
       truth:
         "{player1}, what's an embarrassing moment from your past that still makes you cringe or laugh?",
-      dare: "{player1}, whisper a sexual desire in {player2}'s ear.",
+      dare: "{player1}, whisper a s*xual desire in {player2}'s ear.",
     },
     {
       id: "l8",
@@ -84,7 +84,7 @@ export const lustDeck: Deck = {
       id: "l13",
       truth:
         "{player1}, how comfortable are you with deep eye contact, and what does it make you feel?",
-      dare: "{player1}, reenact your favorite sex position with {player2}.",
+      dare: "{player1}, reenact your favorite s*x position with {player2}.",
     },
     {
       id: "l14",
@@ -113,12 +113,12 @@ export const lustDeck: Deck = {
     {
       id: "l18",
       truth:
-        "{player1}, describe how you felt the last time you had sex with {player2}.",
+        "{player1}, describe how you felt the last time you had s*x with {player2}.",
       dare: "{player1}, close your eyes and moan seductively.",
     },
     {
       id: "l19",
-      truth: "{player1}, share one of your sexual fantasies with {player2}.",
+      truth: "{player1}, share one of your s*xual fantasies with {player2}.",
       dare: "{player1}, bend over and let {player2} spank you for being naughty.",
     },
     {
@@ -129,7 +129,7 @@ export const lustDeck: Deck = {
     {
       id: "l21",
       truth: "{player1}, are you feeling turned on right now?",
-      dare: "{player1}, share a sex position you'd like to try next.",
+      dare: "{player1}, share a s*x position you'd like to try next.",
     },
     {
       id: "l22",
@@ -168,13 +168,13 @@ export const lustDeck: Deck = {
     {
       id: "l28",
       truth:
-        "{player1}, tell me about something {player2} does during sex that makes you lose control.",
+        "{player1}, tell me about something {player2} does during s*x that makes you lose control.",
       dare: "{player1}, let {player2} do whatever they want with you for 1 minute.",
     },
     {
       id: "l29",
       truth:
-        "{player1}, where's the most adventurous place you've ever had sex or wanted to have sex?",
+        "{player1}, where's the most adventurous place you've ever had s*x or wanted to have s*x?",
       dare: "{player1}, twerk for {player2}.",
     },
     {
@@ -209,7 +209,7 @@ export const lustDeck: Deck = {
       id: "l35",
       truth:
         "{player1}, describe something you find incredibly hot about {player2}'s body language when they want you.",
-      dare: "{player1}, reveal a random place you'd like to have sex.",
+      dare: "{player1}, reveal a random place you'd like to have s*x.",
     },
     {
       id: "l36",
@@ -220,7 +220,7 @@ export const lustDeck: Deck = {
     {
       id: "l37",
       truth:
-        "{player1}, when was the last time you thought about {player2} in a sexual way?",
+        "{player1}, when was the last time you thought about {player2} in a s*xual way?",
       dare: "{player1}, perform a strip tease for {player2}.",
     },
     {
@@ -237,7 +237,7 @@ export const lustDeck: Deck = {
     },
     {
       id: "l40",
-      truth: "{player1}, what's the longest you've gone without having sex?",
+      truth: "{player1}, what's the longest you've gone without having s*x?",
       dare: "{player1}, play the next 3 rounds completely naked.",
     },
     {
@@ -252,7 +252,7 @@ export const lustDeck: Deck = {
     },
     {
       id: "l43",
-      truth: "{player1}, what's your biggest sexual insecurity?",
+      truth: "{player1}, what's your biggest s*xual insecurity?",
       dare: "{player1}, gently bite {player2}'s lower lip (softly).",
     },
     {
@@ -263,7 +263,7 @@ export const lustDeck: Deck = {
     {
       id: "l45",
       truth:
-        "{player1}, what's something sexually you've always wanted to try but been too shy to ask?",
+        "{player1}, what's something s*xually you've always wanted to try but been too shy to ask?",
       dare: "{player1}, kiss {player2} on the neck.",
     },
     {
@@ -273,7 +273,7 @@ export const lustDeck: Deck = {
     },
     {
       id: "l47",
-      truth: "{player1}, what's your favorite time of day to have sex?",
+      truth: "{player1}, what's your favorite time of day to have s*x?",
       dare: '{player1}, pull {player2} in and whisper "come closer."',
     },
     {
@@ -284,18 +284,18 @@ export const lustDeck: Deck = {
     {
       id: "l49",
       truth:
-        "{player1}, what's the most number of times you've had sex in one day?",
+        "{player1}, what's the most number of times you've had s*x in one day?",
       dare: "{player1}, hold {player2}'s face and look at them like you're about to kiss.",
     },
     {
       id: "l50",
-      truth: "{player1}, have you ever had sex in a public place?",
+      truth: "{player1}, have you ever had s*x in a public place?",
       dare: "{player1}, place your hand on {player2}'s chest and feel their heartbeat.",
     },
     {
       id: "l51",
       truth:
-        "{player1}, what's your favorite thing to hear {player2} say during sex?",
+        "{player1}, what's your favorite thing to hear {player2} say during s*x?",
       dare: '{player1}, lean in and whisper "I want you."',
     },
     {
@@ -311,7 +311,7 @@ export const lustDeck: Deck = {
     },
     {
       id: "l54",
-      truth: "{player1}, have you ever used sex toys with {player2}?",
+      truth: "{player1}, have you ever used s*x toys with {player2}?",
       dare: "{player1}, give {player2} a sensual massage using only your mouth.",
     },
     {
