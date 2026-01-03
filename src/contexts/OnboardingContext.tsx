@@ -16,17 +16,13 @@ export class OnboardingService {
   static async markOnboardingCompleted(): Promise<void> {
     try {
       await AsyncStorage.setItem(ONBOARDING_COMPLETED_KEY, "true");
-    } catch (error) {
-      // Silent error handling
-    }
+    } catch (error) {}
   }
 
   static async resetOnboarding(): Promise<void> {
     try {
       await AsyncStorage.removeItem(ONBOARDING_COMPLETED_KEY);
-    } catch (error) {
-      // Silent error handling
-    }
+    } catch (error) {}
   }
 }
 

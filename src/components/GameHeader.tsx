@@ -3,7 +3,7 @@ import {
   View,
   StyleSheet,
   Text,
-  useWindowDimensions,
+  Dimensions,
   TouchableOpacity,
 } from "react-native";
 import {
@@ -34,7 +34,7 @@ interface GameHeaderProps {
   onMenuPress?: () => void;
 }
 
-export const GameHeader: React.FC<GameHeaderProps> = ({
+const GameHeaderComponent: React.FC<GameHeaderProps> = ({
   currentPlayer,
   player1Dares,
   player1Truths,
@@ -50,7 +50,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   player2Color,
   onMenuPress,
 }) => {
-  const { width } = useWindowDimensions();
+  const width = useMemo(() => Dimensions.get("window").width, []);
   const stylesMemo = useMemo(() => createStyles(width), [width]);
 
   return (
@@ -287,4 +287,6 @@ const createStyles = (width: number) =>
     },
   });
 
-const styles = createStyles(0); // Will be recalculated in component
+export const GameHeader = React.memo(GameHeaderComponent);
+
+const styles = createStyles(0);

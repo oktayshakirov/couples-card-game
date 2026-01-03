@@ -1,4 +1,3 @@
-// Helper function to get icon source for deck icons
 export const getDeckIconSource = (icon: string) => {
   const iconMap: Record<string, any> = {
     cupid: require("../../assets/images/cupid.png"),

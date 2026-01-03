@@ -4,7 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
-  useWindowDimensions,
+  Dimensions,
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { hexToRgba } from "../utils/colorUtils";
@@ -19,13 +19,13 @@ interface ActionButtonsProps {
   canSkip: boolean;
 }
 
-export const ActionButtons: React.FC<ActionButtonsProps> = ({
+const ActionButtonsComponent: React.FC<ActionButtonsProps> = ({
   onSwipeLeft,
   onSwipeRight,
   onSkip,
   canSkip,
 }) => {
-  const { width } = useWindowDimensions();
+  const width = useMemo(() => Dimensions.get("window").width, []);
   const stylesMemo = useMemo(() => createStyles(width), [width]);
 
   const handleSkip = () => {
@@ -138,4 +138,6 @@ const createStyles = (width: number) =>
     },
   });
 
-const styles = createStyles(0); // Will be recalculated in component
+export const ActionButtons = React.memo(ActionButtonsComponent);
+
+const styles = createStyles(0);

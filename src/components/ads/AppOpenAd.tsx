@@ -12,6 +12,13 @@ let adLoadTimestamp: number = 0;
 const AD_STALE_TIMEOUT_MS = 4 * 60 * 60 * 1000;
 const AD_BACKGROUND_STALE_MS = 30 * 60 * 1000;
 
+export function cleanupAppOpenAd() {
+  cleanupAdInstance();
+  if (initializingPromise) {
+    initializingPromise = null;
+  }
+}
+
 function detachListeners() {
   appOpenListeners.forEach((unsubscribe) => unsubscribe());
   appOpenListeners = [];
@@ -183,4 +190,3 @@ export async function showAppOpenAd() {
 }
 
 export default null;
-

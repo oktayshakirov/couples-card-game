@@ -26,25 +26,41 @@ const BannerAdComponent = () => {
   const [fadeAnim] = useState(new Animated.Value(0));
   const [adKey, setAdKey] = useState(0);
   const appState = useRef(AppState.currentState);
+  const isMountedRef = useRef(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     const initializeAds = async () => {
+      if (!isMounted) return;
+
       if (MobileAds && !isInitialized) {
         try {
           await MobileAds().initialize();
-          setIsInitialized(true);
+          if (isMounted) {
+            setIsInitialized(true);
+          }
         } catch {
-          setIsInitialized(true);
+          if (isMounted) {
+            setIsInitialized(true);
+          }
         }
       } else if (!MobileAds) {
-        setIsInitialized(true);
+        if (isMounted) {
+          setIsInitialized(true);
+        }
       }
     };
 
     initializeAds();
+
+    return () => {
+      isMounted = false;
+    };
   }, [isInitialized]);
 
   const handleAdLoaded = () => {
+    if (!isMountedRef.current) return;
     setIsAdLoaded(true);
     setAdFailed(false);
     Animated.timing(fadeAnim, {
@@ -55,6 +71,7 @@ const BannerAdComponent = () => {
   };
 
   const handleAdFailedToLoad = () => {
+    if (!isMountedRef.current) return;
     setIsAdLoaded(false);
     setAdFailed(true);
   };
@@ -90,10 +107,14 @@ const BannerAdComponent = () => {
     });
 
     return () => {
+      isMountedRef.current = false;
       subscription.remove();
       unsubscribeNetInfo();
+      fadeAnim.stopAnimation();
+      setIsAdLoaded(false);
+      setAdFailed(false);
     };
-  }, []);
+  }, [fadeAnim]);
 
   const renderOfflineMessage = () => (
     <View style={styles.offlineContainer}>

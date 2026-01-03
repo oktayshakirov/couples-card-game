@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  useWindowDimensions,
+  Dimensions,
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -26,7 +26,7 @@ interface CustomToastProps {
 }
 
 const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
-  const { width } = useWindowDimensions();
+  const width = useMemo(() => Dimensions.get("window").width, []);
   const playerColor = props?.playerColor || "#666";
   const playerAvatar = props?.playerAvatar;
   const nextPlayerName = props?.nextPlayerName;
@@ -214,4 +214,4 @@ const createStyles = (width: number) =>
     },
   });
 
-const styles = createStyles(0); // Will be recalculated in component
+const styles = createStyles(0);

@@ -24,6 +24,13 @@ let adLoadTimestamp: number = 0;
 const AD_STALE_TIMEOUT_MS = 4 * 60 * 60 * 1000;
 const AD_BACKGROUND_STALE_MS = 30 * 60 * 1000;
 
+export function cleanupRewardedAd() {
+  cleanupAdInstance();
+  if (initializingPromise) {
+    initializingPromise = null;
+  }
+}
+
 function detachListeners() {
   rewardedAdListeners.forEach((unsubscribe) => unsubscribe());
   rewardedAdListeners = [];

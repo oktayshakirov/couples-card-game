@@ -1,11 +1,5 @@
-import React, { useMemo } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  useWindowDimensions,
-  ScrollView,
-} from "react-native";
+import React, { useMemo, useCallback } from "react";
+import { View, Text, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 
@@ -21,7 +15,7 @@ interface SwipeCardProps {
   blurred?: boolean;
 }
 
-export const SwipeCard: React.FC<SwipeCardProps> = ({
+const SwipeCardComponent: React.FC<SwipeCardProps> = ({
   truth,
   dare,
   player1Name,
@@ -30,25 +24,66 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
   currentPlayerColor,
   blurred = false,
 }) => {
-  const { width, height } = useWindowDimensions();
+  const dimensions = useMemo(() => Dimensions.get("window"), []);
+  const { width, height } = dimensions;
 
-  const getCurrentPlayerName = () =>
-    currentPlayer === 1 ? player1Name : player2Name;
-  const getOtherPlayerName = () =>
-    currentPlayer === 1 ? player2Name : player1Name;
+  const getCurrentPlayerName = useCallback(
+    () => (currentPlayer === 1 ? player1Name : player2Name),
+    [currentPlayer, player1Name, player2Name]
+  );
+  const getOtherPlayerName = useCallback(
+    () => (currentPlayer === 1 ? player2Name : player1Name),
+    [currentPlayer, player1Name, player2Name]
+  );
 
-  const replacePlaceholders = (text: string) => {
-    return text
-      .replace(/{player1}/g, getCurrentPlayerName())
-      .replace(/{player2}/g, getOtherPlayerName());
-  };
+  const formattedTruth = useMemo(
+    () =>
+      truth
+        .replace(/{player1}/g, getCurrentPlayerName())
+        .replace(/{player2}/g, getOtherPlayerName()),
+    [truth, getCurrentPlayerName, getOtherPlayerName]
+  );
+  const formattedDare = useMemo(
+    () =>
+      dare
+        .replace(/{player1}/g, getCurrentPlayerName())
+        .replace(/{player2}/g, getOtherPlayerName()),
+    [dare, getCurrentPlayerName, getOtherPlayerName]
+  );
 
-  const formattedTruth = replacePlaceholders(truth);
-  const formattedDare = replacePlaceholders(dare);
+  const calculateFontSize = useCallback((text: string, isTablet: boolean) => {
+    const baseSize = isTablet ? 24 : 20;
+    const minSize = isTablet ? 16 : 14;
+    const maxSize = isTablet ? 24 : 20;
+
+    const charCount = text.length;
+
+    if (charCount > 120) {
+      return Math.max(minSize, baseSize * 0.7);
+    } else if (charCount > 90) {
+      return Math.max(minSize, baseSize * 0.8);
+    } else if (charCount > 60) {
+      return Math.max(minSize, baseSize * 0.9);
+    } else if (charCount > 40) {
+      return Math.max(minSize, baseSize * 0.95);
+    }
+
+    return baseSize;
+  }, []);
+
+  const truthFontSize = useMemo(
+    () => calculateFontSize(formattedTruth, width >= 768),
+    [formattedTruth, calculateFontSize, width]
+  );
+
+  const dareFontSize = useMemo(
+    () => calculateFontSize(formattedDare, width >= 768),
+    [formattedDare, calculateFontSize, width]
+  );
 
   const stylesMemo = useMemo(
-    () => createStyles(width, height),
-    [width, height]
+    () => createStyles(width, height, truthFontSize, dareFontSize),
+    [width, height, truthFontSize, dareFontSize]
   );
 
   return (
@@ -66,7 +101,10 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
                 <Text style={stylesMemo.sectionLabel}>TRUTH</Text>
               </View>
               <Text
-                style={[stylesMemo.truthText, { color: currentPlayerColor }]}
+                style={[
+                  stylesMemo.truthText,
+                  { color: currentPlayerColor, fontSize: truthFontSize },
+                ]}
               >
                 {formattedTruth}
               </Text>
@@ -108,7 +146,10 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
                 <Text style={stylesMemo.sectionLabel}>DARE</Text>
               </View>
               <Text
-                style={[stylesMemo.dareText, { color: currentPlayerColor }]}
+                style={[
+                  stylesMemo.dareText,
+                  { color: currentPlayerColor, fontSize: dareFontSize },
+                ]}
               >
                 {formattedDare}
               </Text>
@@ -135,7 +176,14 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
   );
 };
 
-const createStyles = (width: number, height: number) =>
+export const SwipeCard = React.memo(SwipeCardComponent);
+
+const createStyles = (
+  width: number,
+  height: number,
+  truthFontSize: number,
+  dareFontSize: number
+) =>
   StyleSheet.create({
     cardContainer: {
       width: width >= 768 ? width * 0.75 : width * 0.92,
@@ -198,9 +246,8 @@ const createStyles = (width: number, height: number) =>
       letterSpacing: 2,
     },
     truthText: {
-      fontSize: moderateScale(width >= 768 ? 24 : 20),
       fontWeight: "700",
-      lineHeight: moderateScale(width >= 768 ? 28 : 26),
+      lineHeight: truthFontSize * 1.3,
       textAlign: "center",
       marginBottom: verticalScale(10),
       textShadowColor: "rgba(0, 0, 0, 0.3)",
@@ -229,9 +276,8 @@ const createStyles = (width: number, height: number) =>
       marginTop: verticalScale(8),
     },
     dareText: {
-      fontSize: moderateScale(width >= 768 ? 24 : 20),
       fontWeight: "600",
-      lineHeight: moderateScale(width >= 768 ? 28 : 26),
+      lineHeight: dareFontSize * 1.3,
       textAlign: "center",
       fontStyle: "italic",
       marginBottom: verticalScale(10),
@@ -262,4 +308,4 @@ const createStyles = (width: number, height: number) =>
     },
   });
 
-const styles = createStyles(0, 0); // Will be recalculated in component
+const styles = createStyles(0, 0, 20, 20);

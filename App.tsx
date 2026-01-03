@@ -19,6 +19,7 @@ import { getDefaultDeck } from "./src/data/decks";
 import {
   initializeGlobalAds,
   useGlobalAds,
+  cleanupGlobalAds,
 } from "./src/components/ads/adsManager";
 
 type Screen =
@@ -137,7 +138,23 @@ const AppContent = () => {
   };
 
   useEffect(() => {
-    initializeGlobalAds();
+    let isMounted = true;
+
+    const initAds = async () => {
+      if (isMounted) {
+        await initializeGlobalAds();
+      }
+    };
+
+    initAds();
+
+    return () => {
+      isMounted = false;
+      if (__DEV__) {
+        cleanupGlobalAds();
+        Toast.hide();
+      }
+    };
   }, []);
 
   const renderScreen = () => {

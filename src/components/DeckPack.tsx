@@ -56,10 +56,8 @@ export const DeckPack: React.FC<DeckPackProps> = ({
       onPress={() => onPress(deck)}
       activeOpacity={0.85}
     >
-      {/* Gradient overlay for depth */}
       <View style={styles.gradientOverlay} />
 
-      {/* Badge in top left corner */}
       {deck.nsfw !== undefined && (
         <View style={styles.badgeContainer}>
           <Image
@@ -75,7 +73,6 @@ export const DeckPack: React.FC<DeckPackProps> = ({
         </View>
       )}
 
-      {/* Card count badge - positioned below Classic/Spicy badge */}
       <View style={styles.cardCountBadge}>
         <MaterialIcons
           name="style"
@@ -92,7 +89,6 @@ export const DeckPack: React.FC<DeckPackProps> = ({
         </Text>
       </View>
 
-      {/* Lock badge for locked decks - top right */}
       {!isUnlocked && (
         <View style={styles.lockBadge}>
           <MaterialIcons name="lock" size={moderateScale(16)} color="#aaa" />
@@ -100,7 +96,6 @@ export const DeckPack: React.FC<DeckPackProps> = ({
       )}
 
       <View style={styles.cardContent}>
-        {/* Icon at top center */}
         <View
           style={[
             styles.deckIconContainer,
@@ -131,7 +126,6 @@ export const DeckPack: React.FC<DeckPackProps> = ({
           )}
         </View>
 
-        {/* Text content */}
         <View style={styles.textContainer}>
           <Text
             style={[styles.deckName, !isUnlocked && styles.deckNameLocked]}

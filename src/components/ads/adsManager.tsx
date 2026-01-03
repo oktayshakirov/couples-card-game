@@ -1,8 +1,13 @@
 import { useEffect, useRef } from "react";
 import { AppState, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { showInterstitial, initializeInterstitial } from "./InterstitialAd";
-import { showAppOpenAd, loadAppOpenAd } from "./AppOpenAd";
+import {
+  showInterstitial,
+  initializeInterstitial,
+  cleanupInterstitialAd,
+} from "./InterstitialAd";
+import { showAppOpenAd, loadAppOpenAd, cleanupAppOpenAd } from "./AppOpenAd";
+import { cleanupRewardedAd } from "./RewardedAd";
 
 const AD_INTERVAL_MS = 60000;
 const APP_OPEN_AFTER_AD_COOLDOWN_MS = 30000;
@@ -27,23 +32,56 @@ export async function initializeGoogleMobileAds() {
 }
 
 let initializationTimeout: NodeJS.Timeout | null = null;
+let isInitialized = false;
+let initializationPromise: Promise<void> | null = null;
 
 export async function initializeGlobalAds() {
-  try {
-    if (initializationTimeout) {
-      clearTimeout(initializationTimeout);
-      initializationTimeout = null;
+  if (isInitialized && initializationPromise) {
+    return initializationPromise;
+  }
+
+  if (initializationPromise) {
+    return initializationPromise;
+  }
+
+  initializationPromise = (async () => {
+    try {
+      if (initializationTimeout) {
+        clearTimeout(initializationTimeout);
+        initializationTimeout = null;
+      }
+      await initializeGoogleMobileAds();
+      await Promise.all([initializeInterstitial(), loadAppOpenAd()]);
+      isInitialized = true;
+    } catch (error) {
+      if (initializationTimeout) {
+        clearTimeout(initializationTimeout);
+      }
+      initializationTimeout = setTimeout(() => {
+        initializationTimeout = null;
+        isInitialized = false;
+        initializationPromise = null;
+        initializeGlobalAds().catch(() => {});
+      }, 5000);
     }
-    await initializeGoogleMobileAds();
-    await Promise.all([initializeInterstitial(), loadAppOpenAd()]);
-  } catch (error) {
-    if (initializationTimeout) {
-      clearTimeout(initializationTimeout);
-    }
-    initializationTimeout = setTimeout(() => {
-      initializationTimeout = null;
-      initializeGlobalAds().catch(() => {});
-    }, 5000);
+  })();
+
+  return initializationPromise;
+}
+
+export function cleanupGlobalAds() {
+  if (initializationTimeout) {
+    clearTimeout(initializationTimeout);
+    initializationTimeout = null;
+  }
+  isInitialized = false;
+  initializationPromise = null;
+  cleanupInterstitialAd();
+  cleanupAppOpenAd();
+  cleanupRewardedAd();
+  if (globalAdsSubscription) {
+    globalAdsSubscription.remove();
+    globalAdsSubscription = null;
   }
 }
 
@@ -114,12 +152,18 @@ export async function trackRewardedAdShown(): Promise<void> {
   await updateLastAdShownTime(AD_TYPES.REWARDED);
 }
 
+let globalAdsSubscription: any = null;
+
 export function useGlobalAds() {
   const appState = useRef(AppState.currentState);
   const lastAppStateChange = useRef(Date.now());
   const lastAdShownTime = useRef(0);
 
   useEffect(() => {
+    if (globalAdsSubscription) {
+      globalAdsSubscription.remove();
+    }
+
     const subscription = AppState.addEventListener(
       "change",
       async (nextAppState) => {
@@ -155,8 +199,13 @@ export function useGlobalAds() {
       }
     );
 
+    globalAdsSubscription = subscription;
+
     return () => {
-      subscription.remove();
+      if (globalAdsSubscription) {
+        globalAdsSubscription.remove();
+        globalAdsSubscription = null;
+      }
     };
   }, []);
 }

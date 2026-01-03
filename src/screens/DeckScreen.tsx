@@ -136,7 +136,6 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
       } catch {}
       onSelectDeck(deck);
     } else {
-      // Handle unlock flow
       if (unlocking || !isOnline || (!adReady && !adLoading)) return;
 
       if (!isRewardedReady()) {
@@ -475,4 +474,4 @@ const createStyles = (width: number) =>
     },
   });
 
-const styles = createStyles(0); // Will be recalculated in component
+const styles = createStyles(0);

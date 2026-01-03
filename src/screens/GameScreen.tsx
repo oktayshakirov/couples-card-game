@@ -76,7 +76,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   } | null>(null);
   const [restoredCardId, setRestoredCardId] = useState<string | null>(null);
 
-  const getCurrentPlayerInfo = useCallback(() => {
+  const currentPlayerInfo = useMemo(() => {
     const currentPlayer = gameState.currentPlayer;
     const playerInfo =
       currentPlayer === 1 ? gameState.player1Info : gameState.player2Info;
@@ -89,9 +89,23 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       avatar: playerInfo.avatar,
       stats: playerStats,
     };
-  }, [gameState]);
+  }, [
+    gameState.currentPlayer,
+    gameState.player1Info.name,
+    gameState.player1Info.color,
+    gameState.player1Info.avatar,
+    gameState.player2Info.name,
+    gameState.player2Info.color,
+    gameState.player2Info.avatar,
+    gameState.player1.dares,
+    gameState.player1.truths,
+    gameState.player1.skipped,
+    gameState.player2.dares,
+    gameState.player2.truths,
+    gameState.player2.skipped,
+  ]);
 
-  const getNextPlayerInfo = useCallback(() => {
+  const nextPlayerInfo = useMemo(() => {
     const nextPlayer = gameState.currentPlayer === 1 ? 2 : 1;
     return {
       player: nextPlayer,
@@ -100,13 +114,27 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           ? gameState.player1Info.name
           : gameState.player2Info.name,
     };
-  }, [gameState]);
+  }, [
+    gameState.currentPlayer,
+    gameState.player1Info.name,
+    gameState.player2Info.name,
+  ]);
 
-  // Preload interstitial ad when game screen mounts
+  const getCurrentPlayerInfo = useCallback(
+    () => currentPlayerInfo,
+    [currentPlayerInfo]
+  );
+  const getNextPlayerInfo = useCallback(() => nextPlayerInfo, [nextPlayerInfo]);
+
   useEffect(() => {
-    ensureInterstitialLoaded().catch(() => {
-      // Silently fail - ad will be loaded when needed
-    });
+    ensureInterstitialLoaded().catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      topCardRef.current = null;
+      cardRemountKeysRef.current.clear();
+    };
   }, []);
 
   const clearConfirmationState = () => {
@@ -162,8 +190,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     restoredCardIdRef.current = null;
     setRestoredCardId(null);
 
-    const { player, name, color, avatar, stats } = getCurrentPlayerInfo();
-    const { name: nextPlayerName } = getNextPlayerInfo();
+    const { player, name, color, avatar, stats } = currentPlayerInfo;
+    const { name: nextPlayerName } = nextPlayerInfo;
 
     if (direction === "right") {
       recordSwipe();
@@ -268,7 +296,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     }
 
     return cards.slice(0, MAX_VISIBLE_CARDS);
-  }, [cards, pendingConfirmation, restoredCardId]);
+  }, [cards, pendingConfirmation?.cardId, restoredCardId]);
 
   const renderedCards = visibleCards.slice().reverse();
 
@@ -345,8 +373,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               const isPlaceholder = card.id === "placeholder";
 
               if (isPlaceholder) {
-                const { name: nextPlayerName } = getNextPlayerInfo();
-                const currentPlayerInfo =
+                const { name: nextPlayerName } = nextPlayerInfo;
+                const currentPlayerInfoData =
                   gameState.currentPlayer === 1
                     ? gameState.player1Info
                     : gameState.player2Info;
@@ -356,7 +384,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
                     <PendingCard
                       player1Name={gameState.player1Info.name}
                       player2Name={gameState.player2Info.name}
-                      currentPlayerColor={currentPlayerInfo.color}
+                      currentPlayerColor={currentPlayerInfoData.color}
                       nextPlayerName={nextPlayerName}
                     />
                   </View>

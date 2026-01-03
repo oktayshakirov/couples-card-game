@@ -22,7 +22,7 @@ export type PlayerColor =
   | "#B19CD9"
   | "#7FCDCD"
   | "#8DB4D4"
-  | "#8FBC8F"
+  | "#E8E8E8"
   | "#D4A5A5"
   | "#A0A0A0"
   | "#E6A8D3"
