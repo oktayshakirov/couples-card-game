@@ -1,4 +1,10 @@
-import React, { useRef, useState, useMemo, useCallback } from "react";
+import React, {
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
 import { View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TinderCard from "react-tinder-card";
@@ -12,7 +18,10 @@ import { EmptyDeck } from "../components/EmptyDeck";
 import { useGame } from "../contexts/GameContext";
 import { useCardDeck } from "../hooks/useCardDeck";
 import BannerAdComponent from "../components/ads/BannerAd";
-import { showInterstitial } from "../components/ads/InterstitialAd";
+import {
+  showInterstitial,
+  ensureInterstitialLoaded,
+} from "../components/ads/InterstitialAd";
 import { COLORS } from "../constants/colors";
 import {
   showSkipCountdown,
@@ -92,6 +101,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           : gameState.player2Info.name,
     };
   }, [gameState]);
+
+  // Preload interstitial ad when game screen mounts
+  useEffect(() => {
+    ensureInterstitialLoaded().catch(() => {
+      // Silently fail - ad will be loaded when needed
+    });
+  }, []);
 
   const clearConfirmationState = () => {
     pendingConfirmationRef.current = null;

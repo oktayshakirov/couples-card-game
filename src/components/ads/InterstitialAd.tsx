@@ -92,7 +92,11 @@ async function createInterstitialInstance() {
       adLoadTimestamp = 0;
       if (ad) {
         try {
+          isLoadingInterstitial = true;
           ad.load();
+          waitForAdLoad().catch(() => {
+            isLoadingInterstitial = false;
+          });
         } catch {}
       }
     })
@@ -170,7 +174,14 @@ export async function showInterstitial() {
   if (!interstitial || !isAdLoaded) {
     await ensureInterstitialLoaded();
     if (!interstitial || !isAdLoaded || isLoadingInterstitial) {
-      return;
+      try {
+        await initializeInterstitial(true);
+        if (!interstitial || !isAdLoaded || isLoadingInterstitial) {
+          return;
+        }
+      } catch {
+        return;
+      }
     }
   }
 
@@ -181,6 +192,15 @@ export async function showInterstitial() {
     } catch {
       isShowingAd = false;
       isAdLoaded = false;
+      if (interstitial) {
+        try {
+          isLoadingInterstitial = true;
+          interstitial.load();
+          waitForAdLoad().catch(() => {
+            isLoadingInterstitial = false;
+          });
+        } catch {}
+      }
     }
   }
 }

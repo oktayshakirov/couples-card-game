@@ -6,6 +6,7 @@ export const getDeckIconSource = (icon: string) => {
     elixir: require("../../assets/images/elixir.png"),
     fate: require("../../assets/images/fate.png"),
     potion: require("../../assets/images/potion.png"),
+    timeless: require("../../assets/images/timeless.png"),
   };
 
   return iconMap[icon] || null;
@@ -24,6 +25,7 @@ export const isImageIcon = (icon: string): boolean => {
     icon === "hearts" ||
     icon === "elixir" ||
     icon === "fate" ||
-    icon === "potion"
+    icon === "potion" ||
+    icon === "timeless"
   );
 };

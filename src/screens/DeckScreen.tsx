@@ -280,17 +280,40 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           }
         >
           {unlocking || (adLoading && !canSelect) ? (
-            <ActivityIndicator size="small" color="#fff" />
+            <View style={stylesMemo.buttonContent}>
+              <MaterialIcons
+                name="hourglass-empty"
+                size={moderateScale(20)}
+                color="#fff"
+              />
+              <Text style={stylesMemo.selectButtonText}>Loading Ad...</Text>
+            </View>
           ) : (
-            <Text style={stylesMemo.selectButtonText}>
-              {canSelect
-                ? "Select This Deck"
-                : !isOnline
-                ? "Internet Required"
-                : !adReady
-                ? "Loading Ad..."
-                : "Watch Ad to Unlock"}
-            </Text>
+            <View style={stylesMemo.buttonContent}>
+              {!canSelect && adReady && isOnline && (
+                <MaterialIcons
+                  name="play-circle-filled"
+                  size={moderateScale(20)}
+                  color="#fff"
+                />
+              )}
+              {!canSelect && !adReady && isOnline && (
+                <MaterialIcons
+                  name="hourglass-empty"
+                  size={moderateScale(20)}
+                  color="#fff"
+                />
+              )}
+              <Text style={stylesMemo.selectButtonText}>
+                {canSelect
+                  ? "Select This Deck"
+                  : !isOnline
+                  ? "Internet Required"
+                  : !adReady
+                  ? "Loading Ad..."
+                  : "Watch Ad to Unlock"}
+              </Text>
+            </View>
           )}
         </TouchableOpacity>
       </View>
@@ -438,6 +461,12 @@ const createStyles = (width: number) =>
     selectButtonDisabled: {
       backgroundColor: "#666",
       opacity: 0.5,
+    },
+    buttonContent: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: scale(8),
     },
     selectButtonText: {
       fontSize: moderateScale(20),
