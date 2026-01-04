@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "dark",
-    "splash": {
-      "image": "./assets/images/splash-icon.jpg",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
     "ios": {
       "icon": "./assets/images/icon.png",
       "supportsTablet": true,
@@ -20,9 +15,9 @@
       }
     },
     "android": {
-      "icon": "./assets/Android/playstore-icon.png",
+      "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/Android/playstore-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#1a0a0f"
       },
       "package": "com.shadev.loveswipe",

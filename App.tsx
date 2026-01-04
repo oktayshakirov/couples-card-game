@@ -21,6 +21,7 @@ import {
   useGlobalAds,
   cleanupGlobalAds,
 } from "./src/components/ads/adsManager";
+import CustomSplashScreen from "./src/components/CustomSplashScreen";
 
 type Screen =
   | "onboarding"
@@ -35,30 +36,40 @@ const AppContent = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>("onboarding");
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
   const [onboardingChecked, setOnboardingChecked] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
   const hasGameStartedRef = useRef(false);
 
   const completeOnboarding = useCallback(() => {
     setCurrentScreen("setup");
   }, []);
 
+  const handleSplashComplete = useCallback(() => {
+    setShowSplash(false);
+  }, []);
+
   useEffect(() => {
     const checkOnboardingStatus = async () => {
-      try {
-        const isCompleted = await OnboardingService.isOnboardingCompleted();
-        if (!isCompleted) {
+      // Wait for splash screen to complete before checking onboarding
+      if (!showSplash) {
+        try {
+          const isCompleted = await OnboardingService.isOnboardingCompleted();
+          if (!isCompleted) {
+            setCurrentScreen("onboarding");
+          } else {
+            setCurrentScreen("setup");
+          }
+        } catch (error) {
           setCurrentScreen("onboarding");
-        } else {
-          setCurrentScreen("setup");
+        } finally {
+          setOnboardingChecked(true);
         }
-      } catch (error) {
-        setCurrentScreen("onboarding");
-      } finally {
-        setOnboardingChecked(true);
       }
     };
 
-    checkOnboardingStatus();
-  }, []);
+    if (!showSplash) {
+      checkOnboardingStatus();
+    }
+  }, [showSplash]);
 
   useGlobalAds();
 
@@ -229,7 +240,14 @@ const AppContent = () => {
   return (
     <>
       <StatusBar style="light" />
-      {renderScreen()}
+      {showSplash ? (
+        <CustomSplashScreen
+          isVisible={showSplash}
+          onAnimationComplete={handleSplashComplete}
+        />
+      ) : (
+        renderScreen()
+      )}
       <Toast config={toastConfig} />
     </>
   );

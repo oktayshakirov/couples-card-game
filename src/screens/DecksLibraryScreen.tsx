@@ -56,6 +56,18 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
 
   const cardDimensions = useMemo(() => getCardDimensions(width), [width]);
 
+  const sortedDecks = useMemo(() => {
+    return [...allDecks].sort((a, b) => {
+      const aIsUnlocked = unlockedDecks.includes(a.id) || !!a.isDefault;
+      const bIsUnlocked = unlockedDecks.includes(b.id) || !!b.isDefault;
+
+      // Unlocked decks first (return -1), then locked decks (return 1)
+      if (aIsUnlocked && !bIsUnlocked) return -1;
+      if (!aIsUnlocked && bIsUnlocked) return 1;
+      return 0; // Keep original order for same unlock status
+    });
+  }, [unlockedDecks]);
+
   useEffect(() => {
     loadUnlockedDecks();
   }, []);
@@ -152,7 +164,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
         showsVerticalScrollIndicator={false}
       >
         <View style={stylesMemo.cardsGrid}>
-          {allDecks.map((deck) => {
+          {sortedDecks.map((deck) => {
             const isUnlocked =
               unlockedDecks.includes(deck.id) || !!deck.isDefault;
             return (

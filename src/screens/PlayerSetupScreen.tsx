@@ -20,6 +20,9 @@ import { Avatar, PlayerInfo, PlayerColor } from "../hooks/useGameState";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+import { allDecks } from "../data/decks";
+import { getUnlockedDecks } from "../utils/deckStorage";
+import { ensureRewardedLoaded } from "../components/ads/RewardedAd";
 
 interface PlayerSetupScreenProps {
   player1Info: PlayerInfo;
@@ -79,6 +82,29 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
       return () => clearTimeout(timer);
     }
   }, [width, height]);
+
+  // Preload rewarded ad if there are locked decks
+  useEffect(() => {
+    const preloadRewardedAd = async () => {
+      try {
+        const unlocked = await getUnlockedDecks();
+        const hasLockedDecks = allDecks.some(
+          (deck) => !deck.isDefault && !unlocked.includes(deck.id)
+        );
+
+        if (hasLockedDecks) {
+          // Start loading rewarded ad in background (don't await)
+          ensureRewardedLoaded().catch(() => {
+            // Silently fail - ad will load when needed
+          });
+        }
+      } catch {
+        // Silently fail
+      }
+    };
+
+    preloadRewardedAd();
+  }, []);
 
   const currentInfo = activePlayer === 1 ? player1Info : player2Info;
   const updateCurrentPlayer =

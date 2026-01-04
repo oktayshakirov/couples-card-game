@@ -68,9 +68,62 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     }
   }, [loading, unlocked]);
 
+  // Poll for ad ready state when ad is loading
   useEffect(() => {
     if (!unlocked && !deck.isDefault && !loading) {
+      // Initial check
       checkAdReady();
+
+      // Set up polling to detect when ad becomes ready
+      let pollInterval: NodeJS.Timeout | null = null;
+      let isCleanedUp = false;
+      
+      // Start polling if ad is not ready
+      const startPolling = () => {
+        if (isCleanedUp) return;
+        
+        pollInterval = setInterval(() => {
+          if (isCleanedUp) {
+            if (pollInterval) {
+              clearInterval(pollInterval);
+            }
+            return;
+          }
+          
+          if (isRewardedReady()) {
+            setAdReady(true);
+            setAdLoading(false);
+            if (pollInterval) {
+              clearInterval(pollInterval);
+              pollInterval = null;
+            }
+          }
+        }, 500);
+      };
+
+      // Start polling immediately
+      startPolling();
+
+      // Cleanup after 30 seconds max
+      const timeout = setTimeout(() => {
+        if (pollInterval) {
+          clearInterval(pollInterval);
+          pollInterval = null;
+        }
+        // Final check
+        if (isRewardedReady()) {
+          setAdReady(true);
+          setAdLoading(false);
+        }
+      }, 30000);
+
+      return () => {
+        isCleanedUp = true;
+        if (pollInterval) {
+          clearInterval(pollInterval);
+        }
+        clearTimeout(timeout);
+      };
     }
   }, [unlocked, loading, deck.isDefault]);
 
@@ -117,13 +170,31 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         await ensureInterstitialLoaded();
       } catch {}
     } else {
+      // Check if ad is already ready
+      if (isRewardedReady()) {
+        setAdReady(true);
+        setAdLoading(false);
+        return;
+      }
+
+      // Start loading
       setAdLoading(true);
+      setAdReady(false);
+      
       try {
+        // This will either use existing ad or start loading new one
         await ensureRewardedLoaded();
-        setAdReady(isRewardedReady());
+        
+        // Check if ad became ready
+        if (isRewardedReady()) {
+          setAdReady(true);
+          setAdLoading(false);
+        } else {
+          // Ad is still loading, keep adLoading true
+          // The polling effect will detect when it becomes ready
+        }
       } catch {
         setAdReady(false);
-      } finally {
         setAdLoading(false);
       }
     }
@@ -136,7 +207,10 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
       } catch {}
       onSelectDeck(deck);
     } else {
-      if (unlocking || !isOnline || (!adReady && !adLoading)) return;
+      // Check ad readiness directly (fallback if state hasn't updated)
+      const isAdReady = adReady || isRewardedReady();
+      
+      if (unlocking || !isOnline || (!isAdReady && !adLoading)) return;
 
       if (!isRewardedReady()) {
         setAdLoading(true);
@@ -146,6 +220,8 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
             setAdLoading(false);
             return;
           }
+          // Update state when ad becomes ready
+          setAdReady(true);
         } catch {
           setAdLoading(false);
           return;
@@ -270,50 +346,60 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           style={[
             stylesMemo.selectButton,
             !canSelect &&
-              (unlocking || !isOnline || (!adReady && !adLoading)) &&
+              (unlocking || !isOnline || (!adReady && !adLoading && !isRewardedReady())) &&
               stylesMemo.selectButtonDisabled,
           ]}
           onPress={handleSelectDeck}
           disabled={
-            !canSelect && (unlocking || !isOnline || (!adReady && !adLoading))
+            !canSelect && (unlocking || !isOnline || (!adReady && !adLoading && !isRewardedReady()))
           }
         >
-          {unlocking || (adLoading && !canSelect) ? (
-            <View style={stylesMemo.buttonContent}>
-              <MaterialIcons
-                name="hourglass-empty"
-                size={moderateScale(20)}
-                color="#fff"
-              />
-              <Text style={stylesMemo.selectButtonText}>Loading Ad...</Text>
-            </View>
-          ) : (
-            <View style={stylesMemo.buttonContent}>
-              {!canSelect && adReady && isOnline && (
-                <MaterialIcons
-                  name="play-circle-filled"
-                  size={moderateScale(20)}
-                  color="#fff"
-                />
-              )}
-              {!canSelect && !adReady && isOnline && (
-                <MaterialIcons
-                  name="hourglass-empty"
-                  size={moderateScale(20)}
-                  color="#fff"
-                />
-              )}
-              <Text style={stylesMemo.selectButtonText}>
-                {canSelect
-                  ? "Select This Deck"
-                  : !isOnline
-                  ? "Internet Required"
-                  : !adReady
-                  ? "Loading Ad..."
-                  : "Watch Ad to Unlock"}
-              </Text>
-            </View>
-          )}
+          {(() => {
+            // Check ad readiness directly as fallback
+            const isAdActuallyReady = adReady || isRewardedReady();
+            const isActuallyLoading = adLoading && !isAdActuallyReady;
+            
+            if (unlocking || (isActuallyLoading && !canSelect)) {
+              return (
+                <View style={stylesMemo.buttonContent}>
+                  <MaterialIcons
+                    name="hourglass-empty"
+                    size={moderateScale(20)}
+                    color="#fff"
+                  />
+                  <Text style={stylesMemo.selectButtonText}>Loading Ad...</Text>
+                </View>
+              );
+            }
+            
+            return (
+              <View style={stylesMemo.buttonContent}>
+                {!canSelect && isAdActuallyReady && isOnline && (
+                  <MaterialIcons
+                    name="play-circle-filled"
+                    size={moderateScale(20)}
+                    color="#fff"
+                  />
+                )}
+                {!canSelect && !isAdActuallyReady && isOnline && (
+                  <MaterialIcons
+                    name="hourglass-empty"
+                    size={moderateScale(20)}
+                    color="#fff"
+                  />
+                )}
+                <Text style={stylesMemo.selectButtonText}>
+                  {canSelect
+                    ? "Select This Deck"
+                    : !isOnline
+                    ? "Internet Required"
+                    : !isAdActuallyReady
+                    ? "Loading Ad..."
+                    : "Watch Ad to Unlock"}
+                </Text>
+              </View>
+            );
+          })()}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

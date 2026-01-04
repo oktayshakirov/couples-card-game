@@ -1,5 +1,12 @@
 import React, { useMemo, useCallback } from "react";
-import { View, Text, StyleSheet, Dimensions, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  Image,
+} from "react-native";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 
@@ -132,7 +139,11 @@ const SwipeCardComponent: React.FC<SwipeCardProps> = ({
                   { backgroundColor: hexToRgba(currentPlayerColor, 0.4) },
                 ]}
               />
-              <Text style={stylesMemo.dividerEmoji}>❤️</Text>
+              <Image
+                source={require("../../assets/images/icon-simple.png")}
+                style={stylesMemo.dividerIcon}
+                resizeMode="contain"
+              />
               <View
                 style={[
                   stylesMemo.dividerLine,
@@ -266,8 +277,9 @@ const createStyles = (
       height: 2.5,
       borderRadius: 1,
     },
-    dividerEmoji: {
-      fontSize: moderateScale(24),
+    dividerIcon: {
+      width: width >= 768 ? moderateScale(64) : moderateScale(56),
+      height: width >= 768 ? moderateScale(64) : moderateScale(56),
       marginHorizontal: scale(12),
     },
     dareSection: {
