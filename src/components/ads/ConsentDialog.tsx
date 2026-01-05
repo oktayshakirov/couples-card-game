@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Modal,
   View,
@@ -6,16 +6,16 @@ import {
   TouchableOpacity,
   Platform,
   StyleSheet,
+  SafeAreaView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../../constants/colors";
+import { initializeGlobalAds } from "./adsManager";
 
 let TrackingTransparency: any;
 try {
   TrackingTransparency = require("expo-tracking-transparency");
-} catch (error) {
-  // expo-tracking-transparency not available
-}
+} catch (error) {}
 
 type ConsentDialogProps = {
   onConsentCompleted: () => void;
@@ -24,93 +24,123 @@ type ConsentDialogProps = {
 const ConsentDialog = ({ onConsentCompleted }: ConsentDialogProps) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
-  useEffect(() => {
-    AsyncStorage.getItem("trackingConsent").then((storedConsent) => {
+  const checkConsent = useCallback(async () => {
+    try {
+      const storedConsent = await AsyncStorage.getItem("trackingConsent");
       if (storedConsent === null) {
         setModalVisible(true);
       } else {
+        await initializeGlobalAds();
         onConsentCompleted();
       }
-    });
-  }, []);
-
-  const handleAllow = async () => {
-    await AsyncStorage.setItem("trackingConsent", "granted");
-    setModalVisible(false);
-    if (Platform.OS === "ios" && TrackingTransparency) {
-      try {
-        await TrackingTransparency.requestTrackingPermissionsAsync();
-      } catch (error) {
-        // Tracking transparency not available or failed
-      }
+    } catch (error) {
+      setModalVisible(true);
     }
-    onConsentCompleted();
+  }, [onConsentCompleted]);
+
+  useEffect(() => {
+    checkConsent();
+  }, [checkConsent]);
+
+  const handleConsent = async (consent: "granted" | "denied") => {
+    try {
+      await AsyncStorage.setItem("trackingConsent", consent);
+      setModalVisible(false);
+
+      if (
+        consent === "granted" &&
+        Platform.OS === "ios" &&
+        TrackingTransparency
+      ) {
+        try {
+          const { status } =
+            await TrackingTransparency.getTrackingPermissionsAsync();
+          const isUndetermined =
+            status === TrackingTransparency.PermissionStatus?.UNDETERMINED ||
+            status === "undetermined" ||
+            status === 0;
+          if (isUndetermined) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await TrackingTransparency.requestTrackingPermissionsAsync();
+          }
+        } catch (error) {}
+      }
+
+      await initializeGlobalAds();
+      onConsentCompleted();
+    } catch (error) {
+      setModalVisible(false);
+      onConsentCompleted();
+    }
   };
 
-  const handleDontAllow = async () => {
-    await AsyncStorage.setItem("trackingConsent", "denied");
-    setModalVisible(false);
-    onConsentCompleted();
-  };
+  const handleAllow = () => handleConsent("granted");
+  const handleDontAllow = () => handleConsent("denied");
 
   return (
     <Modal
       visible={modalVisible}
       transparent
-      animationType="slide"
+      animationType="fade"
+      statusBarTranslucent
       onRequestClose={() => setModalVisible(false)}
     >
-      <View style={styles.modalOverlay}>
+      <SafeAreaView style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
-          <Text style={styles.title}>Your Privacy & Experience</Text>
-          <Text style={styles.message}>
-            To keep Love Swipe free and enjoyable, we ask for your consent to:
-          </Text>
-          <View style={styles.bulletList}>
-            <Text style={styles.bulletItem}>
-              {"\u2022"} Show you personalized ads that help support our app.
-            </Text>
+          <View style={styles.header}>
+            <Text style={styles.title}>Privacy Settings</Text>
+            <Text style={styles.subtitle}>Help us improve your experience</Text>
           </View>
-          <Text style={styles.sectionTitle}>How we use your data:</Text>
-          <View style={styles.bulletList}>
-            <Text style={styles.bulletItem}>
-              {"\u2022"} We and our partners use your data to show ads that
-              match your interests.
+
+          <View style={styles.content}>
+            <Text style={styles.message}>
+              {Platform.OS === "ios"
+                ? "We value your privacy and aim to keep Love Swipe free through personalized ads. You'll see a system dialog next to confirm your choice."
+                : "We use data to provide you with a better experience and keep Love Swipe free through personalized ads. Your data is handled securely, and we prioritize your privacy at all times."}
             </Text>
-            <Text style={styles.bulletItem}>
-              {"\u2022"} Your privacy is important to us. All data is handled
-              securely.
-            </Text>
+
+            <View style={styles.bulletPoints}>
+              <Text style={styles.bulletPoint}>
+                • Personalized content and ads
+              </Text>
+              <Text style={styles.bulletPoint}>• Better app experience</Text>
+              <Text style={styles.bulletPoint}>• Support app development</Text>
+            </View>
           </View>
-          <Text style={styles.sectionTitle}>You're in control:</Text>
-          <Text style={styles.message}>
-            You can choose to allow or deny these features at any time.
-          </Text>
+
           <View style={styles.buttonContainer}>
             {Platform.OS === "android" ? (
               <>
                 <TouchableOpacity
                   onPress={handleDontAllow}
-                  style={styles.button}
+                  style={[styles.button, styles.declineButton]}
                 >
-                  <Text style={styles.buttonText}>Don't Allow</Text>
+                  <Text style={[styles.buttonText, styles.declineButtonText]}>
+                    Don't Allow
+                  </Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleAllow} style={styles.button}>
-                  <Text style={[styles.buttonText, styles.agreeButton]}>
+                <TouchableOpacity
+                  onPress={handleAllow}
+                  style={[styles.button, styles.allowButton]}
+                >
+                  <Text style={[styles.buttonText, styles.allowButtonText]}>
                     Allow
                   </Text>
                 </TouchableOpacity>
               </>
             ) : (
-              <TouchableOpacity onPress={handleAllow} style={styles.button}>
-                <Text style={[styles.buttonText, styles.continueButton]}>
+              <TouchableOpacity
+                onPress={handleAllow}
+                style={[styles.button, styles.allowButton, styles.singleButton]}
+              >
+                <Text style={[styles.buttonText, styles.allowButtonText]}>
                   Continue
                 </Text>
               </TouchableOpacity>
             )}
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };
@@ -118,64 +148,93 @@ const ConsentDialog = ({ onConsentCompleted }: ConsentDialogProps) => {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
   modalContainer: {
-    width: "80%",
     backgroundColor: COLORS.background,
-    padding: 20,
-    borderRadius: 10,
+    borderRadius: 16,
+    padding: 24,
+    width: "90%",
+    maxWidth: 400,
     elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  header: {
+    marginBottom: 16,
   },
   title: {
-    fontSize: 23,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 30,
     color: COLORS.text.primary,
+    marginBottom: 8,
     textAlign: "center",
   },
+  subtitle: {
+    fontSize: 16,
+    color: COLORS.text.secondary,
+    textAlign: "center",
+  },
+  content: {
+    marginBottom: 24,
+  },
   message: {
-    marginBottom: 10,
-    fontSize: 16,
-    color: COLORS.text.primary,
-    textAlign: "left",
+    fontSize: 14,
+    color: COLORS.text.secondary,
+    lineHeight: 20,
+    marginBottom: 16,
+    textAlign: "center",
   },
-  bulletList: {
-    marginLeft: 10,
-    marginBottom: 10,
-  },
-  bulletItem: {
-    fontSize: 16,
-    color: COLORS.text.primary,
-    marginBottom: 2,
-    marginLeft: 10,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: COLORS.text.primary,
+  bulletPoints: {
     marginTop: 8,
-    marginBottom: 2,
+  },
+  bulletPoint: {
+    fontSize: 14,
+    color: COLORS.text.secondary,
+    marginBottom: 8,
+    paddingLeft: 8,
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
+    gap: 12,
   },
   button: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    flex: 1,
+    backgroundColor: "#1E1E1E",
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#333333",
+  },
+  singleButton: {
+    minWidth: 150,
+  },
+  declineButton: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#404040",
+  },
+  allowButton: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
   },
   buttonText: {
+    color: COLORS.text.primary,
     fontSize: 16,
-    color: COLORS.primary,
+    fontWeight: "600",
   },
-  continueButton: {
-    fontWeight: "bold",
+  declineButtonText: {
+    color: COLORS.text.secondary,
   },
-  agreeButton: {
-    fontWeight: "bold",
+  allowButtonText: {
+    color: COLORS.text.primary,
   },
 });
 
