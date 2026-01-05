@@ -4,7 +4,7 @@ import * as Animatable from "react-native-animatable";
 
 const { width, height } = Dimensions.get("window");
 
-const LOADER_COLORS = ["#39e3ff", "#fe6cbe"];
+const LOADER_COLORS = ["#fe6cbe", "#ffb5e0"];
 
 interface CustomSplashScreenProps {
   onAnimationComplete: () => void;

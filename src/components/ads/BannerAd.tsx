@@ -77,23 +77,33 @@ const BannerAdComponent = () => {
   };
 
   useEffect(() => {
+    isMountedRef.current = true;
+
     const checkConnectivity = async () => {
       try {
         const state = await NetInfo.fetch();
-        setIsOnline(state.isConnected ?? false);
+        if (isMountedRef.current) {
+          setIsOnline(state.isConnected ?? false);
+        }
       } catch {
-        setIsOnline(false);
+        if (isMountedRef.current) {
+          setIsOnline(false);
+        }
       }
     };
 
     checkConnectivity();
     const unsubscribeNetInfo = NetInfo.addEventListener(
       (state: NetInfoState) => {
-        setIsOnline(state.isConnected ?? false);
+        if (isMountedRef.current) {
+          setIsOnline(state.isConnected ?? false);
+        }
       }
     );
 
     const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (!isMountedRef.current) return;
+
       if (
         appState.current.match(/inactive|background/) &&
         nextAppState === "active"

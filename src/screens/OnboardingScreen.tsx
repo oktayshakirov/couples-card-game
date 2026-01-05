@@ -54,7 +54,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     icon: "swap-horiz",
     title: "Swipe to Pick",
     description:
-      "Swipe left for Truth, swipe right for Dare. One card, your choice.",
+      "Swipe left for Truth, swipe right for Dare. One choice - one card.",
   },
   {
     icon: "block",

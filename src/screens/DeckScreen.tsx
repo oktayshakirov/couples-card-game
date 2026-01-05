@@ -74,18 +74,19 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
 
       let pollInterval: NodeJS.Timeout | null = null;
       let isCleanedUp = false;
-      
+
       const startPolling = () => {
         if (isCleanedUp) return;
-        
+
         pollInterval = setInterval(() => {
           if (isCleanedUp) {
             if (pollInterval) {
               clearInterval(pollInterval);
+              pollInterval = null;
             }
             return;
           }
-          
+
           if (isRewardedReady()) {
             setAdReady(true);
             setAdLoading(false);
@@ -171,10 +172,10 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
 
       setAdLoading(true);
       setAdReady(false);
-      
+
       try {
         await ensureRewardedLoaded();
-        
+
         if (isRewardedReady()) {
           setAdReady(true);
           setAdLoading(false);
@@ -194,7 +195,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
       onSelectDeck(deck);
     } else {
       const isAdReady = adReady || isRewardedReady();
-      
+
       if (unlocking || !isOnline || (!isAdReady && !adLoading)) return;
 
       if (!isRewardedReady()) {
@@ -255,7 +256,11 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     <SafeAreaView style={stylesMemo.container} edges={["top", "bottom"]}>
       <View style={stylesMemo.header}>
         <TouchableOpacity onPress={onBack} style={stylesMemo.backButton}>
-          <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
+          <MaterialIcons
+            name="arrow-back"
+            size={24}
+            color={COLORS.text.primary}
+          />
         </TouchableOpacity>
         <Text style={stylesMemo.title}>{deck.name}</Text>
         <View style={stylesMemo.placeholder} />
@@ -333,18 +338,23 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           style={[
             stylesMemo.selectButton,
             !canSelect &&
-              (unlocking || !isOnline || (!adReady && !adLoading && !isRewardedReady())) &&
+              (unlocking ||
+                !isOnline ||
+                (!adReady && !adLoading && !isRewardedReady())) &&
               stylesMemo.selectButtonDisabled,
           ]}
           onPress={handleSelectDeck}
           disabled={
-            !canSelect && (unlocking || !isOnline || (!adReady && !adLoading && !isRewardedReady()))
+            !canSelect &&
+            (unlocking ||
+              !isOnline ||
+              (!adReady && !adLoading && !isRewardedReady()))
           }
         >
           {(() => {
             const isAdActuallyReady = adReady || isRewardedReady();
             const isActuallyLoading = adLoading && !isAdActuallyReady;
-            
+
             if (unlocking || (isActuallyLoading && !canSelect)) {
               return (
                 <View style={stylesMemo.buttonContent}>
@@ -357,7 +367,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                 </View>
               );
             }
-            
+
             return (
               <View style={stylesMemo.buttonContent}>
                 {canSelect && (

@@ -35,13 +35,17 @@ let initializationTimeout: NodeJS.Timeout | null = null;
 let isInitialized = false;
 let initializationPromise: Promise<void> | null = null;
 
-export async function initializeGlobalAds() {
-  if (isInitialized && initializationPromise) {
+export async function initializeGlobalAds(force = false) {
+  if (isInitialized && !force && initializationPromise) {
     return initializationPromise;
   }
 
-  if (initializationPromise) {
+  if (initializationPromise && !force) {
     return initializationPromise;
+  }
+
+  if (isInitialized && !force && typeof __DEV__ !== "undefined" && __DEV__) {
+    return Promise.resolve();
   }
 
   initializationPromise = (async () => {
@@ -74,7 +78,6 @@ export function cleanupGlobalAds() {
     clearTimeout(initializationTimeout);
     initializationTimeout = null;
   }
-  isInitialized = false;
   initializationPromise = null;
   cleanupInterstitialAd();
   cleanupAppOpenAd();
@@ -158,10 +161,12 @@ export function useGlobalAds() {
   const appState = useRef(AppState.currentState);
   const lastAppStateChange = useRef(Date.now());
   const lastAdShownTime = useRef(0);
+  const subscriptionRef = useRef<any>(null);
 
   useEffect(() => {
     if (globalAdsSubscription) {
       globalAdsSubscription.remove();
+      globalAdsSubscription = null;
     }
 
     const subscription = AppState.addEventListener(
@@ -200,8 +205,13 @@ export function useGlobalAds() {
     );
 
     globalAdsSubscription = subscription;
+    subscriptionRef.current = subscription;
 
     return () => {
+      if (subscriptionRef.current) {
+        subscriptionRef.current.remove();
+        subscriptionRef.current = null;
+      }
       if (globalAdsSubscription) {
         globalAdsSubscription.remove();
         globalAdsSubscription = null;
