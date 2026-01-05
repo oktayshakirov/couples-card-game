@@ -3,7 +3,7 @@ import { View, StyleSheet, Animated, AppState, Text } from "react-native";
 import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getAdUnitId } from "./adConfig";
-import { useAdConsent } from "./useAdConsent";
+import { useAdConsent } from "../../hooks/useAdConsent";
 import { COLORS } from "../../constants/colors";
 
 let BannerAd: any;

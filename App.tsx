@@ -22,6 +22,7 @@ import {
   cleanupGlobalAds,
 } from "./src/components/ads/adsManager";
 import CustomSplashScreen from "./src/components/CustomSplashScreen";
+import ConsentDialog from "./src/components/ads/ConsentDialog";
 
 type Screen =
   | "onboarding"
@@ -37,6 +38,7 @@ const AppContent = () => {
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
   const [onboardingChecked, setOnboardingChecked] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
+  const [consentCompleted, setConsentCompleted] = useState(false);
   const hasGameStartedRef = useRef(false);
 
   const completeOnboarding = useCallback(() => {
@@ -246,6 +248,9 @@ const AppContent = () => {
         />
       ) : (
         renderScreen()
+      )}
+      {!showSplash && !consentCompleted && (
+        <ConsentDialog onConsentCompleted={() => setConsentCompleted(true)} />
       )}
       <Toast config={toastConfig} />
     </>

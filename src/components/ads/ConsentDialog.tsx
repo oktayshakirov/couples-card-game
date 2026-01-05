@@ -7,9 +7,15 @@ import {
   Platform,
   StyleSheet,
 } from "react-native";
-import * as TrackingTransparency from "expo-tracking-transparency";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Colors } from "@/constants/Colors";
+import { COLORS } from "../../constants/colors";
+
+let TrackingTransparency: any;
+try {
+  TrackingTransparency = require("expo-tracking-transparency");
+} catch (error) {
+  // expo-tracking-transparency not available
+}
 
 type ConsentDialogProps = {
   onConsentCompleted: () => void;
@@ -31,9 +37,12 @@ const ConsentDialog = ({ onConsentCompleted }: ConsentDialogProps) => {
   const handleAllow = async () => {
     await AsyncStorage.setItem("trackingConsent", "granted");
     setModalVisible(false);
-    if (Platform.OS === "ios") {
-      const { status } =
+    if (Platform.OS === "ios" && TrackingTransparency) {
+      try {
         await TrackingTransparency.requestTrackingPermissionsAsync();
+      } catch (error) {
+        // Tracking transparency not available or failed
+      }
     }
     onConsentCompleted();
   };
@@ -55,16 +64,11 @@ const ConsentDialog = ({ onConsentCompleted }: ConsentDialogProps) => {
         <View style={styles.modalContainer}>
           <Text style={styles.title}>Your Privacy & Experience</Text>
           <Text style={styles.message}>
-            To keep TheCrypto.wiki free and enjoyable, we ask for your consent
-            to:
+            To keep Love Swipe free and enjoyable, we ask for your consent to:
           </Text>
           <View style={styles.bulletList}>
             <Text style={styles.bulletItem}>
               {"\u2022"} Show you personalized ads that help support our app.
-            </Text>
-            <Text style={styles.bulletItem}>
-              {"\u2022"} Send you push notifications so you never miss new
-              posts.
             </Text>
           </View>
           <Text style={styles.sectionTitle}>How we use your data:</Text>
@@ -120,7 +124,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "80%",
-    backgroundColor: Colors.background,
+    backgroundColor: COLORS.background,
     padding: 20,
     borderRadius: 10,
     elevation: 5,
@@ -129,13 +133,13 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: "bold",
     marginBottom: 30,
-    color: Colors.text,
+    color: COLORS.text.primary,
     textAlign: "center",
   },
   message: {
     marginBottom: 10,
     fontSize: 16,
-    color: Colors.text,
+    color: COLORS.text.primary,
     textAlign: "left",
   },
   bulletList: {
@@ -144,14 +148,14 @@ const styles = StyleSheet.create({
   },
   bulletItem: {
     fontSize: 16,
-    color: Colors.text,
+    color: COLORS.text.primary,
     marginBottom: 2,
     marginLeft: 10,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: Colors.text,
+    color: COLORS.text.primary,
     marginTop: 8,
     marginBottom: 2,
   },
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    color: Colors.highlight,
+    color: COLORS.primary,
   },
   continueButton: {
     fontWeight: "bold",
@@ -176,4 +180,3 @@ const styles = StyleSheet.create({
 });
 
 export default ConsentDialog;
-
