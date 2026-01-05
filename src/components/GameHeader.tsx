@@ -106,8 +106,8 @@ const GameHeaderComponent: React.FC<GameHeaderProps> = ({
         </Text>
         <View style={stylesMemo.statsRow}>
           <View style={stylesMemo.statBadge}>
-            <Ionicons
-              name="help-circle"
+            <MaterialIcons
+              name="chat"
               size={moderateScale(width >= 768 ? 10 : 12)}
               color="#4A90E2"
             />
@@ -174,8 +174,8 @@ const GameHeaderComponent: React.FC<GameHeaderProps> = ({
         </Text>
         <View style={stylesMemo.statsRow}>
           <View style={stylesMemo.statBadge}>
-            <Ionicons
-              name="help-circle"
+            <MaterialIcons
+              name="chat"
               size={moderateScale(width >= 768 ? 10 : 12)}
               color="#4A90E2"
             />
