@@ -167,6 +167,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   ) => {
     updatePlayerStats(player, statType);
     removeCard(cardId);
+    cardRemountKeysRef.current.delete(cardId);
     clearConfirmationState();
     switchPlayer();
     incrementSwipeCount();
@@ -225,6 +226,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         updatePlayerStats(player, "skipped");
         isSkippingRef.current = false;
         removeCard(cardId);
+        cardRemountKeysRef.current.delete(cardId);
 
         const remainingSkips = Math.max(0, 3 - (stats.skipped + 1));
         if (remainingSkips > 0) {
@@ -266,6 +268,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     }
 
     removeCard(cardId);
+    cardRemountKeysRef.current.delete(cardId);
   };
 
   const swipeLeft = useCallback(() => {

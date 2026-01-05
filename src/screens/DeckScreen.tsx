@@ -279,7 +279,10 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
 
       <ScrollView
         style={stylesMemo.scrollView}
-        contentContainerStyle={stylesMemo.scrollContent}
+        contentContainerStyle={[
+          stylesMemo.scrollContent,
+          canSelect && stylesMemo.scrollContentCentered,
+        ]}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.deckHeader}>
@@ -374,6 +377,13 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
             
             return (
               <View style={stylesMemo.buttonContent}>
+                {canSelect && (
+                  <MaterialIcons
+                    name="style"
+                    size={moderateScale(20)}
+                    color={COLORS.text.primary}
+                  />
+                )}
                 {!canSelect && isAdActuallyReady && isOnline && (
                   <MaterialIcons
                     name="play-circle-filled"
@@ -441,6 +451,10 @@ const createStyles = (width: number) =>
     scrollContent: {
       paddingHorizontal: width >= 768 ? 32 : scale(16),
       paddingBottom: verticalScale(28),
+    },
+    scrollContentCentered: {
+      flexGrow: 1,
+      justifyContent: "center",
     },
     buttonContainer: {
       paddingHorizontal: width >= 768 ? 32 : scale(16),

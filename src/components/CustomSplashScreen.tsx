@@ -4,7 +4,7 @@ import * as Animatable from "react-native-animatable";
 
 const { width, height } = Dimensions.get("window");
 
-const LOADER_COLOR = "#fe6cbe";
+const LOADER_COLORS = ["#fe6cbe", "#39e3ff"];
 
 interface CustomSplashScreenProps {
   onAnimationComplete: () => void;
@@ -17,6 +17,7 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({
 }) => {
   const logoRef = useRef<any>(null);
   const waveRef = useRef<any>(null);
+  const logoOpacity = useRef(new Animated.Value(1)).current;
   const waveValues = useRef([
     new Animated.Value(0),
     new Animated.Value(0),
@@ -47,6 +48,21 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({
           waveRef.current.fadeIn(800);
         }
 
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(logoOpacity, {
+              toValue: 0.6,
+              duration: 750,
+              useNativeDriver: true,
+            }),
+            Animated.timing(logoOpacity, {
+              toValue: 1,
+              duration: 750,
+              useNativeDriver: true,
+            }),
+          ])
+        ).start();
+
         waveValues.forEach((value, index) => {
           const delay = index * 200;
           Animated.loop(
@@ -74,16 +90,23 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        {/* Logo Section */}
         <Animatable.View ref={logoRef} style={styles.logoContainer}>
-          <Image
-            source={require("../../assets/images/splash-icon.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+          <Animated.View
+            style={[
+              styles.logoWrapper,
+              {
+                opacity: logoOpacity,
+              },
+            ]}
+          >
+            <Image
+              source={require("../../assets/images/splash-icon.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </Animated.View>
         </Animatable.View>
 
-        {/* Wave Animation Section */}
         <Animatable.View ref={waveRef} style={styles.waveContainer}>
           {waveValues.map((value, index) => (
             <Animated.View
@@ -91,7 +114,6 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({
               style={[
                 styles.waveBar,
                 {
-                  backgroundColor: LOADER_COLOR,
                   transform: [
                     {
                       scaleY: value.interpolate({
@@ -106,7 +128,32 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({
                   }),
                 },
               ]}
-            />
+            >
+              <Animated.View
+                style={[
+                  StyleSheet.absoluteFill,
+                  {
+                    backgroundColor: LOADER_COLORS[0],
+                    opacity: value.interpolate({
+                      inputRange: [0, 0.5, 1],
+                      outputRange: [1, 0, 1],
+                    }),
+                  },
+                ]}
+              />
+              <Animated.View
+                style={[
+                  StyleSheet.absoluteFill,
+                  {
+                    backgroundColor: LOADER_COLORS[1],
+                    opacity: value.interpolate({
+                      inputRange: [0, 0.5, 1],
+                      outputRange: [0, 1, 0],
+                    }),
+                  },
+                ]}
+              />
+            </Animated.View>
           ))}
         </Animatable.View>
       </View>
@@ -133,6 +180,10 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: "center",
+  },
+  logoWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   logo: {
     width: width * 0.85,
