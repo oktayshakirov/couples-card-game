@@ -125,7 +125,7 @@ const createStyles = (width: number) =>
     },
     buttonText: {
       fontSize: width >= 768 ? moderateScale(20) : moderateScale(24),
-      color: "#FFF",
+      color: COLORS.text.primary,
       fontWeight: "700",
     },
     disabledButton: {

@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#3a2a3f",
   },
   placeholderText: {
-    color: "#999",
+    color: COLORS.text.secondary,
     fontSize: 12,
     fontWeight: "500",
   },

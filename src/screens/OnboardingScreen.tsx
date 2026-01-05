@@ -35,14 +35,14 @@ interface OnboardingStep {
 const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     icon: "favorite",
-    title: "Welcome to Love Swipe",
+    title: "Welcome",
     description: "Here's what you need to know to get started.",
   },
   {
     icon: "person",
-    title: "Set Up Your Profile",
+    title: "Set Up Your Profiles",
     description:
-      "Pick an avatar, choose a name, and pick your favorite color. Make it yours.",
+      "Choose a name, pick an avatar and pick your favorite color. Make it yours.",
   },
   {
     icon: "favorite",
@@ -167,14 +167,14 @@ export const OnboardingScreen: React.FC = () => {
             style={[
               styles.logoContainer,
               {
-                width: width >= 768 ? scale(56) : scale(50),
-                height: width >= 768 ? scale(56) : scale(50),
-                borderRadius: (width >= 768 ? scale(56) : scale(50)) / 2,
+                width: width >= 768 ? scale(80) : scale(70),
+                height: width >= 768 ? scale(80) : scale(70),
+                borderRadius: (width >= 768 ? scale(80) : scale(70)) / 2,
               },
             ]}
           >
             <Image
-              source={require("../../assets/images/icon.png")}
+              source={require("../../assets/images/icon-simple.png")}
               style={styles.logoImage}
               resizeMode="cover"
             />

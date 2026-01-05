@@ -121,7 +121,7 @@ export const DeckPack: React.FC<DeckPackProps> = ({
             <MaterialIcons
               name={deck.icon as any}
               size={width >= 768 ? scale(36) : scale(32)}
-              color={isUnlocked ? COLORS.primary : "#999"}
+              color={isUnlocked ? COLORS.primary : COLORS.text.secondary}
             />
           )}
         </View>
@@ -140,7 +140,7 @@ export const DeckPack: React.FC<DeckPackProps> = ({
                 styles.deckDescription,
                 !isUnlocked && styles.deckDescriptionLocked,
               ]}
-              numberOfLines={2}
+              numberOfLines={3}
             >
               {deck.description}
             </Text>
@@ -272,7 +272,7 @@ const createStyles = (width: number) =>
     deckName: {
       fontSize: width >= 768 ? moderateScale(22) : moderateScale(20),
       fontWeight: "700",
-      color: "#fff",
+      color: COLORS.text.primary,
       textAlign: "center",
       width: "100%",
       lineHeight: width >= 768 ? moderateScale(28) : moderateScale(26),

@@ -117,7 +117,7 @@ export const DeckUnlockedScreen: React.FC<DeckUnlockedScreenProps> = ({
             disabled={!isReady}
           >
             {!isReady ? (
-              <ActivityIndicator size="small" color="#999" />
+              <ActivityIndicator size="small" color={COLORS.text.secondary} />
             ) : (
               <>
                 <MaterialIcons
@@ -160,14 +160,14 @@ const createStyles = (width: number) =>
     headerTitle: {
       fontSize: moderateScale(32),
       fontWeight: "800",
-      color: "#fff",
+      color: COLORS.text.primary,
       textAlign: "center",
       marginBottom: verticalScale(10),
       letterSpacing: 0.5,
     },
     headerSubtitle: {
       fontSize: moderateScale(16),
-      color: "#fff",
+      color: COLORS.text.primary,
       textAlign: "center",
       opacity: 0.85,
       fontWeight: "500",
@@ -219,7 +219,7 @@ const createStyles = (width: number) =>
     deckName: {
       fontSize: moderateScale(28),
       fontWeight: "700",
-      color: "#fff",
+      color: COLORS.text.primary,
       textAlign: "center",
       marginBottom: verticalScale(8),
       letterSpacing: 0.3,
@@ -249,7 +249,7 @@ const createStyles = (width: number) =>
     },
     statText: {
       fontSize: moderateScale(15),
-      color: "#fff",
+      color: COLORS.text.primary,
       fontWeight: "600",
     },
     loadingContainer: {
@@ -269,7 +269,7 @@ const createStyles = (width: number) =>
     },
     loadingText: {
       fontSize: moderateScale(16),
-      color: "#fff",
+      color: COLORS.text.primary,
       textAlign: "center",
       fontWeight: "500",
       opacity: 0.9,

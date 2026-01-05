@@ -69,8 +69,15 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
           >
             <View style={stylesMemo.header}>
               <Text style={stylesMemo.title}>Menu</Text>
-              <TouchableOpacity onPress={onClose} style={stylesMemo.closeButton}>
-                <MaterialIcons name="close" size={24} color="#fff" />
+              <TouchableOpacity
+                onPress={onClose}
+                style={stylesMemo.closeButton}
+              >
+                <MaterialIcons
+                  name="close"
+                  size={24}
+                  color={COLORS.text.primary}
+                />
               </TouchableOpacity>
             </View>
 
@@ -93,7 +100,11 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
                     Change player names, avatars, or colors
                   </Text>
                 </View>
-                <MaterialIcons name="chevron-right" size={24} color="#999" />
+                <MaterialIcons
+                  name="chevron-right"
+                  size={24}
+                  color={COLORS.text.secondary}
+                />
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -114,7 +125,11 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
                     Select a different card deck
                   </Text>
                 </View>
-                <MaterialIcons name="chevron-right" size={24} color="#999" />
+                <MaterialIcons
+                  name="chevron-right"
+                  size={24}
+                  color={COLORS.text.secondary}
+                />
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -124,80 +139,81 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
   );
 };
 
-const createStyles = (width: number) => StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    justifyContent: "flex-start",
-  },
-  container: {
-    flex: 1,
-  },
-  menuContainer: {
-    backgroundColor: COLORS.background,
-    borderBottomLeftRadius: scale(24),
-    borderBottomRightRadius: scale(24),
-    paddingBottom: verticalScale(24),
-    paddingHorizontal: width >= 768 ? 24 : scale(20),
-    borderBottomWidth: 1,
-    borderBottomColor: hexToRgba(COLORS.primary, 0.2),
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: verticalScale(24),
-  },
-  title: {
-    fontSize: moderateScale(28),
-    fontWeight: "700",
-    color: "#fff",
-  },
-  closeButton: {
-    width: scale(40),
-    height: verticalScale(40),
-    borderRadius: scale(20),
-    backgroundColor: "rgba(255,255,255,0.1)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  optionsContainer: {
-    gap: verticalScale(16),
-  },
-  option: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: hexToRgba(COLORS.primary, 0.1),
-    borderRadius: scale(18),
-    paddingVertical: verticalScale(16),
-    paddingHorizontal: scale(18),
-    borderWidth: 1,
-    borderColor: hexToRgba(COLORS.primary, 0.2),
-    minHeight: verticalScale(72),
-  },
-  optionIconContainer: {
-    width: scale(48),
-    height: scale(48),
-    borderRadius: scale(24),
-    backgroundColor: hexToRgba(COLORS.primary, 0.15),
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: scale(16),
-    flexShrink: 0,
-  },
-  optionContent: {
-    flex: 1,
-  },
-  optionTitle: {
-    fontSize: moderateScale(18),
-    fontWeight: "700",
-    color: "#fff",
-    marginBottom: 4,
-  },
-  optionDescription: {
-    fontSize: moderateScale(14),
-    color: "#999",
-  },
-});
+const createStyles = (width: number) =>
+  StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
+      justifyContent: "flex-start",
+    },
+    container: {
+      flex: 1,
+    },
+    menuContainer: {
+      backgroundColor: COLORS.background,
+      borderBottomLeftRadius: scale(24),
+      borderBottomRightRadius: scale(24),
+      paddingBottom: verticalScale(24),
+      paddingHorizontal: width >= 768 ? 24 : scale(20),
+      borderBottomWidth: 1,
+      borderBottomColor: hexToRgba(COLORS.primary, 0.2),
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: verticalScale(24),
+    },
+    title: {
+      fontSize: moderateScale(28),
+      fontWeight: "700",
+      color: COLORS.text.primary,
+    },
+    closeButton: {
+      width: scale(40),
+      height: verticalScale(40),
+      borderRadius: scale(20),
+      backgroundColor: "rgba(255,255,255,0.1)",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    optionsContainer: {
+      gap: verticalScale(16),
+    },
+    option: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: hexToRgba(COLORS.primary, 0.1),
+      borderRadius: scale(18),
+      paddingVertical: verticalScale(16),
+      paddingHorizontal: scale(18),
+      borderWidth: 1,
+      borderColor: hexToRgba(COLORS.primary, 0.2),
+      minHeight: verticalScale(72),
+    },
+    optionIconContainer: {
+      width: scale(48),
+      height: scale(48),
+      borderRadius: scale(24),
+      backgroundColor: hexToRgba(COLORS.primary, 0.15),
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: scale(16),
+      flexShrink: 0,
+    },
+    optionContent: {
+      flex: 1,
+    },
+    optionTitle: {
+      fontSize: moderateScale(18),
+      fontWeight: "700",
+      color: COLORS.text.primary,
+      marginBottom: 4,
+    },
+    optionDescription: {
+      fontSize: moderateScale(14),
+      color: COLORS.text.secondary,
+    },
+  });
 
 const styles = createStyles(0); // Will be recalculated in component

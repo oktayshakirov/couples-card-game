@@ -64,7 +64,7 @@ const GameHeaderComponent: React.FC<GameHeaderProps> = ({
           <MaterialIcons
             name="menu"
             size={moderateScale(width >= 768 ? 20 : 22)}
-            color="#999"
+            color={COLORS.text.secondary}
           />
         </TouchableOpacity>
       )}
@@ -90,7 +90,7 @@ const GameHeaderComponent: React.FC<GameHeaderProps> = ({
           <MaterialCommunityIcons
             name={player1Avatar as any}
             size={moderateScale(width >= 768 ? 18 : 22)}
-            color={currentPlayer === 1 ? player1Color : "#999"}
+            color={currentPlayer === 1 ? player1Color : COLORS.text.secondary}
           />
         </View>
         <Text
@@ -125,7 +125,7 @@ const GameHeaderComponent: React.FC<GameHeaderProps> = ({
             <Ionicons
               name="close"
               size={moderateScale(width >= 768 ? 10 : 12)}
-              color="#999"
+              color={COLORS.text.secondary}
             />
             <Text style={stylesMemo.statText}>{player1Skipped}</Text>
           </View>
@@ -158,7 +158,7 @@ const GameHeaderComponent: React.FC<GameHeaderProps> = ({
           <MaterialCommunityIcons
             name={player2Avatar as any}
             size={moderateScale(width >= 768 ? 18 : 22)}
-            color={currentPlayer === 2 ? player2Color : "#999"}
+            color={currentPlayer === 2 ? player2Color : COLORS.text.secondary}
           />
         </View>
         <Text
@@ -193,7 +193,7 @@ const GameHeaderComponent: React.FC<GameHeaderProps> = ({
             <Ionicons
               name="close"
               size={moderateScale(width >= 768 ? 10 : 12)}
-              color="#999"
+              color={COLORS.text.secondary}
             />
             <Text style={stylesMemo.statText}>{player2Skipped}</Text>
           </View>
@@ -274,7 +274,7 @@ const createStyles = (width: number) =>
     statText: {
       fontSize: width >= 768 ? moderateScale(10) : moderateScale(11),
       fontWeight: "700",
-      color: "#FFF",
+      color: COLORS.text.primary,
     },
     vsDivider: {
       paddingHorizontal: scale(10),

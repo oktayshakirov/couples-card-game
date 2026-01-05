@@ -271,7 +271,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     <SafeAreaView style={stylesMemo.container} edges={["top", "bottom"]}>
       <View style={stylesMemo.header}>
         <TouchableOpacity onPress={onBack} style={stylesMemo.backButton}>
-          <MaterialIcons name="arrow-back" size={24} color="#fff" />
+          <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
         </TouchableOpacity>
         <Text style={stylesMemo.title}>{deck.name}</Text>
         <View style={stylesMemo.placeholder} />
@@ -365,7 +365,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                   <MaterialIcons
                     name="hourglass-empty"
                     size={moderateScale(20)}
-                    color="#fff"
+                    color={COLORS.text.primary}
                   />
                   <Text style={stylesMemo.selectButtonText}>Loading Ad...</Text>
                 </View>
@@ -378,14 +378,14 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                   <MaterialIcons
                     name="play-circle-filled"
                     size={moderateScale(20)}
-                    color="#fff"
+                    color={COLORS.text.primary}
                   />
                 )}
                 {!canSelect && !isAdActuallyReady && isOnline && (
                   <MaterialIcons
                     name="hourglass-empty"
                     size={moderateScale(20)}
-                    color="#fff"
+                    color={COLORS.text.primary}
                   />
                 )}
                 <Text style={stylesMemo.selectButtonText}>
@@ -430,7 +430,7 @@ const createStyles = (width: number) =>
     title: {
       fontSize: moderateScale(26),
       fontWeight: "700",
-      color: "#fff",
+      color: COLORS.text.primary,
     },
     placeholder: {
       width: 40,
@@ -466,7 +466,7 @@ const createStyles = (width: number) =>
     deckName: {
       fontSize: moderateScale(32),
       fontWeight: "700",
-      color: "#fff",
+      color: COLORS.text.primary,
       marginBottom: verticalScale(10),
     },
     deckDescription: {
@@ -487,7 +487,7 @@ const createStyles = (width: number) =>
     },
     statText: {
       fontSize: moderateScale(16),
-      color: "#fff",
+      color: COLORS.text.primary,
       fontWeight: "600",
     },
     lockedContainer: {
@@ -502,7 +502,7 @@ const createStyles = (width: number) =>
     lockedTitle: {
       fontSize: moderateScale(20),
       fontWeight: "700",
-      color: "#fff",
+      color: COLORS.text.primary,
       marginTop: verticalScale(10),
       marginBottom: verticalScale(6),
     },
@@ -556,7 +556,7 @@ const createStyles = (width: number) =>
     selectButtonText: {
       fontSize: moderateScale(20),
       fontWeight: "700",
-      color: "#fff",
+      color: COLORS.text.primary,
     },
   });
 

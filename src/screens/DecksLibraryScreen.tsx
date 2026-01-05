@@ -113,7 +113,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
               >
                 <MaterialCommunityIcons
                   name={player1Avatar as any}
-                  size={moderateScale(width >= 768 ? 20 : 24)}
+                  size={moderateScale(width >= 768 ? 16 : 20)}
                   color={player1Color}
                 />
               </View>
@@ -134,7 +134,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
               >
                 <MaterialCommunityIcons
                   name={player2Avatar as any}
-                  size={moderateScale(width >= 768 ? 20 : 24)}
+                  size={moderateScale(width >= 768 ? 16 : 20)}
                   color={player2Color}
                 />
               </View>
@@ -151,7 +151,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
             onPress={onClose}
             activeOpacity={0.7}
           >
-            <MaterialIcons name="close" size={24} color="#fff" />
+            <MaterialIcons name="close" size={24} color={COLORS.text.primary} />
           </TouchableOpacity>
         ) : (
           <View style={stylesMemo.placeholder} />
@@ -210,41 +210,41 @@ const createStyles = (width: number) =>
     titleContainer: {
       alignItems: "center",
       flex: 1,
-      gap: verticalScale(6),
+      gap: verticalScale(4),
     },
     titleRow: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      gap: scale(8),
+      gap: scale(6),
       flexWrap: "wrap",
     },
     playerNameContainer: {
       flexDirection: "row",
       alignItems: "center",
-      gap: scale(6),
+      gap: scale(4),
     },
     avatarContainer: {
-      width: width >= 768 ? scale(32) : scale(36),
-      height: width >= 768 ? scale(32) : scale(36),
-      borderRadius: width >= 768 ? scale(16) : scale(18),
+      width: width >= 768 ? scale(28) : scale(32),
+      height: width >= 768 ? scale(28) : scale(32),
+      borderRadius: width >= 768 ? scale(14) : scale(16),
       borderWidth: 2,
       alignItems: "center",
       justifyContent: "center",
     },
     title: {
-      fontSize: moderateScale(26),
+      fontSize: moderateScale(22),
       fontWeight: "700",
     },
     ampersand: {
-      fontSize: moderateScale(26),
+      fontSize: moderateScale(22),
       fontWeight: "700",
       color: COLORS.primary,
     },
     subtitle: {
-      fontSize: moderateScale(26),
+      fontSize: moderateScale(20),
       fontWeight: "700",
-      color: "#fff",
+      color: COLORS.text.primary,
     },
     placeholder: {
       width: 40,

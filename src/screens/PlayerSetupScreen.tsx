@@ -200,7 +200,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             onPress={onClose}
             activeOpacity={0.7}
           >
-            <MaterialIcons name="close" size={moderateScale(24)} color="#fff" />
+            <MaterialIcons name="close" size={moderateScale(24)} color={COLORS.text.primary} />
           </TouchableOpacity>
         ) : (
           <View style={stylesMemo.headerSpacer} />
@@ -305,7 +305,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
                         color={
                           currentInfo.avatar === avatar.value
                             ? currentInfo.color
-                            : "#999"
+                            : COLORS.text.secondary
                         }
                       />
                     </TouchableOpacity>
@@ -354,7 +354,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             <MaterialIcons
               name={getButtonIcon() as any}
               size={moderateScale(20)}
-              color="#FFF"
+              color={COLORS.text.primary}
             />
           )}
         </TouchableOpacity>
@@ -417,7 +417,7 @@ const createStyles = (width: number) => {
     },
     subtitle: {
       fontSize: moderateScale(14),
-      color: "#999",
+      color: COLORS.text.secondary,
       textAlign: "center",
       marginBottom: verticalScale(12),
     },
@@ -439,7 +439,7 @@ const createStyles = (width: number) => {
       color: "#666",
     },
     playerIndicatorTextActive: {
-      color: "#FFF",
+      color: COLORS.text.primary,
       fontWeight: "600",
     },
     setupCard: {
@@ -457,7 +457,7 @@ const createStyles = (width: number) => {
     label: {
       fontSize: moderateScale(14),
       fontWeight: "600",
-      color: "#FFF",
+      color: COLORS.text.primary,
       marginBottom: verticalScale(12),
     },
     input: {
@@ -465,7 +465,7 @@ const createStyles = (width: number) => {
       borderRadius: 12,
       padding: scale(14),
       fontSize: moderateScale(16),
-      color: "#FFF",
+      color: COLORS.text.primary,
       borderWidth: 1,
       borderColor: "rgba(255,255,255,0.1)",
     },
@@ -496,7 +496,7 @@ const createStyles = (width: number) => {
     },
     activeColorButton: {
       borderWidth: 3,
-      borderColor: "#FFF",
+      borderColor: COLORS.text.primary,
       transform: [{ scale: 1.1 }],
     },
     buttonContainer: {
@@ -522,7 +522,7 @@ const createStyles = (width: number) => {
     actionButtonText: {
       fontSize: moderateScale(17),
       fontWeight: "700",
-      color: "#FFF",
+      color: COLORS.text.primary,
     },
     loadingContainer: {
       flex: 1,

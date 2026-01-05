@@ -83,7 +83,11 @@ export const EmptyDeck: React.FC<EmptyDeckProps> = ({
                 <Text style={stylesMemo.statValue}>{player1Dares}</Text>
               </View>
               <View style={stylesMemo.statItem}>
-                <Ionicons name="close" size={moderateScale(18)} color="#999" />
+                <Ionicons
+                  name="close"
+                  size={moderateScale(18)}
+                  color={COLORS.text.secondary}
+                />
                 <Text style={stylesMemo.statLabel}>Skipped</Text>
                 <Text style={stylesMemo.statValue}>{player1Skipped}</Text>
               </View>
@@ -116,7 +120,11 @@ export const EmptyDeck: React.FC<EmptyDeckProps> = ({
                 <Text style={stylesMemo.statValue}>{player2Dares}</Text>
               </View>
               <View style={stylesMemo.statItem}>
-                <Ionicons name="close" size={moderateScale(18)} color="#999" />
+                <Ionicons
+                  name="close"
+                  size={moderateScale(18)}
+                  color={COLORS.text.secondary}
+                />
                 <Text style={stylesMemo.statLabel}>Skipped</Text>
                 <Text style={stylesMemo.statValue}>{player2Skipped}</Text>
               </View>
@@ -132,7 +140,7 @@ export const EmptyDeck: React.FC<EmptyDeckProps> = ({
             <MaterialIcons
               name="refresh"
               size={moderateScale(20)}
-              color="#FFF"
+              color={COLORS.text.primary}
             />
             <Text style={stylesMemo.playAgainText}>Play Again</Text>
           </TouchableOpacity>
@@ -144,7 +152,7 @@ export const EmptyDeck: React.FC<EmptyDeckProps> = ({
               <MaterialIcons
                 name="style"
                 size={moderateScale(20)}
-                color="#FFF"
+                color={COLORS.text.primary}
               />
               <Text style={stylesMemo.changeDeckText}>Change Deck</Text>
             </TouchableOpacity>
@@ -177,7 +185,7 @@ const createStyles = (width: number) =>
     },
     subtitle: {
       fontSize: moderateScale(14),
-      color: "#999",
+      color: COLORS.text.secondary,
       textAlign: "center",
       marginBottom: verticalScale(20),
     },
@@ -210,12 +218,12 @@ const createStyles = (width: number) =>
     },
     statLabel: {
       fontSize: moderateScale(11),
-      color: "#999",
+      color: COLORS.text.secondary,
       fontWeight: "600",
     },
     statValue: {
       fontSize: moderateScale(20),
-      color: "#FFF",
+      color: COLORS.text.primary,
       fontWeight: "700",
     },
     buttonsContainer: {
@@ -242,7 +250,7 @@ const createStyles = (width: number) =>
     },
     playAgainText: {
       fontSize: moderateScale(18),
-      color: "#FFF",
+      color: COLORS.text.primary,
       fontWeight: "700",
       letterSpacing: 0.5,
     },
@@ -264,7 +272,7 @@ const createStyles = (width: number) =>
     },
     changeDeckText: {
       fontSize: moderateScale(18),
-      color: "#FFF",
+      color: COLORS.text.primary,
       fontWeight: "700",
       letterSpacing: 0.5,
     },

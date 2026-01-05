@@ -10,6 +10,7 @@ import * as Haptics from "expo-haptics";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { Avatar } from "../hooks/useGameState";
+import { COLORS } from "../constants/colors";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 interface CustomToastProps {
@@ -94,7 +95,7 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
               <MaterialIcons
                 name="check"
                 size={moderateScale(18)}
-                color="#FFF"
+                color={COLORS.text.primary}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -105,7 +106,7 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
               <MaterialIcons
                 name="close"
                 size={moderateScale(18)}
-                color="#FFF"
+                color={COLORS.text.primary}
               />
             </TouchableOpacity>
           </View>
@@ -171,12 +172,12 @@ const createStyles = (width: number) =>
     },
     text2: {
       fontSize: moderateScale(13),
-      color: "#FFF",
+      color: COLORS.text.primary,
       fontWeight: "400",
     },
     questionText: {
       fontSize: moderateScale(12),
-      color: "#999",
+      color: COLORS.text.secondary,
       fontWeight: "500",
       fontStyle: "italic",
       marginTop: verticalScale(6),
