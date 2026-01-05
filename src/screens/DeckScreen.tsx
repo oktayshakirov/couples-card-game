@@ -68,17 +68,13 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     }
   }, [loading, unlocked]);
 
-  // Poll for ad ready state when ad is loading
   useEffect(() => {
     if (!unlocked && !deck.isDefault && !loading) {
-      // Initial check
       checkAdReady();
 
-      // Set up polling to detect when ad becomes ready
       let pollInterval: NodeJS.Timeout | null = null;
       let isCleanedUp = false;
       
-      // Start polling if ad is not ready
       const startPolling = () => {
         if (isCleanedUp) return;
         
@@ -101,16 +97,13 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         }, 500);
       };
 
-      // Start polling immediately
       startPolling();
 
-      // Cleanup after 30 seconds max
       const timeout = setTimeout(() => {
         if (pollInterval) {
           clearInterval(pollInterval);
           pollInterval = null;
         }
-        // Final check
         if (isRewardedReady()) {
           setAdReady(true);
           setAdLoading(false);
@@ -170,28 +163,21 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         await ensureInterstitialLoaded();
       } catch {}
     } else {
-      // Check if ad is already ready
       if (isRewardedReady()) {
         setAdReady(true);
         setAdLoading(false);
         return;
       }
 
-      // Start loading
       setAdLoading(true);
       setAdReady(false);
       
       try {
-        // This will either use existing ad or start loading new one
         await ensureRewardedLoaded();
         
-        // Check if ad became ready
         if (isRewardedReady()) {
           setAdReady(true);
           setAdLoading(false);
-        } else {
-          // Ad is still loading, keep adLoading true
-          // The polling effect will detect when it becomes ready
         }
       } catch {
         setAdReady(false);
@@ -207,7 +193,6 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
       } catch {}
       onSelectDeck(deck);
     } else {
-      // Check ad readiness directly (fallback if state hasn't updated)
       const isAdReady = adReady || isRewardedReady();
       
       if (unlocking || !isOnline || (!isAdReady && !adLoading)) return;
@@ -220,7 +205,6 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
             setAdLoading(false);
             return;
           }
-          // Update state when ad becomes ready
           setAdReady(true);
         } catch {
           setAdLoading(false);
@@ -358,7 +342,6 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           }
         >
           {(() => {
-            // Check ad readiness directly as fallback
             const isAdActuallyReady = adReady || isRewardedReady();
             const isActuallyLoading = adLoading && !isAdActuallyReady;
             

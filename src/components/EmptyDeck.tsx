@@ -278,4 +278,4 @@ const createStyles = (width: number) =>
     },
   });
 
-const styles = createStyles(0); // Will be recalculated in component
+const styles = createStyles(0);

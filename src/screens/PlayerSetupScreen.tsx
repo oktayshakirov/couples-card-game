@@ -83,7 +83,6 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
     }
   }, [width, height]);
 
-  // Preload rewarded ad if there are locked decks
   useEffect(() => {
     const preloadRewardedAd = async () => {
       try {
@@ -93,13 +92,10 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
         );
 
         if (hasLockedDecks) {
-          // Start loading rewarded ad in background (don't await)
           ensureRewardedLoaded().catch(() => {
-            // Silently fail - ad will load when needed
           });
         }
       } catch {
-        // Silently fail
       }
     };
 

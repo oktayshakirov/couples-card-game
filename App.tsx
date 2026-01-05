@@ -49,7 +49,6 @@ const AppContent = () => {
 
   useEffect(() => {
     const checkOnboardingStatus = async () => {
-      // Wait for splash screen to complete before checking onboarding
       if (!showSplash) {
         try {
           const isCompleted = await OnboardingService.isOnboardingCompleted();
