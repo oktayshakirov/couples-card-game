@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TinderCard from "react-tinder-card";
 import * as Haptics from "expo-haptics";
@@ -23,6 +23,8 @@ import {
   ensureInterstitialLoaded,
 } from "../components/ads/InterstitialAd";
 import { COLORS } from "../constants/colors";
+import { hexToRgba } from "../utils/colorUtils";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import {
   showSkipCountdown,
   showTruthToast,
@@ -58,6 +60,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const { cards, getCardRef, removeCard, resetDeck } = useCardDeck(
     selectedDeck?.cards
   );
+  const totalCards = useMemo(
+    () => selectedDeck?.cards.length || 0,
+    [selectedDeck?.cards.length]
+  );
+  const remainingCards = cards.length;
+  const completedCards = totalCards - remainingCards;
+  const progress = totalCards > 0 ? completedCards / totalCards : 0;
   const isSkippingRef = useRef<boolean>(false);
   const topCardRef = useRef<any>(null);
   const lastSwipeTimeRef = useRef<number>(0);
@@ -340,6 +349,21 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         }}
       />
 
+      {totalCards > 0 && (
+        <View style={styles.progressContainer}>
+          <View style={styles.progressBarContainer}>
+            <View style={styles.progressBarBackground}>
+              <View
+                style={[
+                  styles.progressBarFill,
+                  { width: `${progress * 100}%` },
+                ]}
+              />
+            </View>
+          </View>
+        </View>
+      )}
+
       <View style={styles.content}>
         {visibleCards.length === 0 ? (
           <EmptyDeck
@@ -446,11 +470,36 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     overflow: "hidden",
   },
+  progressContainer: {
+    paddingHorizontal: scale(20),
+    paddingVertical: verticalScale(8),
+  },
+  progressBarContainer: {
+    width: "100%",
+  },
+  progressBarBackground: {
+    width: "100%",
+    height: scale(4),
+    backgroundColor: hexToRgba(COLORS.primary, 0.15),
+    borderRadius: scale(2),
+    overflow: "hidden",
+  },
+  progressBarFill: {
+    height: "100%",
+    backgroundColor: COLORS.primary,
+    borderRadius: scale(2),
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 2,
+  },
   content: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     width: "100%",
+    marginTop: verticalScale(4),
   },
   cardWrapper: {
     position: "absolute",
