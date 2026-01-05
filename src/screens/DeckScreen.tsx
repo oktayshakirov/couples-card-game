@@ -13,11 +13,17 @@ import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Deck } from "../types/deck";
-import { isDeckUnlocked, unlockDeck } from "../utils/deckStorage";
+import {
+  isDeckUnlocked,
+  unlockDeck,
+  isDeckTested,
+  markDeckAsTested,
+} from "../utils/deckStorage";
 import {
   showRewardedAd,
   ensureRewardedLoaded,
   isRewardedReady,
+  isRewardedAdModuleAvailable,
 } from "../components/ads/RewardedAd";
 import {
   showGlobalInterstitial,
@@ -27,6 +33,7 @@ import { ensureInterstitialLoaded } from "../components/ads/InterstitialAd";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 import { getDeckIconSource, isImageIcon } from "../utils/deckIcons";
+import { DeckWarning } from "../components/DeckWarning";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
@@ -50,9 +57,12 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
   const [isOnline, setIsOnline] = useState(true);
   const [adReady, setAdReady] = useState(false);
   const [adLoading, setAdLoading] = useState(false);
+  const [isTested, setIsTested] = useState(false);
+  const [adLoadFailed, setAdLoadFailed] = useState(false);
 
   useEffect(() => {
     checkUnlockStatus();
+    checkTestedStatus();
     checkConnectivity();
     const unsubscribe = NetInfo.addEventListener((state: NetInfoState) => {
       setIsOnline(state.isConnected ?? false);
@@ -90,6 +100,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           if (isRewardedReady()) {
             setAdReady(true);
             setAdLoading(false);
+            setAdLoadFailed(false);
             if (pollInterval) {
               clearInterval(pollInterval);
               pollInterval = null;
@@ -108,6 +119,10 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         if (isRewardedReady()) {
           setAdReady(true);
           setAdLoading(false);
+          setAdLoadFailed(false);
+        } else {
+          setAdLoadFailed(true);
+          setAdLoading(false);
         }
       }, 30000);
 
@@ -123,8 +138,17 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
 
   const checkUnlockStatus = async () => {
     const isUnlocked = await isDeckUnlocked(deck.id);
-    setUnlocked(isUnlocked || deck.isDefault || false);
+    setUnlocked(Boolean(isUnlocked || deck.isDefault));
     setLoading(false);
+  };
+
+  const checkTestedStatus = async () => {
+    if (deck.isDefault) {
+      setIsTested(false);
+      return;
+    }
+    const tested = await isDeckTested(deck.id);
+    setIsTested(tested);
   };
 
   const checkConnectivity = async () => {
@@ -140,17 +164,23 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     if (isRewardedReady()) {
       setAdReady(true);
       setAdLoading(false);
+      setAdLoadFailed(false);
     } else {
       setAdReady(false);
       if (!adLoading) {
         setAdLoading(true);
+        setAdLoadFailed(false);
         try {
           await ensureRewardedLoaded();
           if (isRewardedReady()) {
             setAdReady(true);
+            setAdLoadFailed(false);
+          } else {
+            setAdLoadFailed(true);
           }
         } catch {
           setAdReady(false);
+          setAdLoadFailed(true);
         } finally {
           setAdLoading(false);
         }
@@ -167,11 +197,13 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
       if (isRewardedReady()) {
         setAdReady(true);
         setAdLoading(false);
+        setAdLoadFailed(false);
         return;
       }
 
       setAdLoading(true);
       setAdReady(false);
+      setAdLoadFailed(false);
 
       try {
         await ensureRewardedLoaded();
@@ -179,10 +211,15 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         if (isRewardedReady()) {
           setAdReady(true);
           setAdLoading(false);
+          setAdLoadFailed(false);
+        } else {
+          setAdLoadFailed(true);
+          setAdLoading(false);
         }
       } catch {
         setAdReady(false);
         setAdLoading(false);
+        setAdLoadFailed(true);
       }
     }
   };
@@ -194,23 +231,81 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
       } catch {}
       onSelectDeck(deck);
     } else {
+      const isAdModuleAvailable = isRewardedAdModuleAvailable();
       const isAdReady = adReady || isRewardedReady();
 
-      if (unlocking || !isOnline || (!isAdReady && !adLoading)) return;
+      const canTest =
+        !isTested &&
+        (!isAdModuleAvailable ||
+          (!isRewardedReady() && !adLoading && (!isOnline || adLoadFailed)));
 
-      if (!isRewardedReady()) {
+      if (canTest && !isAdModuleAvailable) {
+        await markDeckAsTested(deck.id);
+        setIsTested(true);
+        try {
+          await showGlobalInterstitial();
+        } catch {}
+        onSelectDeck(deck);
+        return;
+      }
+
+      if (canTest && (!isOnline || adLoadFailed)) {
+        await markDeckAsTested(deck.id);
+        setIsTested(true);
+        try {
+          await showGlobalInterstitial();
+        } catch {}
+        onSelectDeck(deck);
+        return;
+      }
+
+      if (
+        unlocking ||
+        (!isOnline && !canTest && isTested) ||
+        (!isAdReady && !adLoading && !canTest && isTested)
+      )
+        return;
+
+      if (isAdModuleAvailable && !isRewardedReady()) {
         setAdLoading(true);
+        setAdLoadFailed(false);
         try {
           await ensureRewardedLoaded();
           if (!isRewardedReady()) {
             setAdLoading(false);
+            setAdLoadFailed(true);
+
+            if (!isTested) {
+              await markDeckAsTested(deck.id);
+              setIsTested(true);
+              try {
+                await showGlobalInterstitial();
+              } catch {}
+              onSelectDeck(deck);
+            }
             return;
           }
           setAdReady(true);
+          setAdLoading(false);
+          setAdLoadFailed(false);
         } catch {
           setAdLoading(false);
+          setAdLoadFailed(true);
+
+          if (!isTested) {
+            await markDeckAsTested(deck.id);
+            setIsTested(true);
+            try {
+              await showGlobalInterstitial();
+            } catch {}
+            onSelectDeck(deck);
+          }
           return;
         }
+      }
+
+      if (!isAdModuleAvailable) {
+        return;
       }
 
       setUnlocking(true);
@@ -251,6 +346,12 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
   }
 
   const canSelect = unlocked || deck.isDefault;
+  const isAdModuleAvailable = isRewardedAdModuleAvailable();
+  const canTest =
+    !canSelect &&
+    !isTested &&
+    (!isAdModuleAvailable ||
+      (!isRewardedReady() && !adLoading && (!isOnline || adLoadFailed)));
 
   return (
     <SafeAreaView style={stylesMemo.container} edges={["top", "bottom"]}>
@@ -315,19 +416,24 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
               Watch a short ad to unlock this deck
             </Text>
             {!isOnline && (
-              <View style={stylesMemo.warningContainer}>
-                <MaterialIcons
-                  name="wifi-off"
-                  size={width >= 768 ? 28 : moderateScale(24)}
-                  color="#FF6B6B"
-                />
-                <Text style={stylesMemo.warningText}>
-                  Internet connection required
-                </Text>
-                <Text style={stylesMemo.warningSubtext}>
-                  Please turn on your internet to unlock this deck
-                </Text>
-              </View>
+              <DeckWarning
+                type="error"
+                icon="wifi-off"
+                title="Internet connection required"
+                message="Please turn on your internet to unlock this deck"
+              />
+            )}
+            {(canTest || adLoadFailed) && isOnline && (
+              <DeckWarning
+                type="info"
+                icon="info-outline"
+                title={isTested ? "Ad Not Available" : "Test Mode Available"}
+                message={
+                  isTested
+                    ? "To unlock this deck permanently, you'll need to watch a rewarded ad when available"
+                    : "You can test this deck now, but to unlock it permanently, you'll need to watch a rewarded ad when available"
+                }
+              />
             )}
           </View>
         )}
@@ -339,23 +445,35 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
             stylesMemo.selectButton,
             !canSelect &&
               (unlocking ||
-                !isOnline ||
-                (!adReady && !adLoading && !isRewardedReady())) &&
+                (!isOnline && isTested && !canTest) ||
+                (!adReady &&
+                  !adLoading &&
+                  !isRewardedReady() &&
+                  isTested &&
+                  !canTest)) &&
               stylesMemo.selectButtonDisabled,
           ]}
           onPress={handleSelectDeck}
           disabled={
             !canSelect &&
             (unlocking ||
-              !isOnline ||
-              (!adReady && !adLoading && !isRewardedReady()))
+              (!isOnline && isTested && !canTest) ||
+              (!adReady &&
+                !adLoading &&
+                !isRewardedReady() &&
+                isTested &&
+                !canTest &&
+                !adLoadFailed))
           }
         >
           {(() => {
             const isAdActuallyReady = adReady || isRewardedReady();
             const isActuallyLoading = adLoading && !isAdActuallyReady;
 
-            if (unlocking || (isActuallyLoading && !canSelect)) {
+            if (
+              unlocking ||
+              (isActuallyLoading && !canSelect && !canTest && !adLoadFailed)
+            ) {
               return (
                 <View style={stylesMemo.buttonContent}>
                   <MaterialIcons
@@ -384,9 +502,20 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                     color={COLORS.text.primary}
                   />
                 )}
-                {!canSelect && !isAdActuallyReady && isOnline && (
+                {!canSelect &&
+                  !isAdActuallyReady &&
+                  isOnline &&
+                  !canTest &&
+                  !adLoadFailed && (
+                    <MaterialIcons
+                      name="hourglass-empty"
+                      size={moderateScale(20)}
+                      color={COLORS.text.primary}
+                    />
+                  )}
+                {!canSelect && (canTest || (adLoadFailed && !isTested)) && (
                   <MaterialIcons
-                    name="hourglass-empty"
+                    name="visibility"
                     size={moderateScale(20)}
                     color={COLORS.text.primary}
                   />
@@ -394,10 +523,23 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                 <Text style={stylesMemo.selectButtonText}>
                   {canSelect
                     ? "Select This Deck"
-                    : !isOnline
+                    : !isOnline && isTested
                     ? "Internet Required"
-                    : !isAdActuallyReady
+                    : !isOnline && !isTested
+                    ? "Test Deck"
+                    : !isAdModuleAvailable && !isTested
+                    ? "Test Deck"
+                    : !isAdActuallyReady && canTest
+                    ? "Test Deck"
+                    : !isAdActuallyReady &&
+                      !canTest &&
+                      adLoadFailed &&
+                      !isTested
+                    ? "Test Deck"
+                    : !isAdActuallyReady && !canTest && !adLoadFailed
                     ? "Loading Ad..."
+                    : !isAdActuallyReady && !canTest && adLoadFailed && isTested
+                    ? "Ad Not Available"
                     : "Watch Ad to Unlock"}
                 </Text>
               </View>
@@ -518,30 +660,6 @@ const createStyles = (width: number) =>
       color: "#ccc",
       textAlign: "center",
       marginBottom: verticalScale(12),
-    },
-    warningContainer: {
-      alignItems: "center",
-      marginBottom: verticalScale(10),
-      paddingVertical: verticalScale(10),
-      paddingHorizontal: scale(20),
-      backgroundColor: hexToRgba("#FF6B6B", 0.1),
-      borderRadius: scale(14),
-      borderWidth: 1,
-      borderColor: hexToRgba("#FF6B6B", 0.3),
-      width: "100%",
-    },
-    warningText: {
-      fontSize: moderateScale(16),
-      fontWeight: "700",
-      color: "#FF6B6B",
-      marginTop: verticalScale(5),
-      textAlign: "center",
-    },
-    warningSubtext: {
-      fontSize: moderateScale(13),
-      color: "#ccc",
-      marginTop: verticalScale(3),
-      textAlign: "center",
     },
     selectButton: {
       backgroundColor: COLORS.primary,

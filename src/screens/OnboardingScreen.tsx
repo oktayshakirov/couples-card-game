@@ -267,9 +267,9 @@ export const OnboardingScreen: React.FC = () => {
               style={[
                 styles.getStartedButton,
                 {
-                  paddingVertical: verticalScale(16),
+                  height: scale(52),
                   paddingHorizontal: scale(40),
-                  borderRadius: scale(30),
+                  borderRadius: scale(26),
                 },
               ]}
               onPress={handleGetStarted}

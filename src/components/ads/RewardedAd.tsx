@@ -185,6 +185,10 @@ export async function ensureRewardedLoaded(backgroundTime?: number) {
   }
 }
 
+export function isRewardedAdModuleAvailable(): boolean {
+  return !!RewardedAd;
+}
+
 export function isRewardedReady() {
   if (!RewardedAd) {
     return false;
