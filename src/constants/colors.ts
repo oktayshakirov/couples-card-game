@@ -4,10 +4,8 @@ export const COLORS = {
   text: {
     primary: "#fff",
     secondary: "#999",
-    tertiary: "#ccc",
   },
   accent: {
-    pink: "#FF6B9D",
     blue: "#4A90E2",
     red: "#FF6B6B",
   },

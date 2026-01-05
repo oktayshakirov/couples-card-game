@@ -126,10 +126,7 @@ export const EmptyDeck: React.FC<EmptyDeckProps> = ({
 
         <View style={stylesMemo.buttonsContainer}>
           <TouchableOpacity
-            style={[
-              stylesMemo.playAgainButton,
-              { backgroundColor: player1Color },
-            ]}
+            style={stylesMemo.playAgainButton}
             onPress={onPlayAgain}
           >
             <MaterialIcons
@@ -232,15 +229,16 @@ const createStyles = (width: number) =>
       alignItems: "center",
       justifyContent: "center",
       gap: scale(10),
-      paddingVertical: verticalScale(16),
+      paddingVertical: verticalScale(14),
       paddingHorizontal: scale(32),
       borderRadius: scale(16),
+      backgroundColor: COLORS.primary,
       shadowColor: COLORS.primary,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
       shadowRadius: 8,
       elevation: 6,
-      flex: 1,
+      width: "100%",
     },
     playAgainText: {
       fontSize: moderateScale(18),
@@ -253,7 +251,7 @@ const createStyles = (width: number) =>
       alignItems: "center",
       justifyContent: "center",
       gap: scale(10),
-      paddingVertical: verticalScale(16),
+      paddingVertical: verticalScale(14),
       paddingHorizontal: scale(32),
       borderRadius: scale(16),
       backgroundColor: COLORS.primary,
@@ -262,7 +260,7 @@ const createStyles = (width: number) =>
       shadowOpacity: 0.3,
       shadowRadius: 8,
       elevation: 6,
-      flex: 1,
+      width: "100%",
     },
     changeDeckText: {
       fontSize: moderateScale(18),
