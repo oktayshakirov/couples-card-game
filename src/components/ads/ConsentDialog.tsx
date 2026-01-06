@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   Platform,
   StyleSheet,
-  SafeAreaView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../../constants/colors";
 import { initializeGlobalAds } from "./adsManager";
