@@ -66,7 +66,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     icon: "check-circle",
     title: "Your Partner Approves",
     description:
-      "After you finish, your partner decides if it counts. Be honest or no points.",
+      "Your partner decides if it counts. If not, you get no points and must retry the same card.",
   },
 ];
 
