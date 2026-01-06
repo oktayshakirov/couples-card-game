@@ -97,12 +97,12 @@ export const timelessDeck: Deck = {
       id: "t16",
       truth:
         "{player1}, what's the most embarrassing nickname you've ever had?",
-      dare: "{player1}, give {player2} a cute nickname and use it for the rest of the game.",
+      dare: "{player1}, write a short poem about {player2} and read it to them.",
     },
     {
       id: "t17",
       truth: "{player1}, what's the most unusual thing you've ever collected?",
-      dare: "{player1}, show {player2} something from your collection or a hobby you're passionate about.",
+      dare: "{player1}, show {player2} something you're passionate about.",
     },
     {
       id: "t18",
@@ -119,13 +119,13 @@ export const timelessDeck: Deck = {
       id: "t20",
       truth:
         "{player1}, what's something you believed as a child that turned out to be completely wrong?",
-      dare: "{player1}, tell {player2} a childhood story that makes you laugh.",
+      dare: "{player1}, draw a picture of something from your childhood and explain it to {player2}.",
     },
     {
       id: "t21",
       truth:
-        "{player1}, what's the most embarrassing thing that's happened to you at school or work?",
-      dare: "{player1}, recreate a funny moment from your past with {player2} as your co-star.",
+        "{player1}, what's the most embarrassing thing that's happened to you at school?",
+      dare: "{player1}, share a photo from your school days with {player2} and tell them the story behind it.",
     },
     {
       id: "t22",
@@ -142,13 +142,13 @@ export const timelessDeck: Deck = {
       id: "t24",
       truth:
         "{player1}, have you ever been caught dancing when you thought no one was watching?",
-      dare: "{player1}, teach {player2} your signature dance move.",
+      dare: "{player1}, teach {player2} your favorite dance move.",
     },
     {
       id: "t25",
       truth:
         "{player1}, what's the most embarrassing thing in your search history?",
-      dare: "{player1}, let {player2} ask you any question and you must answer honestly.",
+      dare: "{player1}, let {player2} ask you 3 questions and you must answer honestly.",
     },
     {
       id: "t26",
@@ -206,14 +206,14 @@ export const timelessDeck: Deck = {
     {
       id: "t35",
       truth:
-        "{player1}, what's the most embarrassing thing you've done in front of a mirror?",
+        "{player1}, what's a childhood memory that always makes you smile?",
       dare: "{player1}, strike your best pose in front of {player2} and hold it for 10 seconds.",
     },
     {
       id: "t36",
       truth:
         "{player1}, what's something you've always wanted to tell {player2} but haven't?",
-      dare: "{player1}, tell {player2} something you've been meaning to say.",
+      dare: "{player1}, write down what you wanted to tell {player2} on a piece of paper and give it to them to read later.",
     },
     {
       id: "t37",
@@ -229,57 +229,56 @@ export const timelessDeck: Deck = {
     },
     {
       id: "t39",
-      truth:
-        "{player1}, what's the most embarrassing thing you've done while trying to be helpful?",
-      dare: "{player1}, do something genuinely helpful for {player2} right now.",
+      truth: "{player1}, what's something you used to hate but now you love?",
+      dare: "{player1}, let {player2} pick a song and you both have to dance to it together.",
     },
     {
       id: "t40",
       truth:
-        "{player1}, what's something you do that you hope {player2} never finds out about?",
-      dare: "{player1}, share a secret habit with {player2} and explain why you do it.",
+        "{player1}, what's a small gesture that {player2} does that makes you feel loved?",
+      dare: "{player1}, give {player2} a 30-second shoulder massage.",
     },
     {
       id: "t41",
       truth:
-        "{player1}, what's the most embarrassing thing you've done while trying to be romantic?",
+        "{player1}, what's a tradition or ritual you'd like to start with {player2}?",
       dare: "{player1}, do something romantic for {player2} right now - even if it's silly.",
     },
     {
       id: "t42",
       truth:
         "{player1}, what's something you've always wanted to do with {player2} but haven't suggested?",
-      dare: "{player1}, suggest an activity you'd like to do with {player2} and plan it together.",
+      dare: "{player1}, create a bucket list of 5 things you want to do with {player2} and share it with them.",
     },
     {
       id: "t43",
       truth:
-        "{player1}, what's the most embarrassing thing you've done while trying to be funny?",
+        "{player1}, what's a compliment you received that you still think about?",
       dare: "{player1}, try to make {player2} laugh using only facial expressions for 1 minute.",
     },
     {
       id: "t44",
       truth:
-        "{player1}, what's something you're embarrassed to admit you're afraid of?",
-      dare: "{player1}, let {player2} help you face a small fear together.",
+        "{player1}, what's a song that always brings back a specific memory for you?",
+      dare: "{player1}, play that song for {player2} and share the memory with them.",
     },
     {
       id: "t45",
       truth:
-        "{player1}, what's the most embarrassing thing you've done while trying to impress someone?",
-      dare: "{player1}, do something impressive for {player2} right now - show off a talent or skill.",
+        "{player1}, what's a place you've always wanted to visit with {player2}?",
+      dare: "{player1}, let {player2} choose your outfit for the next 12 hours.",
     },
     {
       id: "t46",
       truth:
         "{player1}, what's something you do that you think makes you look cool but actually doesn't?",
-      dare: "{player1}, let {player2} give you honest feedback on something you do.",
+      dare: "{player1}, do 10 push-ups while {player2} counts them.",
     },
     {
       id: "t47",
       truth:
-        "{player1}, what's the most embarrassing thing you've done while trying to be mysterious?",
-      dare: "{player1}, share something personal with {player2} that you've never shared before.",
+        "{player1}, what's a small thing {player2} does that makes your day better?",
+      dare: "{player1}, make {player2} a paper airplane and write a message on it for them.",
     },
     {
       id: "t48",
@@ -290,44 +289,42 @@ export const timelessDeck: Deck = {
     {
       id: "t49",
       truth:
-        "{player1}, what's the most embarrassing thing you've done while trying to be spontaneous?",
+        "{player1}, what's something you used to be really good at but haven't done in a while?",
       dare: "{player1}, do something completely spontaneous with {player2} right now.",
     },
     {
       id: "t50",
       truth:
         "{player1}, what's something you do that you know annoys people but you can't stop?",
-      dare: "{player1}, try to stop doing that thing for the next 5 minutes while {player2} watches.",
+      dare: "{player1}, let {player2} pick a movie or show for you both to watch together.",
     },
     {
       id: "t51",
       truth:
-        "{player1}, what's the most embarrassing thing you've done while trying to be supportive?",
-      dare: "{player1}, give {player2} genuine encouragement about something they care about.",
+        "{player1}, what's a memory from your childhood that you'd love to recreate with {player2}?",
+      dare: "{player1}, teach {player2} how to do something you learned as a kid.",
     },
     {
       id: "t52",
-      truth:
-        "{player1}, what's something you've always wanted to do together but been too shy to ask?",
-      dare: "{player1}, suggest something fun you'd like to do with {player2} and see if they're interested.",
+      truth: "{player1}, what's a habit of {player2}'s that you find adorable?",
+      dare: "{player1}, write {player2} a thank you note for something they did recently.",
     },
     {
       id: "t53",
       truth:
-        "{player1}, what's the most embarrassing thing you've done while trying to be thoughtful?",
-      dare: "{player1}, do something thoughtful for {player2} that shows you pay attention to them.",
+        "{player1}, what's something {player2} said that you'll never forget?",
+      dare: "{player1}, recreate your first meeting with {player2} through acting.",
     },
     {
       id: "t54",
-      truth:
-        "{player1}, what's something about yourself that you're embarrassed about but {player2} actually loves?",
-      dare: "{player1}, let {player2} tell you something they love about you that you might not realize.",
+      truth: "{player1}, what's a superpower you wish you had and why?",
+      dare: "{player1}, let {player2} choose a silly superpower for you and act it out for 30 seconds.",
     },
     {
       id: "t55",
       truth:
         "{player1}, what's one thing you hope {player2} never stops doing?",
-      dare: "{player1}, tell {player2} three things you hope you'll always do together.",
+      dare: "{player1}, let {player2} take a photo of you making your silliest face.",
     },
   ],
 };

@@ -16,7 +16,7 @@ export const cupidDeck: Deck = {
     {
       id: "c2",
       truth: "{player1}, what does {player2} do that turns you on the most?",
-      dare: "{player1}, try to take off {player2}'s underwear using only your mouth.",
+      dare: "{player1}, try to take off {player2}'s top using only your mouth.",
     },
     {
       id: "c3",
@@ -28,17 +28,18 @@ export const cupidDeck: Deck = {
       id: "c4",
       truth:
         "{player1}, when was the first time you became attracted to {player2}?",
-      dare: "{player1}, lick {player2}'s body, starting from their feet up to their head.",
+      dare: "{player1}, lick a part of {player2}'s body.",
     },
     {
       id: "c5",
-      truth: "{player1}, what made {player2}'s personality attractive to you?",
+      truth:
+        "{player1}, have you ever watched a porn video thinking about {player2}?",
       dare: "{player1}, write {player2} a naughty poem and read it out loud.",
     },
     {
       id: "c6",
       truth: "{player1}, what was your first impression of {player2}?",
-      dare: "{player1} and {player2}, play your favorite seductive song and kiss.",
+      dare: "{player1} and {player2}, play your favorite romantic song and kiss.",
     },
     {
       id: "c7",
@@ -53,7 +54,7 @@ export const cupidDeck: Deck = {
     {
       id: "c9",
       truth: "{player1}, what's your wildest experience in the bedroom?",
-      dare: "{player1}, suck on {player2}'s tongue for 10 seconds.",
+      dare: "{player1}, kiss {player2} on the lips.",
     },
     {
       id: "c10",
@@ -63,7 +64,8 @@ export const cupidDeck: Deck = {
     },
     {
       id: "c11",
-      truth: "{player1}, what is one trait you want to improve about yourself?",
+      truth:
+        "{player1}, what is one trait you want to improve about {player2}?",
       dare: "{player1}, find a way to give {player2} goosebumps using only your hand.",
     },
     {
@@ -74,23 +76,23 @@ export const cupidDeck: Deck = {
     {
       id: "c13",
       truth: "{player1}, name 3 things on your s*xual bucket list.",
-      dare: "{player1}, nibble on {player2}'s earlobe for 30 seconds.",
+      dare: "{player1}, hug {player2} from behind.",
     },
     {
       id: "c14",
       truth:
-        "{player1}, what's the craziest place you've done \"it\" with someone?",
-      dare: "{player1}, suck on {player2}'s big toe for 5 seconds.",
+        "{player1}, what's the craziest place you've done 'it' with someone?",
+      dare: "{player1}, slap {player2}'s butt.",
     },
     {
       id: "c15",
       truth: "{player1}, who was your first kiss, and how old were you?",
-      dare: "{player1}, pin {player2} against the wall and kiss them all over.",
+      dare: "{player1}, pin {player2} against the wall and kiss them.",
     },
     {
       id: "c16",
       truth: "{player1}, what's the worst pickup line you've been told?",
-      dare: "{player1}, sit on {player2}'s face for 30 seconds.",
+      dare: "{player1}, sit on {player2}'s lap for 30 seconds.",
     },
     {
       id: "c17",
@@ -123,7 +125,7 @@ export const cupidDeck: Deck = {
     {
       id: "c22",
       truth: "{player1}, which celebrity was your childhood crush?",
-      dare: "{player1} and {player2}, have a sloppy, wet makeout session.",
+      dare: "{player1} and {player2}, have a funny dance battle on song of your choice.",
     },
     {
       id: "c23",
@@ -132,13 +134,14 @@ export const cupidDeck: Deck = {
     },
     {
       id: "c24",
-      truth: "{player1}, describe your dream vacation you'd like to go on.",
+      truth:
+        "{player1}, describe your dream vacation you'd like to go on with {player2}.",
       dare: "{player1}, trace your name with your tongue on a body part of {player2}.",
     },
     {
       id: "c25",
       truth: "{player1}, what's the most unusual thing that has turned you on?",
-      dare: "{player1}, put your hand in {player2}'s underwear for 30 seconds.",
+      dare: "{player1}, put your hand in {player2}'s chest area for 30 seconds.",
     },
     {
       id: "c26",
@@ -147,14 +150,14 @@ export const cupidDeck: Deck = {
     },
     {
       id: "c27",
-      truth: "{player1}, what's {player2}'s most attractive feature?",
+      truth: "{player1}, what's the sexiest thing {player2} has ever worn?",
       dare: "{player1}, take and send {player2} a naughty photo.",
     },
     {
       id: "c28",
       truth:
         "{player1}, what's something you've learned from dating in the past?",
-      dare: "{player1}, tie {player2} up and tease them for 30 seconds.",
+      dare: "{player1}, tie {player2}'s hands behind their back and tease them for 30 seconds.",
     },
     {
       id: "c29",
@@ -186,22 +189,22 @@ export const cupidDeck: Deck = {
     {
       id: "c34",
       truth: "{player1}, what's your favorite compliment to receive?",
-      dare: "{player1}, post {player2} on social media.",
+      dare: "{player1}, post a photo of you and {player2} on social media.",
     },
     {
       id: "c35",
       truth: "{player1}, tell {player2} your phone's passcode.",
-      dare: "{player1}, let {player2} scroll through your phone for 30 seconds.",
+      dare: "{player1}, let {player2} scroll through your phones gallery for 30 seconds.",
     },
     {
       id: "c36",
       truth: "{player1}, what color underwear are you wearing?",
-      dare: "{player1}, paint {player2} nude.",
+      dare: "{player1}, show {player2} a part of your body that you are proud of.",
     },
     {
       id: "c37",
       truth: "{player1}, what is your body count?",
-      dare: "{player1}, moan and cheer {player2} for 10 seconds.",
+      dare: "{player1}, moan {player2}'s name for 10 seconds.",
     },
     {
       id: "c38",
@@ -215,7 +218,7 @@ export const cupidDeck: Deck = {
     },
     {
       id: "c40",
-      truth: "{player1}, what's the longest you've gone without doing \"it\"?",
+      truth: "{player1}, what's the longest you've gone without doing 'it'?",
       dare: "{player1} and {player2}, karaoke duet — sing a song together.",
     },
     {
@@ -245,7 +248,7 @@ export const cupidDeck: Deck = {
       id: "c45",
       truth:
         "{player1}, what's the kinkiest thing you've ever done with someone else?",
-      dare: "{player1}, write a short love letter to {player2}'s future self.",
+      dare: "{player1}, write a short love letter to {player2} that they should read in 1 month.",
     },
     {
       id: "c46",
@@ -256,7 +259,7 @@ export const cupidDeck: Deck = {
     {
       id: "c47",
       truth: "{player1}, what's your favorite thing about {player2}'s body?",
-      dare: "{player1}, give {player2} a lap dance for 45 seconds.",
+      dare: "{player1}, give {player2} a lap dance for 30 seconds.",
     },
     {
       id: "c48",
@@ -266,7 +269,8 @@ export const cupidDeck: Deck = {
     },
     {
       id: "c49",
-      truth: "{player1}, what's a fantasy you've never shared with anyone?",
+      truth:
+        "{player1}, what's something you would like to do with {player2} next time you are together?",
       dare: "{player1}, make {player2} laugh while trying to be seductive.",
     },
     {

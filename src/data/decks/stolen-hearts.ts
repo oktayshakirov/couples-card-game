@@ -30,7 +30,7 @@ export const heartsDeck: Deck = {
       id: "h4",
       truth:
         "{player1}, how do you think you'll spend your time when you retire?",
-      dare: "{player1}, let {player2} place your hands where they want.",
+      dare: "{player1}, let {player2} place your hands where they want for 1 round.",
     },
     {
       id: "h5",
@@ -41,7 +41,7 @@ export const heartsDeck: Deck = {
       id: "h6",
       truth:
         "{player1}, if you could make one rule that everyone had to follow for a day, what would it be?",
-      dare: "{player1}, take a selfie with {player2}'s phone.",
+      dare: "{player1}, take a selfie with {player2}.",
     },
     {
       id: "h7",
@@ -64,7 +64,7 @@ export const heartsDeck: Deck = {
       id: "h10",
       truth:
         "{player1}, if you received $10,000 and had to spend it today, what would you buy?",
-      dare: "{player1}, act like an animal of {player2}'s choice for 30 seconds.",
+      dare: "{player1}, act like an animal of {player2}'s choice for 20 seconds.",
     },
     {
       id: "h11",
@@ -75,7 +75,7 @@ export const heartsDeck: Deck = {
     {
       id: "h12",
       truth:
-        "{player1}, if you met {player2} today, where would you take them on a date?",
+        "{player1}, if you met {player2} today, where would you take them on a first date?",
       dare: "{player1}, pretend you're a game show host and introduce {player2} as the contestant.",
     },
     {
@@ -109,7 +109,7 @@ export const heartsDeck: Deck = {
     {
       id: "h18",
       truth: "{player1}, what is your favorite family tradition?",
-      dare: "{player1}, act like a baby for 30 seconds.",
+      dare: "{player1}, act like a baby for 15 seconds.",
     },
     {
       id: "h19",
@@ -125,7 +125,7 @@ export const heartsDeck: Deck = {
     {
       id: "h21",
       truth: "{player1}, have you ever won a competition?",
-      dare: '{player1}, act like you\'re teaching a class on "how to be {player1}".',
+      dare: '{player1}, act like you are teaching a class on "how to be {player1}".',
     },
     {
       id: "h22",
@@ -153,13 +153,13 @@ export const heartsDeck: Deck = {
       id: "h26",
       truth:
         "{player1}, if you and {player2} could plan a day trip this weekend, where would you go?",
-      dare: '{player1}, choose a dramatic title for today\'s "episode" of your relationship.',
+      dare: "{player1}, choose a dramatic title for your relationship if it was a movie.",
     },
     {
       id: "h27",
       truth:
-        "{player1}, if you could eavesdrop on any conversation, which one would you choose?",
-      dare: '{player1}, pick a random spot in the room and dramatically "arrive" there like you\'re meeting {player2} for the first time.',
+        "{player1}, if you could have a hidden camera, who would you choose to spy on?",
+      dare: '{player1}, pick a random spot in the room and dramatically "arrive" there.',
     },
     {
       id: "h28",
@@ -170,7 +170,7 @@ export const heartsDeck: Deck = {
     {
       id: "h29",
       truth: "{player1}, what does your perfect day look like?",
-      dare: '{player1}, pretend you\'re a mind reader and guess what {player2} is "thinking".',
+      dare: '{player1}, pretend you are a mind reader and guess what {player2} is "thinking".',
     },
     {
       id: "h30",
@@ -180,13 +180,12 @@ export const heartsDeck: Deck = {
     },
     {
       id: "h31",
-      truth: "{player1}, what's your go-to excuse to get out of something?",
+      truth: "{player1}, what's your go-to excuse to get out of plans?",
       dare: "{player1}, sit like royalty and demand respect.",
     },
     {
       id: "h32",
-      truth:
-        "{player1}, has someone ever played a practical joke on you, or have you played one on someone else?",
+      truth: "{player1}, has someone offended you recently?",
       dare: "{player1}, act like you just discovered something shocking about the room.",
     },
     {
@@ -226,7 +225,7 @@ export const heartsDeck: Deck = {
     },
     {
       id: "h39",
-      truth: "{player1}, what's your favorite part of the holidays?",
+      truth: "{player1}, what's your favorite part of the year?",
       dare: "{player1}, pretend you're serenading {player2} with your favorite song.",
     },
     {
@@ -261,7 +260,7 @@ export const heartsDeck: Deck = {
       id: "h45",
       truth:
         "{player1}, what's something you're proud of but don't get to brag about much?",
-      dare: "{player1}, pretend to dramatically faint from how much you love {player2}.",
+      dare: "{player1}, pretend to dramatically faint from how much you like {player2}.",
     },
     {
       id: "h46",
@@ -288,7 +287,7 @@ export const heartsDeck: Deck = {
     },
     {
       id: "h50",
-      truth: '{player1}, have you ever felt like you "beat the system"?',
+      truth: '{player1}, have you ever felt proud of {player2}?"',
       dare: '{player1}, pretend you just won "Best Partner" — give a short acceptance speech.',
     },
   ],

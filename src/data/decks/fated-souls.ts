@@ -12,17 +12,18 @@ export const fateDeck: Deck = {
     {
       id: "f1",
       truth:
-        "{player1}, what was your favorite game to play at recess, and why?",
+        "{player1}, what was your favorite game to play when you were younger?",
       dare: "{player1}, pay for the next date.",
     },
     {
       id: "f2",
-      truth: "{player1}, what's one of the best times you've had on vacation?",
+      truth: "{player1}, what's the best country you've visited?",
       dare: '{player1}, post {player2} on your instagram story with the caption "Love of my Life".',
     },
     {
       id: "f3",
-      truth: "{player1}, what would be an accurate tagline for this week?",
+      truth:
+        "{player1}, what would be an accurate description of your relationship with {player2}?",
       dare: "{player1}, unlock your phone and give {player2} access for 1 minute.",
     },
     {
@@ -39,12 +40,12 @@ export const fateDeck: Deck = {
     },
     {
       id: "f6",
-      truth: "{player1}, what's the last product you bought because of an ad?",
-      dare: "{player1}, make {player2} smile within 30 seconds.",
+      truth: "{player1}, what's the best gift that {player2} could give you?",
+      dare: "{player1}, make {player2} smile within 10 seconds.",
     },
     {
       id: "f7",
-      truth: "{player1}, how did you come up with your first username?",
+      truth: "{player1}, what's the best way to make {player2} feel special?",
       dare: "{player1}, give {player2} a back massage.",
     },
     {
@@ -62,14 +63,14 @@ export const fateDeck: Deck = {
     {
       id: "f10",
       truth:
-        "{player1}, if {player2} could pamper you for a day, what would you want them to do?",
+        "{player1}, if {player2} could spoil you for a day, what would you want them to do?",
       dare: "{player1}, hug {player2} for 20 seconds.",
     },
     {
       id: "f11",
       truth:
         "{player1}, what are the best and worst purchases you've ever made?",
-      dare: "{player1}, tell {player2} a secret that you've never told anyone.",
+      dare: "{player1}, show {player2} embarrassing photo of you from your past.",
     },
     {
       id: "f12",
@@ -87,19 +88,19 @@ export const fateDeck: Deck = {
       id: "f14",
       truth:
         "{player1}, what's the luckiest thing that's ever happened to you?",
-      dare: "{player1}, stare into {player2}'s eyes for 30 seconds.",
+      dare: "{player1}, stare into {player2}'s eyes for 20 seconds.",
     },
     {
       id: "f15",
       truth:
         "{player1}, if you had to replace {player2} at work, how well do you think you'd do?",
-      dare: "{player1} and {player2}, play a game of rock, paper, scissors.",
+      dare: "{player1} and {player2}, play a game of rock, paper, scissors. Looser gets tickled.",
     },
     {
       id: "f16",
       truth:
         "{player1}, if you could talk to your pets, what would you talk to them about?",
-      dare: "{player1}, guess {player2}'s favorite movie.",
+      dare: "{player1}, tell {player2} your most embarrassing momory.",
     },
     {
       id: "f17",
@@ -114,8 +115,8 @@ export const fateDeck: Deck = {
     },
     {
       id: "f19",
-      truth: "{player1}, what was your most memorable childhood field trip?",
-      dare: "{player1}, guess {player2}'s favorite color.",
+      truth: "{player1}, what was your most memorable childhood trip?",
+      dare: "{player1}, copy {player2} for 1 minute.",
     },
     {
       id: "f20",
@@ -155,7 +156,7 @@ export const fateDeck: Deck = {
     {
       id: "f26",
       truth: "{player1}, which outfit of {player2}'s is your favorite?",
-      dare: "{player1}, do an impression of {player2}.",
+      dare: "{player1}, do an impression of {player2} when they are angry.",
     },
     {
       id: "f27",
@@ -166,7 +167,7 @@ export const fateDeck: Deck = {
     {
       id: "f28",
       truth: "{player1}, how did you earn and spend your first paycheck?",
-      dare: "{player1}, describe {player2} using only three words while doing a silly dance.",
+      dare: "{player1}, describe {player2} using a different language.",
     },
     {
       id: "f29",
@@ -183,8 +184,8 @@ export const fateDeck: Deck = {
     {
       id: "f31",
       truth:
-        "{player1}, if you could start a business with your friends, would you—and what would it be?",
-      dare: "{player1}, play a song that reminds you of {player2} and dance to it.",
+        "{player1}, if you could start a business with your {player2}, would you - and what would it be?",
+      dare: "{player1}, play a song that reminds you of {player2}.",
     },
     {
       id: "f32",
@@ -194,14 +195,13 @@ export const fateDeck: Deck = {
     },
     {
       id: "f33",
-      truth:
-        "{player1}, if you were campaigning to be {player2}'s significant other, what would your slogan be?",
-      dare: "{player1} and {player2}, recreate a favorite shared memory.",
+      truth: "{player1}, what's the worst thing you've done to make money?",
+      dare: "{player1}, act like you are a paparazzi and take a photo of {player2}.",
     },
     {
       id: "f34",
       truth:
-        "{player1}, what in your and {player2}'s lives is having its golden age right now?",
+        "{player1}, what in your and {player2}'s relationship could be improved?",
       dare: "{player1}, let {player2} pick your background or lock-screen photo.",
     },
     {
@@ -212,23 +212,24 @@ export const fateDeck: Deck = {
     },
     {
       id: "f36",
-      truth: "{player1}, how did you learn how to drive?",
-      dare: "{player1}, plan out a future moment you're excited to experience together in detail and act it out.",
+      truth: "{player1}, is {player2} a good driver?",
+      dare: "{player1}, plan a road trip with {player2} for the next weekend.",
     },
     {
       id: "f37",
-      truth: "{player1}, what's something you're willing to splurge on?",
-      dare: "{player1}, describe your perfect day together using only five words.",
+      truth:
+        "{player1}, what's something you're willing to spend money on for {player2}?",
+      dare: "{player1}, send {player2} a 20$ gift card for their favorite store.",
     },
     {
       id: "f38",
       truth:
-        "{player1}, if you were stranded on an island, how quickly would you start making friends with an inanimate object?",
+        "{player1}, if you were stranded on an island with {player2}, what would you do first?",
       dare: "{player1}, thank {player2} for something they did recently.",
     },
     {
       id: "f39",
-      truth: "{player1}, how did you meet one of your closest friends?",
+      truth: "{player1}, describe your parents to {player2}.",
       dare: "{player1}, kiss {player2} on the cheek three times in a row.",
     },
     {
@@ -241,17 +242,16 @@ export const fateDeck: Deck = {
       id: "f41",
       truth:
         "{player1}, aside from {player2}'s current job, what other profession do you think they'd be good at?",
-      dare: "{player1}, share a photo of you with {player2} from when you were younger.",
+      dare: "{player1}, show a photo of you with with a friend of yours.",
     },
     {
       id: "f42",
-      truth: "{player1}, did you google {player2} before your first date?",
+      truth: "{player1}, did you stalk on social media before your first met?",
       dare: "{player1}, propose a future date idea to {player2}.",
     },
     {
       id: "f43",
-      truth:
-        "{player1}, how do you want to celebrate your next personal milestone?",
+      truth: "{player1}, how do you want to celebrate your next birthday?",
       dare: "{player1}, take a photo of something around you that represents your relationship.",
     },
     {
@@ -268,15 +268,14 @@ export const fateDeck: Deck = {
     },
     {
       id: "f46",
-      truth:
-        "{player1}, what was your first experience at a party or dance like?",
+      truth: "{player1}, what was your first experience at a party like?",
       dare: "{player1}, stand up and spin {player2} once like in a movie scene.",
     },
     {
       id: "f47",
       truth:
-        "{player1}, have you ever been on a truly blind date? How did it go?",
-      dare: "{player1}, let {player2} choose where you sit next.",
+        "{player1}, have you ever been on a date with someone you met on a dating app?",
+      dare: "{player1}, let {player2} put make up on your face.",
     },
     {
       id: "f48",
@@ -286,7 +285,7 @@ export const fateDeck: Deck = {
     },
     {
       id: "f49",
-      truth: '{player1}, what was the weirdest "black market" at your school?',
+      truth: "{player1}, what was the weirdest thing you did in school?",
       dare: "{player1}, do a playful bow to {player2} like they're royalty.",
     },
     {
