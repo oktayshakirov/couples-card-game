@@ -499,13 +499,16 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    marginTop: verticalScale(4),
   },
   cardWrapper: {
     position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",

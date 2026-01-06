@@ -167,8 +167,8 @@ export const OnboardingScreen: React.FC = () => {
             style={[
               styles.logoContainer,
               {
-                width: width >= 768 ? scale(80) : scale(70),
-                height: width >= 768 ? scale(80) : scale(70),
+                width: width >= 768 ? scale(40) : scale(70),
+                height: width >= 768 ? scale(40) : scale(70),
                 borderRadius: (width >= 768 ? scale(80) : scale(70)) / 2,
               },
             ]}
@@ -182,7 +182,7 @@ export const OnboardingScreen: React.FC = () => {
           <Text
             style={[
               styles.appTitle,
-              { fontSize: moderateScale(width >= 768 ? 22 : 20) },
+              { fontSize: moderateScale(width >= 768 ? 18 : 20) },
             ]}
           >
             Love Swipe
@@ -231,7 +231,7 @@ export const OnboardingScreen: React.FC = () => {
             <Text
               style={[
                 styles.stepTitle,
-                { fontSize: moderateScale(width >= 768 ? 28 : 24) },
+                { fontSize: moderateScale(width >= 768 ? 22 : 24) },
               ]}
             >
               {currentStepData.title}
@@ -240,7 +240,7 @@ export const OnboardingScreen: React.FC = () => {
             <Text
               style={[
                 styles.stepDescription,
-                { fontSize: moderateScale(width >= 768 ? 17 : 16) },
+                { fontSize: moderateScale(width >= 768 ? 15 : 16) },
               ]}
             >
               {currentStepData.description}
@@ -250,14 +250,22 @@ export const OnboardingScreen: React.FC = () => {
 
         <View style={styles.navigationContainer}>
           <TouchableOpacity
-            style={[styles.navButton, isFirstStep && styles.navButtonDisabled]}
+            style={[
+              styles.navButton,
+              isFirstStep && styles.navButtonDisabled,
+              {
+                width: width >= 768 ? scale(42) : scale(52),
+                height: width >= 768 ? scale(42) : scale(52),
+                borderRadius: width >= 768 ? scale(21) : scale(26),
+              },
+            ]}
             onPress={handlePrevious}
             disabled={isFirstStep}
             activeOpacity={0.7}
           >
             <MaterialIcons
               name="chevron-left"
-              size={moderateScale(28)}
+              size={moderateScale(width >= 768 ? 22 : 28)}
               color={isFirstStep ? "#444" : COLORS.text.primary}
             />
           </TouchableOpacity>
@@ -267,9 +275,9 @@ export const OnboardingScreen: React.FC = () => {
               style={[
                 styles.getStartedButton,
                 {
-                  height: scale(52),
-                  paddingHorizontal: scale(40),
-                  borderRadius: scale(26),
+                  padding: width >= 768 ? scale(12) : scale(16),
+                  borderRadius: scale(16),
+                  minWidth: width >= 768 ? scale(140) : scale(160),
                 },
               ]}
               onPress={handleGetStarted}
@@ -278,34 +286,46 @@ export const OnboardingScreen: React.FC = () => {
               <Text
                 style={[
                   styles.getStartedButtonText,
-                  { fontSize: moderateScale(width >= 768 ? 18 : 16) },
+                  { fontSize: moderateScale(width >= 768 ? 15 : 17) },
                 ]}
               >
                 Get Started
               </Text>
               <MaterialIcons
                 name="arrow-forward"
-                size={moderateScale(20)}
+                size={moderateScale(width >= 768 ? 16 : 20)}
                 color={COLORS.text.primary}
                 style={styles.buttonIcon}
               />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              style={styles.navButton}
+              style={[
+                styles.navButton,
+                {
+                  width: width >= 768 ? scale(42) : scale(52),
+                  height: width >= 768 ? scale(42) : scale(52),
+                  borderRadius: width >= 768 ? scale(21) : scale(26),
+                },
+              ]}
               onPress={handleNext}
               activeOpacity={0.7}
             >
               <MaterialIcons
                 name="chevron-right"
-                size={moderateScale(28)}
+                size={moderateScale(width >= 768 ? 22 : 28)}
                 color={COLORS.text.primary}
               />
             </TouchableOpacity>
           )}
         </View>
 
-        <View style={styles.indicatorsContainer}>
+        <View
+          style={[
+            styles.indicatorsContainer,
+            { gap: width >= 768 ? scale(5) : scale(6) },
+          ]}
+        >
           {steps.map((_, index) => (
             <View
               key={index}
@@ -313,6 +333,11 @@ export const OnboardingScreen: React.FC = () => {
                 styles.indicator,
                 index === currentStep && styles.indicatorActive,
                 index < currentStep && styles.indicatorCompleted,
+                {
+                  width: width >= 768 ? scale(6) : scale(8),
+                  height: width >= 768 ? scale(6) : scale(8),
+                  borderRadius: width >= 768 ? scale(3) : scale(4),
+                },
               ]}
             />
           ))}
@@ -478,18 +503,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: verticalScale(20),
-    gap: scale(6),
   },
   indicator: {
-    width: scale(8),
-    height: scale(8),
-    borderRadius: scale(4),
     backgroundColor: hexToRgba(COLORS.primary, 0.25),
   },
   indicatorActive: {
-    width: scale(8),
-    height: scale(8),
-    borderRadius: scale(4),
     backgroundColor: COLORS.primary,
     transform: [{ scale: 1.2 }],
   },

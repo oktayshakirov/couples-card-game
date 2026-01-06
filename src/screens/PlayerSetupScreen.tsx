@@ -92,11 +92,9 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
         );
 
         if (hasLockedDecks) {
-          ensureRewardedLoaded().catch(() => {
-          });
+          ensureRewardedLoaded().catch(() => {});
         }
-      } catch {
-      }
+      } catch {}
     };
 
     preloadRewardedAd();
@@ -196,7 +194,11 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
             onPress={onClose}
             activeOpacity={0.7}
           >
-            <MaterialIcons name="close" size={moderateScale(24)} color={COLORS.text.primary} />
+            <MaterialIcons
+              name="close"
+              size={moderateScale(24)}
+              color={COLORS.text.primary}
+            />
           </TouchableOpacity>
         ) : (
           <View style={stylesMemo.headerSpacer} />
@@ -349,7 +351,7 @@ export const PlayerSetupScreen: React.FC<PlayerSetupScreenProps> = ({
           {activePlayer === 1 && (
             <MaterialIcons
               name={getButtonIcon() as any}
-              size={moderateScale(20)}
+              size={moderateScale(width >= 768 ? 16 : 20)}
               color={COLORS.text.primary}
             />
           )}
@@ -503,10 +505,10 @@ const createStyles = (width: number) => {
       flexDirection: "row",
       backgroundColor: COLORS.primary,
       borderRadius: 12,
-      padding: scale(16),
+      padding: isTablet ? scale(12) : scale(16),
       alignItems: "center",
       justifyContent: "center",
-      gap: scale(8),
+      gap: isTablet ? scale(6) : scale(8),
       maxWidth: maxContentWidth,
       alignSelf: "center",
       width: "100%",
@@ -516,7 +518,7 @@ const createStyles = (width: number) => {
       opacity: 0.5,
     },
     actionButtonText: {
-      fontSize: moderateScale(17),
+      fontSize: moderateScale(isTablet ? 15 : 17),
       fontWeight: "700",
       color: COLORS.text.primary,
     },

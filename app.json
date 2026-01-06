@@ -28,8 +28,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-tracking-transparency"
-    ]
+    "plugins": ["expo-splash-screen", "expo-tracking-transparency"]
   }
 }

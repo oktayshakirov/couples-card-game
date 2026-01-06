@@ -122,7 +122,7 @@ export const DeckUnlockedScreen: React.FC<DeckUnlockedScreenProps> = ({
               <>
                 <MaterialIcons
                   name="style"
-                  size={width >= 768 ? 48 : moderateScale(20)}
+                  size={moderateScale(width >= 768 ? 16 : 20)}
                   color={COLORS.background}
                 />
                 <Text style={stylesMemo.actionButtonText}>START PLAYING!</Text>
@@ -283,10 +283,9 @@ const createStyles = (width: number) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      paddingVertical: verticalScale(16),
-      paddingHorizontal: scale(32),
-      borderRadius: scale(16),
-      gap: scale(10),
+      padding: width >= 768 ? scale(12) : scale(16),
+      borderRadius: 12,
+      gap: width >= 768 ? scale(6) : scale(8),
       shadowColor: COLORS.primary,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
@@ -301,7 +300,7 @@ const createStyles = (width: number) =>
       opacity: 0.5,
     },
     actionButtonText: {
-      fontSize: moderateScale(18),
+      fontSize: moderateScale(width >= 768 ? 15 : 17),
       fontWeight: "700",
       color: COLORS.background,
       letterSpacing: 0.5,

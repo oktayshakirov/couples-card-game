@@ -478,7 +478,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                 <View style={stylesMemo.buttonContent}>
                   <MaterialIcons
                     name="hourglass-empty"
-                    size={moderateScale(20)}
+                    size={moderateScale(width >= 768 ? 16 : 20)}
                     color={COLORS.text.primary}
                   />
                   <Text style={stylesMemo.selectButtonText}>Loading Ad...</Text>
@@ -491,14 +491,14 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                 {canSelect && (
                   <MaterialIcons
                     name="style"
-                    size={moderateScale(20)}
+                    size={moderateScale(width >= 768 ? 16 : 20)}
                     color={COLORS.text.primary}
                   />
                 )}
                 {!canSelect && isAdActuallyReady && isOnline && (
                   <MaterialIcons
                     name="play-circle-filled"
-                    size={moderateScale(20)}
+                    size={moderateScale(width >= 768 ? 16 : 20)}
                     color={COLORS.text.primary}
                   />
                 )}
@@ -509,14 +509,14 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                   !adLoadFailed && (
                     <MaterialIcons
                       name="hourglass-empty"
-                      size={moderateScale(20)}
+                      size={moderateScale(width >= 768 ? 16 : 20)}
                       color={COLORS.text.primary}
                     />
                   )}
                 {!canSelect && (canTest || (adLoadFailed && !isTested)) && (
                   <MaterialIcons
                     name="visibility"
-                    size={moderateScale(20)}
+                    size={moderateScale(width >= 768 ? 16 : 20)}
                     color={COLORS.text.primary}
                   />
                 )}
@@ -663,8 +663,8 @@ const createStyles = (width: number) =>
     },
     selectButton: {
       backgroundColor: COLORS.primary,
-      borderRadius: scale(14),
-      paddingVertical: verticalScale(14),
+      borderRadius: 12,
+      padding: width >= 768 ? scale(12) : scale(16),
       alignItems: "center",
       justifyContent: "center",
     },
@@ -676,10 +676,10 @@ const createStyles = (width: number) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      gap: scale(8),
+      gap: width >= 768 ? scale(6) : scale(8),
     },
     selectButtonText: {
-      fontSize: moderateScale(20),
+      fontSize: moderateScale(width >= 768 ? 15 : 17),
       fontWeight: "700",
       color: COLORS.text.primary,
     },
