@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1a0a0f"
+      "backgroundColor": "#000000"
     },
     "ios": {
       "icon": "./assets/images/icon.png",
@@ -23,7 +23,7 @@
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#1a0a0f"
+        "backgroundColor": "#000000"
       },
       "package": "com.shadev.loveswipe",
       "config": {

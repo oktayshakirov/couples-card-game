@@ -46,8 +46,6 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
-    <key>NSUserTrackingUsageDescription</key>
-    <string>Allow this app to collect app-related data that can be used for tracking you or your device.</string>
     <key>RCTNewArchEnabled</key>
     <true/>
     <key>UILaunchStoryboardName</key>
