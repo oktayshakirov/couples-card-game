@@ -8,6 +8,7 @@ import {
 } from "./InterstitialAd";
 import { showAppOpenAd, loadAppOpenAd, cleanupAppOpenAd } from "./AppOpenAd";
 import { cleanupRewardedAd } from "./RewardedAd";
+import { OnboardingService } from "../../contexts/OnboardingContext";
 
 const AD_INTERVAL_MS = 60000;
 const APP_OPEN_AFTER_AD_COOLDOWN_MS = 30000;
@@ -190,7 +191,8 @@ export function useGlobalAds() {
             }
           }
 
-          if (await canShowAd(AD_TYPES.APP_OPEN)) {
+          const isOnboardingCompleted = await OnboardingService.isOnboardingCompleted();
+          if (isOnboardingCompleted && (await canShowAd(AD_TYPES.APP_OPEN))) {
             try {
               await showAppOpenAd();
               await updateLastAdShownTime(AD_TYPES.APP_OPEN);

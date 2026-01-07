@@ -132,6 +132,7 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({
               <Animated.View
                 style={[
                   StyleSheet.absoluteFill,
+                  styles.waveBarInner,
                   {
                     backgroundColor: LOADER_COLORS[0],
                     opacity: value.interpolate({
@@ -144,6 +145,7 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({
               <Animated.View
                 style={[
                   StyleSheet.absoluteFill,
+                  styles.waveBarInner,
                   {
                     backgroundColor: LOADER_COLORS[1],
                     opacity: value.interpolate({
@@ -198,10 +200,14 @@ const styles = StyleSheet.create({
     height: 60,
   },
   waveBar: {
-    width: 6,
-    height: 40,
-    borderRadius: 8,
+    width: 10,
+    height: 20,
+    borderRadius: 80,
     marginHorizontal: 3,
+    overflow: "hidden",
+  },
+  waveBarInner: {
+    borderRadius: 80,
   },
 });
 

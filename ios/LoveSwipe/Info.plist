@@ -46,6 +46,8 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
+    <key>NSUserTrackingUsageDescription</key>
+    <string>We use your data to provide personalized ads and improve your experience. This helps keep Love Swipe free.</string>
     <key>RCTNewArchEnabled</key>
     <true/>
     <key>UILaunchStoryboardName</key>

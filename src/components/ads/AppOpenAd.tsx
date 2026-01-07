@@ -1,6 +1,7 @@
 import { AppOpenAd, AdEventType } from "react-native-google-mobile-ads";
 import { getAdUnitId } from "./adConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { OnboardingService } from "../../contexts/OnboardingContext";
 
 let appOpenAd: AppOpenAd | null = null;
 let isAppOpenAdLoaded = false;
@@ -109,6 +110,11 @@ async function createAppOpenInstance() {
 }
 
 export async function loadAppOpenAd(force = false, backgroundTime?: number) {
+  const isOnboardingCompleted = await OnboardingService.isOnboardingCompleted();
+  if (!isOnboardingCompleted) {
+    return;
+  }
+
   if (isLoadingAppOpenAd && !force) {
     return initializingPromise || Promise.resolve();
   }
@@ -140,6 +146,11 @@ export async function loadAppOpenAd(force = false, backgroundTime?: number) {
 }
 
 export async function ensureAppOpenAdLoaded(backgroundTime?: number) {
+  const isOnboardingCompleted = await OnboardingService.isOnboardingCompleted();
+  if (!isOnboardingCompleted) {
+    return;
+  }
+
   if (isLoadingAppOpenAd && initializingPromise) {
     await initializingPromise;
     return;
@@ -167,6 +178,11 @@ export function isAppOpenAdReady() {
 }
 
 export async function showAppOpenAd() {
+  const isOnboardingCompleted = await OnboardingService.isOnboardingCompleted();
+  if (!isOnboardingCompleted) {
+    return;
+  }
+
   if (isShowingAd || isLoadingAppOpenAd) {
     return;
   }
