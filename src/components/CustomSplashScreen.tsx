@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   waveBar: {
     width: 6,
     height: 40,
-    borderRadius: 3,
+    borderRadius: 8,
     marginHorizontal: 3,
   },
 });
