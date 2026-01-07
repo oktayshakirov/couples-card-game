@@ -15,7 +15,6 @@
     "@react-spring/native": "^9.5.5",
     "expo": "^54.0.27",
     "expo-haptics": "^15.0.8",
-    "expo-splash-screen": "^31.0.13",
     "expo-status-bar": "~3.0.8",
     "expo-tracking-transparency": "~6.0.8",
     "react": "19.1.0",

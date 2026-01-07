@@ -13,7 +13,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Deck } from "../types/deck";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
-import { getDeckIconSource, isImageIcon } from "../utils/deckIcons";
+import {
+  getDeckIconSource,
+  isImageIcon,
+  getBadgeIconSource,
+} from "../utils/deckIcons";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
@@ -100,6 +104,18 @@ export const DeckUnlockedScreen: React.FC<DeckUnlockedScreenProps> = ({
                         {deck.cards.length} Cards
                       </Text>
                     </View>
+                    {deck.nsfw !== undefined && (
+                      <View style={stylesMemo.stat}>
+                        <Image
+                          source={getBadgeIconSource(deck.nsfw)}
+                          style={stylesMemo.badgeIcon}
+                          resizeMode="contain"
+                        />
+                        <Text style={stylesMemo.statText}>
+                          {deck.nsfw ? "Spicy" : "Classic"}
+                        </Text>
+                      </View>
+                    )}
                   </View>
                 </View>
               </View>
@@ -251,6 +267,10 @@ const createStyles = (width: number) =>
       fontSize: moderateScale(15),
       color: COLORS.text.primary,
       fontWeight: "600",
+    },
+    badgeIcon: {
+      width: moderateScale(16),
+      height: moderateScale(16),
     },
     loadingContainer: {
       alignItems: "center",
