@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { AppState, Platform } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   showInterstitial,
   initializeInterstitial,
@@ -9,15 +8,6 @@ import {
 import { showAppOpenAd, loadAppOpenAd, cleanupAppOpenAd } from "./AppOpenAd";
 import { cleanupRewardedAd } from "./RewardedAd";
 import { OnboardingService } from "../../contexts/OnboardingContext";
-
-const AD_INTERVAL_MS = 60000;
-const APP_OPEN_AFTER_AD_COOLDOWN_MS = 30000;
-
-const AD_TYPES = {
-  INTERSTITIAL: "interstitial",
-  APP_OPEN: "appOpen",
-  REWARDED: "rewarded",
-};
 
 let MobileAds: any;
 try {
@@ -89,71 +79,22 @@ export function cleanupGlobalAds() {
   }
 }
 
-async function canShowAd(adType: string): Promise<boolean> {
-  if (adType === AD_TYPES.APP_OPEN) {
-    const lastInterstitialString = await AsyncStorage.getItem(
-      `lastAdShownTime_${AD_TYPES.INTERSTITIAL}`
-    );
-    const lastRewardedString = await AsyncStorage.getItem(
-      `lastAdShownTime_${AD_TYPES.REWARDED}`
-    );
-
-    const now = Date.now();
-    let canShow = true;
-
-    if (lastInterstitialString) {
-      const lastInterstitialTime = parseInt(lastInterstitialString, 10);
-      const timeSinceInterstitial = now - lastInterstitialTime;
-      if (timeSinceInterstitial < APP_OPEN_AFTER_AD_COOLDOWN_MS) {
-        canShow = false;
-      }
-    }
-
-    if (lastRewardedString) {
-      const lastRewardedTime = parseInt(lastRewardedString, 10);
-      const timeSinceRewarded = now - lastRewardedTime;
-      if (timeSinceRewarded < APP_OPEN_AFTER_AD_COOLDOWN_MS) {
-        canShow = false;
-      }
-    }
-
-    return canShow;
-  }
-
-  const lastAdShownString = await AsyncStorage.getItem(
-    `lastAdShownTime_${adType}`
-  );
-
-  if (!lastAdShownString) {
-    return true;
-  }
-
-  const lastAdShownTime = parseInt(lastAdShownString, 10);
-  const now = Date.now();
-  const timeSinceLastAd = now - lastAdShownTime;
-
-  const canShow = timeSinceLastAd > AD_INTERVAL_MS;
-  return canShow;
-}
-
-async function updateLastAdShownTime(adType: string) {
-  const now = Date.now();
-  await AsyncStorage.setItem(`lastAdShownTime_${adType}`, now.toString());
-}
+let lastOtherAdShownTime = 0;
+const APP_OPEN_AD_COOLDOWN_AFTER_OTHER_ADS_MS = 10000;
+const MIN_BACKGROUND_TIME_FOR_APP_OPEN_MS = 3000;
 
 export async function showGlobalInterstitial(): Promise<boolean> {
-  if (await canShowAd(AD_TYPES.INTERSTITIAL)) {
-    try {
-      await showInterstitial();
-      await updateLastAdShownTime(AD_TYPES.INTERSTITIAL);
-      return true;
-    } catch (error) {}
+  try {
+    await showInterstitial();
+    lastOtherAdShownTime = Date.now();
+    return true;
+  } catch (error) {
+    return false;
   }
-  return false;
 }
 
 export async function trackRewardedAdShown(): Promise<void> {
-  await updateLastAdShownTime(AD_TYPES.REWARDED);
+  lastOtherAdShownTime = Date.now();
 }
 
 let globalAdsSubscription: any = null;
@@ -163,6 +104,7 @@ export function useGlobalAds() {
   const lastAppStateChange = useRef(Date.now());
   const lastAdShownTime = useRef(0);
   const subscriptionRef = useRef<any>(null);
+  const isShowingAppOpenAd = useRef(false);
 
   useEffect(() => {
     if (globalAdsSubscription) {
@@ -176,11 +118,16 @@ export function useGlobalAds() {
         const now = Date.now();
         const timeSinceLastChange = now - lastAppStateChange.current;
         const timeSinceLastAd = now - lastAdShownTime.current;
+        const timeSinceOtherAd = now - lastOtherAdShownTime;
 
         if (
           appState.current.match(/inactive|background/) &&
           nextAppState === "active"
         ) {
+          if (isShowingAppOpenAd.current) {
+            return;
+          }
+
           if (Platform.OS === "android") {
             if (timeSinceLastChange < 500) {
               return;
@@ -191,13 +138,32 @@ export function useGlobalAds() {
             }
           }
 
-          const isOnboardingCompleted = await OnboardingService.isOnboardingCompleted();
-          if (isOnboardingCompleted && (await canShowAd(AD_TYPES.APP_OPEN))) {
+          const recentlyShownOtherAd =
+            timeSinceOtherAd < APP_OPEN_AD_COOLDOWN_AFTER_OTHER_ADS_MS;
+
+          if (recentlyShownOtherAd) {
+            return;
+          }
+
+          const wasInBackgroundLongEnough =
+            timeSinceLastChange >= MIN_BACKGROUND_TIME_FOR_APP_OPEN_MS;
+          if (!wasInBackgroundLongEnough) {
+            return;
+          }
+
+          const isOnboardingCompleted =
+            await OnboardingService.isOnboardingCompleted();
+          if (isOnboardingCompleted) {
             try {
+              isShowingAppOpenAd.current = true;
               await showAppOpenAd();
-              await updateLastAdShownTime(AD_TYPES.APP_OPEN);
               lastAdShownTime.current = now;
-            } catch (e) {}
+              setTimeout(() => {
+                isShowingAppOpenAd.current = false;
+              }, 2000);
+            } catch (e) {
+              isShowingAppOpenAd.current = false;
+            }
           }
         }
 

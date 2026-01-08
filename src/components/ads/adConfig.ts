@@ -40,3 +40,17 @@ type AdType = "banner" | "interstitial" | "appOpen" | "rewarded";
 export function getAdUnitId(type: AdType): string | undefined {
   return USE_TEST_ADS ? testAdUnitIDs[type] : adUnitIDs[type];
 }
+
+let MobileAds: any;
+try {
+  MobileAds = require("react-native-google-mobile-ads").MobileAds;
+} catch (error) {}
+
+export function isGoogleMobileAdsInitialized(): boolean {
+  if (!MobileAds) return false;
+  try {
+    return MobileAds().isInitialized();
+  } catch {
+    return false;
+  }
+}

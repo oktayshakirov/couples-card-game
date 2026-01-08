@@ -19,8 +19,8 @@ import { useGame } from "../contexts/GameContext";
 import { useCardDeck } from "../hooks/useCardDeck";
 import BannerAdComponent from "../components/ads/BannerAd";
 import {
-  showInterstitial,
   ensureInterstitialLoaded,
+  showInterstitial,
 } from "../components/ads/InterstitialAd";
 import { COLORS } from "../constants/colors";
 import { hexToRgba } from "../utils/colorUtils";
@@ -33,6 +33,7 @@ import {
 
 const MAX_VISIBLE_CARDS = 1;
 const SWIPE_COOLDOWN_MS = 1000;
+const CARDS_PER_INTERSTITIAL = 5; // Show ad every 5 cards
 
 import { Deck } from "../types/deck";
 
@@ -153,10 +154,12 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     setRestoredCardId(null);
   };
 
-  const incrementSwipeCount = () => {
+  const incrementSwipeCount = async () => {
     swipeCountRef.current += 1;
-    if (swipeCountRef.current % 5 === 0) {
-      showInterstitial();
+
+    // Show interstitial ad every 5 cards
+    if (swipeCountRef.current % CARDS_PER_INTERSTITIAL === 0) {
+      await showInterstitial();
     }
   };
 
@@ -170,7 +173,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     cardRemountKeysRef.current.delete(cardId);
     clearConfirmationState();
     switchPlayer();
-    incrementSwipeCount();
+    incrementSwipeCount().catch(() => {
+      // Silently handle ad errors to not interrupt game flow
+    });
   };
 
   const handleCancel = (cardId: string) => {
@@ -238,7 +243,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           });
         }
         switchPlayer();
-        incrementSwipeCount();
+        incrementSwipeCount().catch(() => {
+          // Silently handle ad errors to not interrupt game flow
+        });
       } else {
         const pendingData = {
           cardId,
@@ -315,6 +322,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const handlePlayAgain = useCallback(() => {
     resetGame();
     resetDeck();
+    swipeCountRef.current = 0; // Reset swipe count when starting a new game
   }, [resetGame, resetDeck]);
 
   return (
