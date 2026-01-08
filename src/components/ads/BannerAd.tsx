@@ -126,12 +126,14 @@ const BannerAdComponent = () => {
     };
   }, [fadeAnim]);
 
-  const renderOfflineMessage = () => (
-    <View style={styles.offlineContainer}>
-      <MaterialIcons name="wifi-off" size={16} color={COLORS.primary} />
-      <Text style={styles.placeholderText}>
-        Connect to internet for the best experience
-      </Text>
+  const renderPlaceholder = () => (
+    <View style={styles.placeholderContainer}>
+      <View style={styles.offlineContainer}>
+        <MaterialIcons name="wifi-off" size={20} color={COLORS.primary} />
+        <Text style={styles.placeholderText}>
+          Please turn on your internet to have the best experience
+        </Text>
+      </View>
     </View>
   );
 
@@ -144,7 +146,7 @@ const BannerAdComponent = () => {
   }
 
   if (!isOnline || adFailed) {
-    return null;
+    return renderPlaceholder();
   }
 
   if (!isAdLoaded) {
@@ -192,25 +194,27 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
   },
-  placeholder: {
+  placeholderContainer: {
     width: "100%",
-    height: 70,
-    backgroundColor: "#2a1a2f",
+    height: 65,
+    backgroundColor: "rgba(255, 255, 255, 0.03)",
     justifyContent: "center",
     alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#3a2a3f",
-  },
-  placeholderText: {
-    color: COLORS.text.secondary,
-    fontSize: 12,
-    fontWeight: "500",
+    borderBottomColor: "rgba(177, 156, 217, 0.15)",
   },
   offlineContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 6,
+    gap: 8,
+    paddingHorizontal: 16,
+  },
+  placeholderText: {
+    color: COLORS.text.secondary,
+    fontSize: 12,
+    fontWeight: "500",
+    textAlign: "center",
   },
 });
 
