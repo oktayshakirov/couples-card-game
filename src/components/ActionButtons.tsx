@@ -1,13 +1,7 @@
 import React, { useMemo } from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  Dimensions,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import * as Haptics from "expo-haptics";
-import { hexToRgba } from "../utils/colorUtils";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
@@ -52,9 +46,11 @@ const ActionButtonsComponent: React.FC<ActionButtonsProps> = ({
         onPress={handleSwipeLeft}
         activeOpacity={0.7}
       >
-        <Text style={[stylesMemo.buttonText, { color: COLORS.accent.blue }]}>
-          ←
-        </Text>
+        <MaterialIcons
+          name="arrow-back"
+          size={moderateScale(width >= 768 ? 20 : 24)}
+          color={COLORS.accent.blue}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -67,14 +63,11 @@ const ActionButtonsComponent: React.FC<ActionButtonsProps> = ({
         disabled={!canSkip}
         activeOpacity={canSkip ? 0.7 : 1}
       >
-        <Text
-          style={[
-            stylesMemo.buttonText,
-            !canSkip && stylesMemo.disabledButtonText,
-          ]}
-        >
-          ✗
-        </Text>
+        <Ionicons
+          name="close"
+          size={moderateScale(width >= 768 ? 20 : 24)}
+          color={!canSkip ? "#666" : COLORS.text.primary}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -82,9 +75,11 @@ const ActionButtonsComponent: React.FC<ActionButtonsProps> = ({
         onPress={handleSwipeRight}
         activeOpacity={0.7}
       >
-        <Text style={[stylesMemo.buttonText, { color: COLORS.accent.red }]}>
-          →
-        </Text>
+        <MaterialIcons
+          name="arrow-forward"
+          size={moderateScale(width >= 768 ? 20 : 24)}
+          color={COLORS.accent.red}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -105,11 +100,6 @@ const createStyles = (width: number) =>
       alignItems: "center",
       justifyContent: "center",
       borderWidth: 2,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.4,
-      shadowRadius: 8,
-      elevation: 10,
     },
     leftButton: {
       backgroundColor: COLORS.background,
@@ -123,18 +113,10 @@ const createStyles = (width: number) =>
       backgroundColor: COLORS.background,
       borderColor: COLORS.accent.red,
     },
-    buttonText: {
-      fontSize: width >= 768 ? moderateScale(20) : moderateScale(24),
-      color: COLORS.text.primary,
-      fontWeight: "700",
-    },
     disabledButton: {
       backgroundColor: COLORS.background,
       borderColor: "#333",
       opacity: 0.5,
-    },
-    disabledButtonText: {
-      color: "#666",
     },
   });
 

@@ -7,9 +7,9 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
+import { Badge } from "./Badge";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
@@ -124,14 +124,12 @@ const SwipeCardComponent: React.FC<SwipeCardProps> = ({
                     swipe left
                   </Text>
                 </View>
-                <View style={stylesMemo.sectionLabelContainer}>
-                  <MaterialIcons
-                    name="chat"
-                    size={moderateScale(14)}
-                    color="#4A90E2"
-                  />
-                  <Text style={stylesMemo.sectionLabel}>TRUTH</Text>
-                </View>
+                <Badge
+                  icon="chat"
+                  iconType="material"
+                  text="TRUTH"
+                  iconColor={COLORS.accent.blue}
+                />
               </View>
               <View style={stylesMemo.textContent}>
                 <Text
@@ -167,14 +165,12 @@ const SwipeCardComponent: React.FC<SwipeCardProps> = ({
 
             <View style={stylesMemo.dareSection}>
               <View style={stylesMemo.sectionHeader}>
-                <View style={stylesMemo.sectionLabelContainer}>
-                  <Ionicons
-                    name="flame"
-                    size={moderateScale(14)}
-                    color="#FF6B6B"
-                  />
-                  <Text style={stylesMemo.sectionLabel}>DARE</Text>
-                </View>
+                <Badge
+                  icon="flame"
+                  iconType="ionicons"
+                  text="DARE"
+                  iconColor={COLORS.accent.red}
+                />
                 <View style={stylesMemo.swipeHint}>
                   <Text
                     style={[
@@ -225,11 +221,6 @@ const createStyles = (
       width: width >= 768 ? width * 0.75 : width * 0.92,
       height: width >= 768 ? height * 0.5 : height * 0.55,
       borderRadius: scale(32),
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.4,
-      shadowRadius: 24,
-      elevation: 20,
       alignSelf: "center",
     },
     card: {
@@ -276,24 +267,6 @@ const createStyles = (
       justifyContent: "center",
       alignItems: "center",
       width: "100%",
-    },
-    sectionLabelContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: scale(6),
-      backgroundColor: hexToRgba(COLORS.primary, 0.15),
-      paddingHorizontal: scale(12),
-      paddingVertical: verticalScale(6),
-      borderRadius: scale(10),
-      borderWidth: 1,
-      borderColor: hexToRgba(COLORS.primary, 0.3),
-      flexShrink: 0,
-    },
-    sectionLabel: {
-      fontSize: moderateScale(11),
-      fontWeight: "800",
-      color: COLORS.primary,
-      letterSpacing: 2,
     },
     truthText: {
       fontWeight: "700",

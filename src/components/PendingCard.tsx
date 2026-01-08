@@ -68,11 +68,6 @@ const createStyles = (width: number, height: number) =>
       width: width >= 768 ? width * 0.75 : width * 0.92,
       height: width >= 768 ? height * 0.5 : height * 0.55,
       borderRadius: scale(32),
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.4,
-      shadowRadius: 24,
-      elevation: 20,
       alignSelf: "center",
     },
     card: {
@@ -109,11 +104,6 @@ const createStyles = (width: number, height: number) =>
       alignItems: "center",
       justifyContent: "center",
       marginBottom: verticalScale(20),
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.4,
-      shadowRadius: 8,
-      elevation: 8,
     },
     icon: {
       fontSize: moderateScale(36),

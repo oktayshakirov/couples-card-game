@@ -77,14 +77,11 @@ const GameHeaderComponent: React.FC<GameHeaderProps> = ({
               borderColor:
                 currentPlayer === 1 ? player1Color : "rgba(255,255,255,0.15)",
             },
-            currentPlayer === 1 && [
-              stylesMemo.activeAvatarContainer,
-              {
-                borderColor: player1Color,
-                backgroundColor: hexToRgba(player1Color, 0.15),
-                shadowColor: player1Color,
-              },
-            ],
+            currentPlayer === 1 && {
+              borderColor: player1Color,
+              backgroundColor: hexToRgba(player1Color, 0.15),
+              shadowColor: player1Color,
+            },
           ]}
         >
           <MaterialCommunityIcons
@@ -145,14 +142,11 @@ const GameHeaderComponent: React.FC<GameHeaderProps> = ({
               borderColor:
                 currentPlayer === 2 ? player2Color : "rgba(255,255,255,0.15)",
             },
-            currentPlayer === 2 && [
-              stylesMemo.activeAvatarContainer,
-              {
-                borderColor: player2Color,
-                backgroundColor: hexToRgba(player2Color, 0.15),
-                shadowColor: player2Color,
-              },
-            ],
+            currentPlayer === 2 && {
+              borderColor: player2Color,
+              backgroundColor: hexToRgba(player2Color, 0.15),
+              shadowColor: player2Color,
+            },
           ]}
         >
           <MaterialCommunityIcons
@@ -239,12 +233,6 @@ const createStyles = (width: number) =>
       alignItems: "center",
       justifyContent: "center",
       marginBottom: width >= 768 ? verticalScale(2) : verticalScale(4),
-    },
-    activeAvatarContainer: {
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.4,
-      shadowRadius: 8,
-      elevation: 6,
     },
     playerLabel: {
       fontSize: width >= 768 ? moderateScale(9) : moderateScale(10),

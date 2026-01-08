@@ -18,6 +18,7 @@ import {
   isImageIcon,
   getBadgeIconSource,
 } from "../utils/deckIcons";
+import { Badge } from "../components/Badge";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
@@ -94,27 +95,18 @@ export const DeckUnlockedScreen: React.FC<DeckUnlockedScreenProps> = ({
                     {deck.description}
                   </Text>
                   <View style={stylesMemo.statsContainer}>
-                    <View style={stylesMemo.stat}>
-                      <MaterialIcons
-                        name="style"
-                        size={18}
-                        color={COLORS.primary}
-                      />
-                      <Text style={stylesMemo.statText}>
-                        {deck.cards.length} Cards
-                      </Text>
-                    </View>
+                    <Badge
+                      icon="style"
+                      iconType="material"
+                      text={`${deck.cards.length} Cards`}
+                      iconSize={18}
+                    />
                     {deck.nsfw !== undefined && (
-                      <View style={stylesMemo.stat}>
-                        <Image
-                          source={getBadgeIconSource(deck.nsfw)}
-                          style={stylesMemo.badgeIcon}
-                          resizeMode="contain"
-                        />
-                        <Text style={stylesMemo.statText}>
-                          {deck.nsfw ? "Spicy" : "Classic"}
-                        </Text>
-                      </View>
+                      <Badge
+                        icon={getBadgeIconSource(deck.nsfw)}
+                        iconType="image"
+                        text={deck.nsfw ? "Spicy" : "Classic"}
+                      />
                     )}
                   </View>
                 </View>
@@ -201,11 +193,6 @@ const createStyles = (width: number) =>
       borderWidth: 2,
       borderColor: hexToRgba(COLORS.primary, 0.4),
       backgroundColor: hexToRgba(COLORS.primary, 0.18),
-      shadowColor: COLORS.primary,
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.4,
-      shadowRadius: 20,
-      elevation: 12,
       width: width >= 768 ? width * 0.65 : width * 0.9,
     },
     glassTint: {
@@ -252,26 +239,6 @@ const createStyles = (width: number) =>
       flexDirection: "row",
       gap: width >= 768 ? 24 : scale(16),
     },
-    stat: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 8,
-      backgroundColor: hexToRgba(COLORS.primary, 0.15),
-      paddingVertical: verticalScale(8),
-      paddingHorizontal: scale(16),
-      borderRadius: scale(20),
-      borderWidth: 1,
-      borderColor: hexToRgba(COLORS.primary, 0.25),
-    },
-    statText: {
-      fontSize: moderateScale(15),
-      color: COLORS.text.primary,
-      fontWeight: "600",
-    },
-    badgeIcon: {
-      width: moderateScale(16),
-      height: moderateScale(16),
-    },
     loadingContainer: {
       alignItems: "center",
       justifyContent: "center",
@@ -306,11 +273,6 @@ const createStyles = (width: number) =>
       padding: width >= 768 ? scale(12) : scale(16),
       borderRadius: 12,
       gap: width >= 768 ? scale(6) : scale(8),
-      shadowColor: COLORS.primary,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      elevation: 6,
     },
     enabledButton: {
       backgroundColor: COLORS.primary,

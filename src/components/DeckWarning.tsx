@@ -9,14 +9,12 @@ export type WarningType = "error" | "info";
 interface DeckWarningProps {
   type: WarningType;
   icon: string;
-  title: string;
   message: string;
 }
 
 export const DeckWarning: React.FC<DeckWarningProps> = ({
   type,
   icon,
-  title,
   message,
 }) => {
   const { width } = useWindowDimensions();
@@ -26,11 +24,13 @@ export const DeckWarning: React.FC<DeckWarningProps> = ({
     <View style={styles.container}>
       <MaterialIcons
         name={icon as any}
-        size={width >= 768 ? 28 : moderateScale(24)}
+        size={width >= 768 ? 18 : moderateScale(16)}
         color={type === "error" ? "#FF6B6B" : "#FFA500"}
+        style={styles.icon}
       />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.message}>{message}</Text>
+      <Text style={styles.message}>
+        {message}
+      </Text>
     </View>
   );
 };
@@ -38,34 +38,33 @@ export const DeckWarning: React.FC<DeckWarningProps> = ({
 const createStyles = (width: number, type: WarningType) =>
   StyleSheet.create({
     container: {
-      alignItems: "center",
-      marginBottom: verticalScale(10),
-      paddingVertical: verticalScale(10),
-      paddingHorizontal: scale(20),
+      flexDirection: "row",
+      alignItems: "flex-start",
+      marginBottom: verticalScale(8),
+      paddingVertical: verticalScale(8),
+      paddingHorizontal: scale(12),
       backgroundColor:
         type === "error"
           ? hexToRgba("#FF6B6B", 0.1)
           : hexToRgba("#FFA500", 0.1),
-      borderRadius: scale(14),
+      borderRadius: scale(8),
       borderWidth: 1,
       borderColor:
         type === "error"
           ? hexToRgba("#FF6B6B", 0.3)
           : hexToRgba("#FFA500", 0.3),
       width: "100%",
+      gap: scale(8),
     },
-    title: {
-      fontSize: moderateScale(16),
-      fontWeight: "700",
-      color: type === "error" ? "#FF6B6B" : "#FFA500",
-      marginTop: verticalScale(5),
-      textAlign: "center",
+    icon: {
+      marginTop: 2,
     },
     message: {
-      fontSize: moderateScale(13),
+      fontSize: moderateScale(12),
       color: "#ccc",
-      marginTop: verticalScale(3),
-      textAlign: "center",
+      flex: 1,
+      textAlign: "left",
+      lineHeight: moderateScale(16),
     },
   });
 

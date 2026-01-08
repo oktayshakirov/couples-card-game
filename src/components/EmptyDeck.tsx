@@ -241,11 +241,6 @@ const createStyles = (width: number) =>
       paddingHorizontal: scale(32),
       borderRadius: scale(16),
       backgroundColor: COLORS.primary,
-      shadowColor: COLORS.primary,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      elevation: 6,
       width: "100%",
     },
     playAgainText: {
@@ -263,11 +258,6 @@ const createStyles = (width: number) =>
       paddingHorizontal: scale(32),
       borderRadius: scale(16),
       backgroundColor: COLORS.primary,
-      shadowColor: COLORS.primary,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      elevation: 6,
       width: "100%",
     },
     changeDeckText: {

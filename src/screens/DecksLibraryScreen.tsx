@@ -113,7 +113,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
               >
                 <MaterialCommunityIcons
                   name={player1Avatar as any}
-                  size={moderateScale(width >= 768 ? 16 : 20)}
+                  size={moderateScale(width >= 768 ? 12 : 16)}
                   color={player1Color}
                 />
               </View>
@@ -134,7 +134,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
               >
                 <MaterialCommunityIcons
                   name={player2Avatar as any}
-                  size={moderateScale(width >= 768 ? 16 : 20)}
+                  size={moderateScale(width >= 768 ? 12 : 16)}
                   color={player2Color}
                 />
               </View>
@@ -225,19 +225,19 @@ const createStyles = (width: number) =>
       gap: scale(4),
     },
     avatarContainer: {
-      width: width >= 768 ? scale(28) : scale(32),
-      height: width >= 768 ? scale(28) : scale(32),
-      borderRadius: width >= 768 ? scale(14) : scale(16),
+      width: width >= 768 ? scale(22) : scale(26),
+      height: width >= 768 ? scale(22) : scale(26),
+      borderRadius: width >= 768 ? scale(11) : scale(13),
       borderWidth: 2,
       alignItems: "center",
       justifyContent: "center",
     },
     title: {
-      fontSize: moderateScale(22),
+      fontSize: moderateScale(18),
       fontWeight: "700",
     },
     ampersand: {
-      fontSize: moderateScale(22),
+      fontSize: moderateScale(18),
       fontWeight: "700",
       color: COLORS.primary,
     },

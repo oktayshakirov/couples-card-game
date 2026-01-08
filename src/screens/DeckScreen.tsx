@@ -32,8 +32,13 @@ import {
 import { ensureInterstitialLoaded } from "../components/ads/InterstitialAd";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
-import { getDeckIconSource, isImageIcon } from "../utils/deckIcons";
+import {
+  getDeckIconSource,
+  isImageIcon,
+  getBadgeIconSource,
+} from "../utils/deckIcons";
 import { DeckWarning } from "../components/DeckWarning";
+import { Badge } from "../components/Badge";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
@@ -397,37 +402,46 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           <Text style={stylesMemo.deckName}>{deck.name}</Text>
           <Text style={stylesMemo.deckDescription}>{deck.description}</Text>
           <View style={stylesMemo.statsContainer}>
-            <View style={stylesMemo.stat}>
-              <MaterialIcons name="style" size={20} color={COLORS.primary} />
-              <Text style={stylesMemo.statText}>{deck.cards.length} Cards</Text>
-            </View>
+            <Badge
+              icon="style"
+              iconType="material"
+              text={`${deck.cards.length} Cards`}
+              iconSize={20}
+            />
+            {deck.nsfw !== undefined && (
+              <Badge
+                icon={getBadgeIconSource(deck.nsfw)}
+                iconType="image"
+                text={deck.nsfw ? "Spicy" : "Classic"}
+              />
+            )}
           </View>
         </View>
 
         {!canSelect && (
-          <View style={stylesMemo.lockedContainer}>
-            <MaterialIcons
-              name="lock"
-              size={width >= 768 ? 40 : moderateScale(36)}
-              color="#666"
-            />
-            <Text style={stylesMemo.lockedTitle}>Deck Locked</Text>
-            <Text style={stylesMemo.lockedDescription}>
-              Watch a short ad to unlock this deck
-            </Text>
+          <>
+            <View style={stylesMemo.lockedContainer}>
+              <MaterialIcons
+                name="lock"
+                size={width >= 768 ? 40 : moderateScale(36)}
+                color="#666"
+              />
+              <Text style={stylesMemo.lockedTitle}>Deck Locked</Text>
+              <Text style={stylesMemo.lockedDescription}>
+                Watch a short ad to unlock this deck
+              </Text>
+            </View>
             {!isOnline && (
               <DeckWarning
                 type="error"
                 icon="wifi-off"
-                title="Internet connection required"
-                message="Please turn on your internet to unlock this deck"
+                message="Internet connection required to unlock this deck"
               />
             )}
             {(canTest || adLoadFailed) && isOnline && (
               <DeckWarning
                 type="info"
                 icon="info-outline"
-                title={isTested ? "Ad Not Available" : "Test Mode Available"}
                 message={
                   isTested
                     ? "To unlock this deck permanently, you'll need to watch a rewarded ad when available"
@@ -435,7 +449,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                 }
               />
             )}
-          </View>
+          </>
         )}
       </ScrollView>
 
@@ -628,16 +642,6 @@ const createStyles = (width: number) =>
     statsContainer: {
       flexDirection: "row",
       gap: width >= 768 ? 24 : scale(16),
-    },
-    stat: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 8,
-    },
-    statText: {
-      fontSize: moderateScale(16),
-      color: COLORS.text.primary,
-      fontWeight: "600",
     },
     lockedContainer: {
       alignItems: "center",

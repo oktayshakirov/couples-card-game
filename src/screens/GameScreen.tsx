@@ -491,11 +491,6 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: COLORS.primary,
     borderRadius: scale(2),
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 2,
   },
   content: {
     flex: 1,
