@@ -126,14 +126,16 @@ const BannerAdComponent = () => {
     };
   }, [fadeAnim]);
 
-  const renderPlaceholder = () => (
+  const renderPlaceholder = (showWarning: boolean = false) => (
     <View style={styles.placeholderContainer}>
-      <View style={styles.offlineContainer}>
-        <MaterialIcons name="wifi-off" size={20} color={COLORS.primary} />
-        <Text style={styles.placeholderText}>
-          Please turn on your internet to have the best experience
-        </Text>
-      </View>
+      {showWarning && (
+        <View style={styles.offlineContainer}>
+          <MaterialIcons name="wifi-off" size={20} color={COLORS.primary} />
+          <Text style={styles.placeholderText}>
+            Please turn on your internet to have the best experience
+          </Text>
+        </View>
+      )}
     </View>
   );
 
@@ -145,24 +147,31 @@ const BannerAdComponent = () => {
     return null;
   }
 
-  if (!isOnline || adFailed) {
-    return renderPlaceholder();
+  if (!isOnline) {
+    return renderPlaceholder(true);
+  }
+
+  if (adFailed) {
+    return null;
   }
 
   if (!isAdLoaded) {
     return (
-      <View style={{ height: 0, overflow: "hidden" }}>
-        <BannerAd
-          key={adKey}
-          unitId={adUnitId!}
-          size={BannerAdSize.ADAPTIVE_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly,
-          }}
-          onAdLoaded={handleAdLoaded}
-          onAdFailedToLoad={handleAdFailedToLoad}
-        />
-      </View>
+      <>
+        {renderPlaceholder(false)}
+        <View style={{ height: 0, overflow: "hidden" }}>
+          <BannerAd
+            key={adKey}
+            unitId={adUnitId!}
+            size={BannerAdSize.ADAPTIVE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly,
+            }}
+            onAdLoaded={handleAdLoaded}
+            onAdFailedToLoad={handleAdFailedToLoad}
+          />
+        </View>
+      </>
     );
   }
 
