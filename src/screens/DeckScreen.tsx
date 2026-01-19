@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
   View,
   Text,
@@ -63,9 +63,38 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
   const [adReady, setAdReady] = useState(false);
   const [adLoading, setAdLoading] = useState(false);
   const [isTested, setIsTested] = useState(false);
-  const [adLoadFailed, setAdLoadFailed] = useState(false);
+  const [adLoadAttempted, setAdLoadAttempted] = useState(false);
+
+  const lastLoadAttemptRef = useRef(0);
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const adReadyRef = useRef(false);
+  const adLoadingRef = useRef(false);
 
   useEffect(() => {
+    const checkUnlockStatus = async () => {
+      const isUnlocked = await isDeckUnlocked(deck.id);
+      setUnlocked(Boolean(isUnlocked || deck.isDefault));
+      setLoading(false);
+    };
+
+    const checkTestedStatus = async () => {
+      if (deck.isDefault) {
+        setIsTested(false);
+        return;
+      }
+      const tested = await isDeckTested(deck.id);
+      setIsTested(tested);
+    };
+
+    const checkConnectivity = async () => {
+      try {
+        const state = await NetInfo.fetch();
+        setIsOnline(state.isConnected ?? false);
+      } catch {
+        setIsOnline(false);
+      }
+    };
+
     checkUnlockStatus();
     checkTestedStatus();
     checkConnectivity();
@@ -75,159 +104,109 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     return () => {
       unsubscribe();
     };
-  }, [deck.id]);
+  }, [deck.id, deck.isDefault]);
 
   useEffect(() => {
-    if (!loading) {
-      preloadAd();
+    if (pollIntervalRef.current) {
+      clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
     }
-  }, [loading, unlocked]);
 
-  useEffect(() => {
-    if (!unlocked && !deck.isDefault && !loading) {
-      checkAdReady();
-
-      let pollInterval: NodeJS.Timeout | null = null;
-      let isCleanedUp = false;
-
-      const startPolling = () => {
-        if (isCleanedUp) return;
-
-        pollInterval = setInterval(() => {
-          if (isCleanedUp) {
-            if (pollInterval) {
-              clearInterval(pollInterval);
-              pollInterval = null;
-            }
-            return;
-          }
-
-          if (isRewardedReady()) {
-            setAdReady(true);
-            setAdLoading(false);
-            setAdLoadFailed(false);
-            if (pollInterval) {
-              clearInterval(pollInterval);
-              pollInterval = null;
-            }
-          }
-        }, 500);
-      };
-
-      startPolling();
-
-      const timeout = setTimeout(() => {
-        if (pollInterval) {
-          clearInterval(pollInterval);
-          pollInterval = null;
-        }
-        if (isRewardedReady()) {
-          setAdReady(true);
-          setAdLoading(false);
-          setAdLoadFailed(false);
-        } else {
-          setAdLoadFailed(true);
-          setAdLoading(false);
-        }
-      }, 30000);
-
-      return () => {
-        isCleanedUp = true;
-        if (pollInterval) {
-          clearInterval(pollInterval);
-        }
-        clearTimeout(timeout);
-      };
-    }
-  }, [unlocked, loading, deck.isDefault]);
-
-  const checkUnlockStatus = async () => {
-    const isUnlocked = await isDeckUnlocked(deck.id);
-    setUnlocked(Boolean(isUnlocked || deck.isDefault));
-    setLoading(false);
-  };
-
-  const checkTestedStatus = async () => {
-    if (deck.isDefault) {
-      setIsTested(false);
+    if (unlocked || deck.isDefault || loading) {
       return;
     }
-    const tested = await isDeckTested(deck.id);
-    setIsTested(tested);
-  };
 
-  const checkConnectivity = async () => {
-    try {
-      const state = await NetInfo.fetch();
-      setIsOnline(state.isConnected ?? false);
-    } catch {
-      setIsOnline(false);
+    const isAdModuleAvailable = isRewardedAdModuleAvailable();
+    if (!isAdModuleAvailable) {
+      return;
     }
-  };
 
-  const checkAdReady = async () => {
-    if (isRewardedReady()) {
-      setAdReady(true);
-      setAdLoading(false);
-      setAdLoadFailed(false);
-    } else {
-      setAdReady(false);
-      if (!adLoading) {
-        setAdLoading(true);
-        setAdLoadFailed(false);
-        try {
-          await ensureRewardedLoaded();
-          if (isRewardedReady()) {
-            setAdReady(true);
-            setAdLoadFailed(false);
-          } else {
-            setAdLoadFailed(true);
-          }
-        } catch {
-          setAdReady(false);
-          setAdLoadFailed(true);
-        } finally {
+    const LOAD_RETRY_INTERVAL = 5000;
+    const POLL_INTERVAL = 1000;
+
+    const checkAdStatus = (): boolean => {
+      const isReady = isRewardedReady();
+      
+      if (isReady !== adReadyRef.current) {
+        adReadyRef.current = isReady;
+        setAdReady(isReady);
+        if (isReady) {
+          adLoadingRef.current = false;
           setAdLoading(false);
         }
       }
-    }
-  };
+      
+      return isReady;
+    };
 
-  const preloadAd = async () => {
-    if (unlocked || deck.isDefault) {
-      try {
-        await ensureInterstitialLoaded();
-      } catch {}
-    } else {
+    const attemptLoadAd = async () => {
       if (isRewardedReady()) {
-        setAdReady(true);
-        setAdLoading(false);
-        setAdLoadFailed(false);
+        checkAdStatus();
         return;
       }
 
+      if (!isOnline || adLoadingRef.current) {
+        return;
+      }
+
+      const now = Date.now();
+      const timeSinceLastAttempt = now - lastLoadAttemptRef.current;
+      
+      if (timeSinceLastAttempt < LOAD_RETRY_INTERVAL && adLoadAttempted) {
+        return;
+      }
+
+      lastLoadAttemptRef.current = now;
+      adLoadingRef.current = true;
       setAdLoading(true);
-      setAdReady(false);
-      setAdLoadFailed(false);
+      setAdLoadAttempted(true);
 
       try {
         await ensureRewardedLoaded();
-
-        if (isRewardedReady()) {
-          setAdReady(true);
-          setAdLoading(false);
-          setAdLoadFailed(false);
-        } else {
-          setAdLoadFailed(true);
-          setAdLoading(false);
-        }
+        checkAdStatus();
       } catch {
-        setAdReady(false);
+        adLoadingRef.current = false;
         setAdLoading(false);
-        setAdLoadFailed(true);
       }
+    };
+
+    const isReady = checkAdStatus();
+    
+    if (!isReady) {
+      attemptLoadAd();
+
+      let pollCount = 0;
+      pollIntervalRef.current = setInterval(() => {
+        const isReadyNow = checkAdStatus();
+        
+        if (isReadyNow) {
+          if (pollIntervalRef.current) {
+            clearInterval(pollIntervalRef.current);
+            pollIntervalRef.current = null;
+          }
+          return;
+        }
+
+        pollCount++;
+        if (pollCount % 5 === 0 && isOnline && !adLoadingRef.current) {
+          attemptLoadAd();
+        }
+      }, POLL_INTERVAL);
     }
-  };
+
+    return () => {
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+    };
+  }, [unlocked, deck.isDefault, loading, isOnline, adLoadAttempted]);
+
+  useEffect(() => {
+    if (!loading && (unlocked || deck.isDefault)) {
+      ensureInterstitialLoaded().catch(() => {});
+    }
+  }, [loading, unlocked, deck.isDefault]);
 
   const handleSelectDeck = async () => {
     if (unlocked || deck.isDefault) {
@@ -235,68 +214,42 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         await showGlobalInterstitial();
       } catch {}
       onSelectDeck(deck);
-    } else {
-      const isAdModuleAvailable = isRewardedAdModuleAvailable();
-      const isAdReady = adReady || isRewardedReady();
+      return;
+    }
 
-      const canTest =
-        !isTested &&
-        (!isAdModuleAvailable ||
-          (!isRewardedReady() && !adLoading && (!isOnline || adLoadFailed)));
+    const isAdModuleAvailable = isRewardedAdModuleAvailable();
+    const isAdActuallyReady = adReady || isRewardedReady();
+    const isActuallyLoading = adLoading && !isAdActuallyReady;
 
-      if (canTest && !isAdModuleAvailable) {
-        await markDeckAsTested(deck.id);
-        setIsTested(true);
-        try {
-          await showGlobalInterstitial();
-        } catch {}
-        onSelectDeck(deck);
-        return;
-      }
+    const canTest =
+      !isTested &&
+      (!isAdModuleAvailable ||
+        (!isRewardedReady() && !adLoading && !isOnline));
 
-      if (canTest && (!isOnline || adLoadFailed)) {
-        await markDeckAsTested(deck.id);
-        setIsTested(true);
-        try {
-          await showGlobalInterstitial();
-        } catch {}
-        onSelectDeck(deck);
-        return;
-      }
+    if (canTest && (!isAdModuleAvailable || !isOnline)) {
+      await markDeckAsTested(deck.id);
+      setIsTested(true);
+      try {
+        await showGlobalInterstitial();
+      } catch {}
+      onSelectDeck(deck);
+      return;
+    }
 
-      if (
-        unlocking ||
-        (!isOnline && !canTest && isTested) ||
-        (!isAdReady && !adLoading && !canTest && isTested)
-      )
-        return;
+    if (
+      unlocking ||
+      (!isOnline && !canTest && isTested) ||
+      (!isAdActuallyReady && !isActuallyLoading && !canTest && isTested)
+    ) {
+      return;
+    }
 
-      if (isAdModuleAvailable && !isRewardedReady()) {
-        setAdLoading(true);
-        setAdLoadFailed(false);
-        try {
-          await ensureRewardedLoaded();
-          if (!isRewardedReady()) {
-            setAdLoading(false);
-            setAdLoadFailed(true);
-
-            if (!isTested) {
-              await markDeckAsTested(deck.id);
-              setIsTested(true);
-              try {
-                await showGlobalInterstitial();
-              } catch {}
-              onSelectDeck(deck);
-            }
-            return;
-          }
-          setAdReady(true);
+    if (isAdModuleAvailable && !isRewardedReady() && isOnline) {
+      setAdLoading(true);
+      try {
+        await ensureRewardedLoaded();
+        if (!isRewardedReady()) {
           setAdLoading(false);
-          setAdLoadFailed(false);
-        } catch {
-          setAdLoading(false);
-          setAdLoadFailed(true);
-
           if (!isTested) {
             await markDeckAsTested(deck.id);
             setIsTested(true);
@@ -307,34 +260,47 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           }
           return;
         }
-      }
-
-      if (!isAdModuleAvailable) {
+        setAdReady(true);
+        setAdLoading(false);
+      } catch {
+        setAdLoading(false);
+        if (!isTested) {
+          await markDeckAsTested(deck.id);
+          setIsTested(true);
+          try {
+            await showGlobalInterstitial();
+          } catch {}
+          onSelectDeck(deck);
+        }
         return;
       }
+    }
 
-      setUnlocking(true);
-      setAdLoading(false);
-      try {
-        const success = await showRewardedAd(async () => {
-          await unlockDeck(deck.id);
-          await trackRewardedAdShown();
-          setUnlocked(true);
-          setTimeout(() => {
-            if (onDeckUnlocked) {
-              onDeckUnlocked(deck);
-            } else {
-              onSelectDeck(deck);
-            }
-          }, 500);
-        });
+    if (!isAdModuleAvailable) {
+      return;
+    }
 
-        if (!success) {
-          setUnlocking(false);
-        }
-      } catch {
+    setUnlocking(true);
+    setAdLoading(false);
+    try {
+      const success = await showRewardedAd(async () => {
+        await unlockDeck(deck.id);
+        await trackRewardedAdShown();
+        setUnlocked(true);
+        setTimeout(() => {
+          if (onDeckUnlocked) {
+            onDeckUnlocked(deck);
+          } else {
+            onSelectDeck(deck);
+          }
+        }, 500);
+      });
+
+      if (!success) {
         setUnlocking(false);
       }
+    } catch {
+      setUnlocking(false);
     }
   };
 
@@ -352,11 +318,13 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
 
   const canSelect = unlocked || deck.isDefault;
   const isAdModuleAvailable = isRewardedAdModuleAvailable();
+  const isAdActuallyReady = adReady || isRewardedReady();
+  const isActuallyLoading = adLoading && !isAdActuallyReady;
   const canTest =
     !canSelect &&
     !isTested &&
     (!isAdModuleAvailable ||
-      (!isRewardedReady() && !adLoading && (!isOnline || adLoadFailed)));
+      (!isAdActuallyReady && !isActuallyLoading && !isOnline));
 
   return (
     <SafeAreaView style={stylesMemo.container} edges={["top", "bottom"]}>
@@ -380,7 +348,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         ]}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.deckHeader}>
+        <View style={stylesMemo.deckHeader}>
           <View style={stylesMemo.iconContainer}>
             {isImageIcon(deck.icon) ? (
               <Image
@@ -438,7 +406,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
                 message="Internet connection required to unlock this deck"
               />
             )}
-            {(canTest || adLoadFailed) && isOnline && (
+            {canTest && isOnline && (
               <DeckWarning
                 type="info"
                 icon="info-outline"
@@ -460,9 +428,8 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
             !canSelect &&
               (unlocking ||
                 (!isOnline && isTested && !canTest) ||
-                (!adReady &&
-                  !adLoading &&
-                  !isRewardedReady() &&
+                (!isAdActuallyReady &&
+                  !isActuallyLoading &&
                   isTested &&
                   !canTest)) &&
               stylesMemo.selectButtonDisabled,
@@ -472,93 +439,80 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
             !canSelect &&
             (unlocking ||
               (!isOnline && isTested && !canTest) ||
-              (!adReady &&
-                !adLoading &&
-                !isRewardedReady() &&
+              (!isAdActuallyReady &&
+                !isActuallyLoading &&
                 isTested &&
-                !canTest &&
-                !adLoadFailed))
+                !canTest))
           }
         >
-          {(() => {
-            const isAdActuallyReady = adReady || isRewardedReady();
-            const isActuallyLoading = adLoading && !isAdActuallyReady;
-
-            if (
-              unlocking ||
-              (isActuallyLoading && !canSelect && !canTest && !adLoadFailed)
-            ) {
-              return (
-                <View style={stylesMemo.buttonContent}>
-                  <MaterialIcons
-                    name="hourglass-empty"
-                    size={moderateScale(width >= 768 ? 16 : 20)}
-                    color={COLORS.text.primary}
-                  />
-                  <Text style={stylesMemo.selectButtonText}>Loading Ad...</Text>
-                </View>
-              );
-            }
-
-            return (
-              <View style={stylesMemo.buttonContent}>
-                {canSelect && (
-                  <MaterialIcons
-                    name="style"
-                    size={moderateScale(width >= 768 ? 16 : 20)}
-                    color={COLORS.text.primary}
-                  />
-                )}
-                {!canSelect && isAdActuallyReady && isOnline && (
-                  <MaterialIcons
-                    name="play-circle-filled"
-                    size={moderateScale(width >= 768 ? 16 : 20)}
-                    color={COLORS.text.primary}
-                  />
-                )}
-                {!canSelect &&
-                  !isAdActuallyReady &&
-                  isOnline &&
-                  !canTest &&
-                  !adLoadFailed && (
-                    <MaterialIcons
-                      name="hourglass-empty"
-                      size={moderateScale(width >= 768 ? 16 : 20)}
-                      color={COLORS.text.primary}
-                    />
-                  )}
-                {!canSelect && (canTest || (adLoadFailed && !isTested)) && (
-                  <MaterialIcons
-                    name="visibility"
-                    size={moderateScale(width >= 768 ? 16 : 20)}
-                    color={COLORS.text.primary}
-                  />
-                )}
-                <Text style={stylesMemo.selectButtonText}>
-                  {canSelect
-                    ? "Select This Deck"
-                    : !isOnline && isTested
-                    ? "Internet Required"
-                    : !isOnline && !isTested
-                    ? "Test Deck"
-                    : !isAdModuleAvailable && !isTested
-                    ? "Test Deck"
-                    : !isAdActuallyReady && canTest
-                    ? "Test Deck"
-                    : !isAdActuallyReady &&
-                      !canTest &&
-                      adLoadFailed &&
-                      !isTested
-                    ? "Test Deck"
-                    : !isAdActuallyReady && !canTest && !adLoadFailed
-                    ? "Loading Ad..."
-                    : !isAdActuallyReady && !canTest && adLoadFailed && isTested
-                    ? "Ad Not Available"
-                    : "Watch Ad to Unlock"}
-                </Text>
-              </View>
-            );
-          })()}
+          {unlocking ? (
+            <View style={stylesMemo.buttonContent}>
+              <ActivityIndicator
+                size="small"
+                color={COLORS.text.primary}
+                style={{ marginRight: 8 }}
+              />
+              <Text style={stylesMemo.selectButtonText}>Unlocking...</Text>
+            </View>
+          ) : canSelect ? (
+            <View style={stylesMemo.buttonContent}>
+              <MaterialIcons
+                name="style"
+                size={moderateScale(width >= 768 ? 16 : 20)}
+                color={COLORS.text.primary}
+              />
+              <Text style={stylesMemo.selectButtonText}>Select This Deck</Text>
+            </View>
+          ) : isAdActuallyReady && isOnline && isAdModuleAvailable ? (
+            <View style={stylesMemo.buttonContent}>
+              <MaterialIcons
+                name="play-circle-filled"
+                size={moderateScale(width >= 768 ? 16 : 20)}
+                color={COLORS.text.primary}
+              />
+              <Text style={stylesMemo.selectButtonText}>Watch Ad to Unlock</Text>
+            </View>
+          ) : isActuallyLoading && isOnline && isAdModuleAvailable ? (
+            <View style={stylesMemo.buttonContent}>
+              <ActivityIndicator
+                size="small"
+                color={COLORS.text.primary}
+                style={{ marginRight: 8 }}
+              />
+              <Text style={stylesMemo.selectButtonText}>Loading Ad...</Text>
+            </View>
+          ) : !isOnline && isTested ? (
+            <View style={stylesMemo.buttonContent}>
+              <Text style={stylesMemo.selectButtonText}>Internet Required</Text>
+            </View>
+          ) : canTest ? (
+            <View style={stylesMemo.buttonContent}>
+              <MaterialIcons
+                name="visibility"
+                size={moderateScale(width >= 768 ? 16 : 20)}
+                color={COLORS.text.primary}
+              />
+              <Text style={stylesMemo.selectButtonText}>Test Deck</Text>
+            </View>
+          ) : isTested && isOnline && !isAdActuallyReady && !isActuallyLoading ? (
+            <View style={stylesMemo.buttonContent}>
+              <MaterialIcons
+                name="hourglass-empty"
+                size={moderateScale(width >= 768 ? 16 : 20)}
+                color={COLORS.text.primary}
+              />
+              <Text style={stylesMemo.selectButtonText}>Ad Not Available</Text>
+            </View>
+          ) : (
+            <View style={stylesMemo.buttonContent}>
+              <MaterialIcons
+                name="hourglass-empty"
+                size={moderateScale(width >= 768 ? 16 : 20)}
+                color={COLORS.text.primary}
+              />
+              <Text style={stylesMemo.selectButtonText}>Loading Ad...</Text>
+            </View>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -688,5 +642,3 @@ const createStyles = (width: number) =>
       color: COLORS.text.primary,
     },
   });
-
-const styles = createStyles(0);

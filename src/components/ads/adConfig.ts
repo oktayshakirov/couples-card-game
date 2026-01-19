@@ -1,6 +1,6 @@
 import { Platform } from "react-native";
 
-export const USE_TEST_ADS = true;
+export const USE_TEST_ADS = false;
 
 let TestIds: any;
 try {
