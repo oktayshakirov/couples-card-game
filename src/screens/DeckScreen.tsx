@@ -253,9 +253,6 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           if (!isTested) {
             await markDeckAsTested(deck.id);
             setIsTested(true);
-            try {
-              await showGlobalInterstitial();
-            } catch {}
             onSelectDeck(deck);
           }
           return;
@@ -267,9 +264,6 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         if (!isTested) {
           await markDeckAsTested(deck.id);
           setIsTested(true);
-          try {
-            await showGlobalInterstitial();
-          } catch {}
           onSelectDeck(deck);
         }
         return;
@@ -280,13 +274,35 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
       return;
     }
 
+    if (!isRewardedReady()) {
+      return;
+    }
+
     setUnlocking(true);
     setAdLoading(false);
+    
+    let unlockTimeout: NodeJS.Timeout | null = setTimeout(() => {
+      setUnlocking(false);
+      unlockTimeout = null;
+    }, 20000);
+
+    const cleanup = () => {
+      if (unlockTimeout) {
+        clearTimeout(unlockTimeout);
+        unlockTimeout = null;
+      }
+    };
+
+    let rewardEarned = false;
+
     try {
       const success = await showRewardedAd(async () => {
+        rewardEarned = true;
+        cleanup();
         await unlockDeck(deck.id);
         await trackRewardedAdShown();
         setUnlocked(true);
+        setUnlocking(false);
         setTimeout(() => {
           if (onDeckUnlocked) {
             onDeckUnlocked(deck);
@@ -296,10 +312,13 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         }, 500);
       });
 
-      if (!success) {
+      cleanup();
+      
+      if (!success || !rewardEarned) {
         setUnlocking(false);
       }
     } catch {
+      cleanup();
       setUnlocking(false);
     }
   };
