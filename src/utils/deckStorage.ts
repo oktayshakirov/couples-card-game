@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { allDecks } from "../data/decks";
 
 const UNLOCKED_DECKS_KEY = "unlockedDecks";
 const TESTED_DECKS_KEY = "testedDecks";
@@ -22,6 +23,14 @@ export async function unlockDeck(deckId: string): Promise<void> {
       unlocked.push(deckId);
       await AsyncStorage.setItem(UNLOCKED_DECKS_KEY, JSON.stringify(unlocked));
     }
+  } catch {}
+}
+
+/** Persists every deck id (lifetime / full unlock). New decks added to `allDecks` unlock automatically. */
+export async function unlockAllDecks(): Promise<void> {
+  try {
+    const ids = allDecks.map((d) => d.id);
+    await AsyncStorage.setItem(UNLOCKED_DECKS_KEY, JSON.stringify(ids));
   } catch {}
 }
 

@@ -16,9 +16,11 @@ import { Deck } from "../types/deck";
 import {
   isDeckUnlocked,
   unlockDeck,
+  unlockAllDecks,
   isDeckTested,
   markDeckAsTested,
 } from "../utils/deckStorage";
+import { useRevenueCat } from "../hooks/useRevenueCat";
 import {
   showRewardedAd,
   ensureRewardedLoaded,
@@ -56,6 +58,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
   onBack,
 }) => {
   const { width } = useWindowDimensions();
+  const { isLifetime } = useRevenueCat();
   const [unlocked, setUnlocked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [unlocking, setUnlocking] = useState(false);
@@ -73,7 +76,9 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
   useEffect(() => {
     const checkUnlockStatus = async () => {
       const isUnlocked = await isDeckUnlocked(deck.id);
-      setUnlocked(Boolean(isUnlocked || deck.isDefault));
+      setUnlocked(
+        Boolean(isUnlocked || deck.isDefault || isLifetime)
+      );
       setLoading(false);
     };
 
@@ -104,7 +109,23 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     return () => {
       unsubscribe();
     };
-  }, [deck.id, deck.isDefault]);
+  }, [deck.id, deck.isDefault, isLifetime]);
+
+  useEffect(() => {
+    if (!isLifetime) {
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      await unlockAllDecks();
+      if (!cancelled) {
+        setUnlocked(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isLifetime]);
 
   useEffect(() => {
     if (pollIntervalRef.current) {
@@ -112,7 +133,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
       pollIntervalRef.current = null;
     }
 
-    if (unlocked || deck.isDefault || loading) {
+    if (unlocked || deck.isDefault || loading || isLifetime) {
       return;
     }
 
@@ -200,7 +221,14 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         pollIntervalRef.current = null;
       }
     };
-  }, [unlocked, deck.isDefault, loading, isOnline, adLoadAttempted]);
+  }, [
+    unlocked,
+    deck.isDefault,
+    loading,
+    isOnline,
+    adLoadAttempted,
+    isLifetime,
+  ]);
 
   useEffect(() => {
     if (!loading && (unlocked || deck.isDefault)) {

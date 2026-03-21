@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { allDecks } from "../data/decks";
 import { Deck } from "../types/deck";
-import { getUnlockedDecks } from "../utils/deckStorage";
+import { getUnlockedDecks, unlockAllDecks } from "../utils/deckStorage";
+import { useRevenueCat } from "../hooks/useRevenueCat";
+import { getCustomerInfo, hasLifetimeEntitlement } from "../services/revenueCat";
 import { useGame } from "../contexts/GameContext";
 import { COLORS } from "../constants/colors";
 import { DeckPack } from "../components/DeckPack";
@@ -38,6 +40,8 @@ const getCardDimensions = (width: number) => {
 };
 
 interface DecksLibraryScreenProps {
+  /** Bumps on every navigation to this screen (see App `decksVisitKey`) so the paywall flow runs each visit. */
+  paywallEntryKey: number;
   onSelectDeck: (deck: Deck) => void;
   onBack?: () => void;
   onClose?: () => void;
@@ -45,6 +49,7 @@ interface DecksLibraryScreenProps {
 }
 
 export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
+  paywallEntryKey,
   onSelectDeck,
   onBack,
   onClose,
@@ -52,6 +57,8 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
 }) => {
   const { width } = useWindowDimensions();
   const { gameState } = useGame();
+  const { syncCustomerInfo, showPaywallIfNeeded, isAvailable, loading: rcLoading } =
+    useRevenueCat();
   const [unlockedDecks, setUnlockedDecks] = useState<string[]>([]);
 
   const cardDimensions = useMemo(() => getCardDimensions(width), [width]);
@@ -68,14 +75,53 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
     });
   }, [unlockedDecks]);
 
-  useEffect(() => {
-    loadUnlockedDecks();
-  }, []);
-
-  const loadUnlockedDecks = async () => {
+  const loadUnlockedDecks = useCallback(async () => {
     const unlocked = await getUnlockedDecks();
     setUnlockedDecks(unlocked);
-  };
+  }, []);
+
+  useEffect(() => {
+    loadUnlockedDecks();
+  }, [loadUnlockedDecks]);
+
+  useEffect(() => {
+    if (!isAvailable || rcLoading) {
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const { customerInfo, error: infoErr } = await getCustomerInfo();
+      if (cancelled || infoErr?.code === "NOT_CONFIGURED") {
+        return;
+      }
+      if (hasLifetimeEntitlement(customerInfo)) {
+        await unlockAllDecks();
+        await loadUnlockedDecks();
+        await syncCustomerInfo();
+        return;
+      }
+      await showPaywallIfNeeded();
+      if (cancelled) {
+        return;
+      }
+      const after = await getCustomerInfo();
+      if (hasLifetimeEntitlement(after.customerInfo)) {
+        await unlockAllDecks();
+        await loadUnlockedDecks();
+        await syncCustomerInfo();
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    paywallEntryKey,
+    isAvailable,
+    rcLoading,
+    syncCustomerInfo,
+    showPaywallIfNeeded,
+    loadUnlockedDecks,
+  ]);
 
   const handleDeckPress = (deck: Deck) => {
     onSelectDeck(deck);

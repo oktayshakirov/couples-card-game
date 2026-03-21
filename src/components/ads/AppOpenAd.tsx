@@ -2,6 +2,7 @@ import { AppOpenAd, AdEventType } from "react-native-google-mobile-ads";
 import { getAdUnitId } from "./adConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { OnboardingService } from "../../contexts/OnboardingContext";
+import { areSubscriptionAdsDisabled } from "./adsSubscriptionGate";
 
 let appOpenAd: AppOpenAd | null = null;
 let isAppOpenAdLoaded = false;
@@ -110,6 +111,9 @@ async function createAppOpenInstance() {
 }
 
 export async function loadAppOpenAd(force = false, backgroundTime?: number) {
+  if (areSubscriptionAdsDisabled()) {
+    return;
+  }
   const isOnboardingCompleted = await OnboardingService.isOnboardingCompleted();
   if (!isOnboardingCompleted) {
     return;
@@ -178,6 +182,9 @@ export function isAppOpenAdReady() {
 }
 
 export async function showAppOpenAd() {
+  if (areSubscriptionAdsDisabled()) {
+    return;
+  }
   const isOnboardingCompleted = await OnboardingService.isOnboardingCompleted();
   if (!isOnboardingCompleted) {
     return;

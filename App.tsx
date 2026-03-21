@@ -21,8 +21,10 @@ import {
   useGlobalAds,
   cleanupGlobalAds,
 } from "./src/components/ads/adsManager";
+import { setSubscriptionAdsDisabled } from "./src/components/ads/adsSubscriptionGate";
 import CustomSplashScreen from "./src/components/CustomSplashScreen";
 import ConsentDialog from "./src/components/ads/ConsentDialog";
+import { RevenueCatProvider, useRevenueCat } from "./src/hooks/useRevenueCat";
 
 type Screen =
   | "onboarding"
@@ -33,13 +35,20 @@ type Screen =
   | "game";
 
 const AppContent = () => {
+  const { isLifetime } = useRevenueCat();
   const { gameState, updatePlayerInfo, isSetupComplete } = useGame();
   const [currentScreen, setCurrentScreen] = useState<Screen>("onboarding");
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
   const [onboardingChecked, setOnboardingChecked] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [consentCompleted, setConsentCompleted] = useState(false);
+  const [decksVisitKey, setDecksVisitKey] = useState(0);
   const hasGameStartedRef = useRef(false);
+
+  const goToDecksScreen = useCallback(() => {
+    setDecksVisitKey((k) => k + 1);
+    setCurrentScreen("decks");
+  }, []);
 
   const completeOnboarding = useCallback(() => {
     setCurrentScreen("setup");
@@ -72,11 +81,15 @@ const AppContent = () => {
     }
   }, [showSplash]);
 
-  useGlobalAds();
+  useEffect(() => {
+    setSubscriptionAdsDisabled(isLifetime);
+  }, [isLifetime]);
+
+  useGlobalAds(isLifetime);
 
   const handlePlayerSetupComplete = () => {
     if (isSetupComplete()) {
-      setCurrentScreen("decks");
+      goToDecksScreen();
     }
   };
 
@@ -104,13 +117,13 @@ const AppContent = () => {
   };
 
   const handleBackToDecks = () => {
-    setCurrentScreen("decks");
+    goToDecksScreen();
     setSelectedDeck(null);
   };
 
   const handleBackToSetup = () => {
     if (hasGameStartedRef.current) {
-      setCurrentScreen("decks");
+      goToDecksScreen();
     } else {
       setCurrentScreen("setup");
       setSelectedDeck(null);
@@ -125,12 +138,12 @@ const AppContent = () => {
     if (hasGameStartedRef.current) {
       setCurrentScreen("game");
     } else {
-      setCurrentScreen("decks");
+      goToDecksScreen();
     }
   };
 
   const handleBackToDeckLibrary = () => {
-    setCurrentScreen("decks");
+    goToDecksScreen();
   };
 
   const handleCloseSetup = () => {
@@ -138,7 +151,7 @@ const AppContent = () => {
       if (selectedDeck) {
         setCurrentScreen("game");
       } else {
-        setCurrentScreen("decks");
+        goToDecksScreen();
       }
     }
   };
@@ -200,6 +213,7 @@ const AppContent = () => {
       case "decks":
         return (
           <DecksLibraryScreen
+            paywallEntryKey={decksVisitKey}
             onSelectDeck={handleDeckSelected}
             onBack={hasGameStartedRef.current ? handleBackToSetup : undefined}
             onClose={
@@ -260,9 +274,11 @@ const AppContent = () => {
 export default function App() {
   return (
     <SafeAreaProvider>
-      <GameProvider>
-        <AppContent />
-      </GameProvider>
+      <RevenueCatProvider>
+        <GameProvider>
+          <AppContent />
+        </GameProvider>
+      </RevenueCatProvider>
     </SafeAreaProvider>
   );
 }

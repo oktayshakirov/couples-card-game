@@ -8,6 +8,7 @@ import {
 import { showAppOpenAd, loadAppOpenAd, cleanupAppOpenAd } from "./AppOpenAd";
 import { cleanupRewardedAd } from "./RewardedAd";
 import { OnboardingService } from "../../contexts/OnboardingContext";
+import { areSubscriptionAdsDisabled } from "./adsSubscriptionGate";
 
 let MobileAds: any;
 try {
@@ -27,6 +28,9 @@ let isInitialized = false;
 let initializationPromise: Promise<void> | null = null;
 
 export async function initializeGlobalAds(force = false) {
+  if (areSubscriptionAdsDisabled()) {
+    return;
+  }
   if (isInitialized && !force && initializationPromise) {
     return initializationPromise;
   }
@@ -84,6 +88,9 @@ const APP_OPEN_AD_COOLDOWN_AFTER_OTHER_ADS_MS = 10000;
 const MIN_BACKGROUND_TIME_FOR_APP_OPEN_MS = 3000;
 
 export async function showGlobalInterstitial(): Promise<boolean> {
+  if (areSubscriptionAdsDisabled()) {
+    return false;
+  }
   try {
     await showInterstitial();
     lastOtherAdShownTime = Date.now();
@@ -99,7 +106,7 @@ export async function trackRewardedAdShown(): Promise<void> {
 
 let globalAdsSubscription: any = null;
 
-export function useGlobalAds() {
+export function useGlobalAds(disableAds?: boolean) {
   const appState = useRef(AppState.currentState);
   const lastAppStateChange = useRef(Date.now());
   const lastAdShownTime = useRef(0);
@@ -107,6 +114,9 @@ export function useGlobalAds() {
   const isShowingAppOpenAd = useRef(false);
 
   useEffect(() => {
+    if (disableAds) {
+      return;
+    }
     if (globalAdsSubscription) {
       globalAdsSubscription.remove();
       globalAdsSubscription = null;
@@ -185,5 +195,5 @@ export function useGlobalAds() {
         globalAdsSubscription = null;
       }
     };
-  }, []);
+  }, [disableAds]);
 }

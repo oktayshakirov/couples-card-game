@@ -30,6 +30,7 @@ import {
   showTruthToast,
   showDareToast,
 } from "../utils/toast";
+import { useRevenueCat } from "../hooks/useRevenueCat";
 
 const MAX_VISIBLE_CARDS = 1;
 const SWIPE_COOLDOWN_MS = 1000;
@@ -51,6 +52,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onBackToDecks,
 }) => {
   const [menuVisible, setMenuVisible] = useState(false);
+  const { isLifetime } = useRevenueCat();
   const {
     gameState,
     updatePlayerStats,
@@ -72,6 +74,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const topCardRef = useRef<any>(null);
   const lastSwipeTimeRef = useRef<number>(0);
   const swipeCountRef = useRef<number>(0);
+  const isLifetimeRef = useRef(isLifetime);
   const pendingConfirmationRef = useRef<{
     cardId: string;
     player: number;
@@ -137,6 +140,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const getNextPlayerInfo = useCallback(() => nextPlayerInfo, [nextPlayerInfo]);
 
   useEffect(() => {
+    isLifetimeRef.current = isLifetime;
+  }, [isLifetime]);
+
+  useEffect(() => {
     ensureInterstitialLoaded().catch(() => {});
   }, []);
 
@@ -157,8 +164,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const incrementSwipeCount = async () => {
     swipeCountRef.current += 1;
 
-    // Show interstitial ad every 5 cards
-    if (swipeCountRef.current % CARDS_PER_INTERSTITIAL === 0) {
+    if (
+      !isLifetimeRef.current &&
+      swipeCountRef.current % CARDS_PER_INTERSTITIAL === 0
+    ) {
       await showInterstitial();
     }
   };
@@ -327,7 +336,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-      <BannerAdComponent />
+      {!isLifetime && <BannerAdComponent />}
       <GameHeader
         currentPlayer={gameState.currentPlayer}
         player1Dares={gameState.player1.dares}

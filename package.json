@@ -21,6 +21,8 @@
     "react-native": "0.81.5",
     "react-native-animatable": "^1.4.0",
     "react-native-google-mobile-ads": "^16.0.0",
+    "react-native-purchases": "^9.13.0",
+    "react-native-purchases-ui": "^9.13.0",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-size-matters": "^0.4.2",
     "react-native-toast-message": "^2.3.3",
@@ -30,6 +32,7 @@
   "devDependencies": {
     "@types/react": "~19.1.0",
     "babel-preset-expo": "^54.0.8",
+    "react-native-dotenv": "^3.4.11",
     "typescript": "~5.9.2"
   },
   "private": true

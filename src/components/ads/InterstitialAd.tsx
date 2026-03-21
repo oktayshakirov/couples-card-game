@@ -1,6 +1,7 @@
 import { InterstitialAd, AdEventType } from "react-native-google-mobile-ads";
 import { getAdUnitId } from "./adConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { areSubscriptionAdsDisabled } from "./adsSubscriptionGate";
 
 let interstitial: InterstitialAd | null = null;
 let isAdLoaded = false;
@@ -174,6 +175,9 @@ export function isInterstitialReady() {
 }
 
 export async function showInterstitial() {
+  if (areSubscriptionAdsDisabled()) {
+    return;
+  }
   if (isShowingAd || isLoadingInterstitial) {
     return;
   }
