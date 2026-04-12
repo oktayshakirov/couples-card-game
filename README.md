@@ -8,7 +8,9 @@ Whether you're looking for a fun date night activity, want to spark deeper conve
 
 ## Demo
 
-![Couples Card Game Demo](https://via.placeholder.com/800x600/FF6B6B/FFFFFF?text=Couples+Card+Game "Couples Card Game Demo")
+![Love Swipe — Truth or Dare for Couples](https://oktayshakirov.com/assets/images/projects/love-swipe.jpg "Love Swipe")
+
+**Get the app:** [Google Play](https://play.google.com/store/apps/details?id=com.shadev.loveswipe) · [App Store](https://apps.apple.com/de/app/love-swipe-truth-or-dare/id6757429065?l=en-GB)
 
 ## Features
 
