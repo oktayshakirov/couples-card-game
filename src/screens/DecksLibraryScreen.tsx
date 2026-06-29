@@ -6,9 +6,15 @@ import {
   TouchableOpacity,
   ScrollView,
   useWindowDimensions,
+  Linking,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 import { allDecks } from "../data/decks";
 import { Deck } from "../types/deck";
 import { getUnlockedDecks, unlockAllDecks } from "../utils/deckStorage";
@@ -17,6 +23,7 @@ import { getCustomerInfo, hasLifetimeEntitlement } from "../services/revenueCat"
 import { useGame } from "../contexts/GameContext";
 import { COLORS } from "../constants/colors";
 import { DeckPack } from "../components/DeckPack";
+import { ConnectModal } from "../components/ConnectModal";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { hexToRgba } from "../utils/colorUtils";
 
@@ -57,9 +64,31 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
 }) => {
   const { width } = useWindowDimensions();
   const { gameState } = useGame();
-  const { syncCustomerInfo, showPaywallIfNeeded, isAvailable, loading: rcLoading } =
-    useRevenueCat();
+  const {
+    syncCustomerInfo,
+    showPaywallIfNeeded,
+    isAvailable,
+    isLifetime,
+    customerInfo,
+    devProOverride,
+    setDevProOverride,
+    restore,
+    loading: rcLoading,
+  } = useRevenueCat();
   const [unlockedDecks, setUnlockedDecks] = useState<string[]>([]);
+  const [connectVisible, setConnectVisible] = useState(false);
+
+  const handleManageInStore = useCallback(async () => {
+    const url =
+      Platform.OS === "ios"
+        ? "https://apps.apple.com/account/subscriptions"
+        : "https://play.google.com/store/account/subscriptions";
+    await Linking.openURL(url).catch(() => undefined);
+  }, []);
+
+  const handleUpgrade = useCallback(async () => {
+    await showPaywallIfNeeded();
+  }, [showPaywallIfNeeded]);
 
   const cardDimensions = useMemo(() => getCardDimensions(width), [width]);
 
@@ -79,6 +108,21 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
     const unlocked = await getUnlockedDecks();
     setUnlockedDecks(unlocked);
   }, []);
+
+  const handleRestore = useCallback(async (): Promise<boolean> => {
+    const { success } = await restore();
+    if (!success) {
+      return false;
+    }
+    const { customerInfo: info } = await getCustomerInfo();
+    const restored = hasLifetimeEntitlement(info);
+    if (restored) {
+      await unlockAllDecks();
+      await loadUnlockedDecks();
+      await syncCustomerInfo();
+    }
+    return restored;
+  }, [restore, syncCustomerInfo, loadUnlockedDecks]);
 
   useEffect(() => {
     loadUnlockedDecks();
@@ -191,18 +235,43 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
           </View>
           <Text style={stylesMemo.subtitle}>Choose a Deck</Text>
         </View>
-        {isEditing && onClose ? (
+        <View style={stylesMemo.headerActions}>
           <TouchableOpacity
-            style={stylesMemo.closeButton}
-            onPress={onClose}
+            style={stylesMemo.iconButton}
+            onPress={() => setConnectVisible(true)}
             activeOpacity={0.7}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <MaterialIcons name="close" size={24} color={COLORS.text.primary} />
+            <Ionicons name="settings-outline" size={24} color={COLORS.primary} />
           </TouchableOpacity>
-        ) : (
-          <View style={stylesMemo.placeholder} />
-        )}
+          {isEditing && onClose && (
+            <TouchableOpacity
+              style={stylesMemo.closeButton}
+              onPress={onClose}
+              activeOpacity={0.7}
+            >
+              <MaterialIcons
+                name="close"
+                size={24}
+                color={COLORS.text.primary}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
+
+      <ConnectModal
+        visible={connectVisible}
+        onClose={() => setConnectVisible(false)}
+        isLifetime={isLifetime}
+        revenueCatAvailable={isAvailable}
+        customerInfo={customerInfo}
+        onManageInStore={handleManageInStore}
+        onUpgrade={handleUpgrade}
+        onRestore={handleRestore}
+        devProOverride={devProOverride}
+        setDevProOverride={setDevProOverride}
+      />
 
       <ScrollView
         style={stylesMemo.scrollView}
@@ -244,6 +313,19 @@ const createStyles = (width: number) =>
     },
     backButton: {
       padding: 8,
+    },
+    headerActions: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      gap: scale(8),
+      minWidth: scale(40),
+    },
+    iconButton: {
+      width: scale(40),
+      height: scale(40),
+      alignItems: "center",
+      justifyContent: "center",
     },
     closeButton: {
       width: scale(40),

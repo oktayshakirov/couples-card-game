@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { CustomerInfo } from "react-native-purchases";
 import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 import {
@@ -29,7 +30,12 @@ export interface UseRevenueCatResult {
   showPaywallIfNeeded: () => Promise<boolean>;
   restore: () => Promise<{ success: boolean; error?: RevenueCatError }>;
   isAvailable: boolean;
+  /** Developer-only override for the lifetime state (no-op in production builds). */
+  devProOverride: boolean | null;
+  setDevProOverride: (value: boolean | null) => Promise<void>;
 }
+
+const DEV_PRO_OVERRIDE_KEY = "devProOverride";
 
 const RevenueCatContext = createContext<UseRevenueCatResult | null>(null);
 
@@ -37,8 +43,34 @@ function useRevenueCatImpl(): UseRevenueCatResult {
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<RevenueCatError | null>(null);
+  const [devProOverride, setDevProOverrideState] = useState<boolean | null>(
+    null
+  );
 
   const isAvailable = Platform.OS === "ios" || Platform.OS === "android";
+
+  // Load the persisted developer override (dev builds only).
+  useEffect(() => {
+    if (!__DEV__) {
+      return;
+    }
+    AsyncStorage.getItem(DEV_PRO_OVERRIDE_KEY).then((stored) => {
+      if (stored === "true") {
+        setDevProOverrideState(true);
+      } else if (stored === "false") {
+        setDevProOverrideState(false);
+      }
+    });
+  }, []);
+
+  const setDevProOverride = useCallback(async (value: boolean | null) => {
+    setDevProOverrideState(value);
+    if (value === null) {
+      await AsyncStorage.removeItem(DEV_PRO_OVERRIDE_KEY);
+    } else {
+      await AsyncStorage.setItem(DEV_PRO_OVERRIDE_KEY, value ? "true" : "false");
+    }
+  }, []);
 
   const fetchCustomerInfo = useCallback(async () => {
     if (!isAvailable) {
@@ -144,7 +176,9 @@ function useRevenueCatImpl(): UseRevenueCatResult {
     return { success: Boolean(info && !err), error: err ?? undefined };
   }, [isAvailable]);
 
-  const isLifetime = hasLifetimeEntitlement(customerInfo);
+  const realIsLifetime = hasLifetimeEntitlement(customerInfo);
+  const isLifetime =
+    __DEV__ && devProOverride !== null ? devProOverride : realIsLifetime;
 
   return {
     isLifetime,
@@ -157,6 +191,8 @@ function useRevenueCatImpl(): UseRevenueCatResult {
     showPaywallIfNeeded,
     restore,
     isAvailable,
+    devProOverride,
+    setDevProOverride,
   };
 }
 
