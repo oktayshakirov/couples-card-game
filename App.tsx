@@ -5,6 +5,7 @@ import { OnboardingScreen } from "./src/screens/OnboardingScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GameScreen } from "./src/screens/GameScreen";
 import { PlayerSetupScreen } from "./src/screens/PlayerSetupScreen";
+import { WelcomeBackScreen } from "./src/screens/WelcomeBackScreen";
 import { DecksLibraryScreen } from "./src/screens/DecksLibraryScreen";
 import { DeckScreen } from "./src/screens/DeckScreen";
 import { DeckUnlockedScreen } from "./src/screens/DeckUnlockedScreen";
@@ -14,6 +15,7 @@ import {
   OnboardingService,
 } from "./src/contexts/OnboardingContext";
 import { toastConfig } from "./src/components/Toast";
+import { hasSavedPlayers } from "./src/utils/playerStorage";
 import { Deck } from "./src/types/deck";
 import { getDefaultDeck } from "./src/data/decks";
 import {
@@ -28,6 +30,7 @@ import { RevenueCatProvider, useRevenueCat } from "./src/hooks/useRevenueCat";
 
 type Screen =
   | "onboarding"
+  | "welcome"
   | "setup"
   | "decks"
   | "deck"
@@ -36,7 +39,8 @@ type Screen =
 
 const AppContent = () => {
   const { isLifetime } = useRevenueCat();
-  const { gameState, updatePlayerInfo, isSetupComplete } = useGame();
+  const { gameState, updatePlayerInfo, isSetupComplete, resetPlayers } =
+    useGame();
   const [currentScreen, setCurrentScreen] = useState<Screen>("onboarding");
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
   const [onboardingChecked, setOnboardingChecked] = useState(false);
@@ -54,6 +58,19 @@ const AppContent = () => {
     setCurrentScreen("setup");
   }, []);
 
+  const handleWelcomeContinue = useCallback(() => {
+    goToDecksScreen();
+  }, [goToDecksScreen]);
+
+  const handleWelcomeEdit = useCallback(() => {
+    setCurrentScreen("setup");
+  }, []);
+
+  const handleWelcomeStartNew = useCallback(() => {
+    resetPlayers();
+    setCurrentScreen("setup");
+  }, [resetPlayers]);
+
   const handleSplashComplete = useCallback(() => {
     setShowSplash(false);
   }, []);
@@ -65,6 +82,8 @@ const AppContent = () => {
           const isCompleted = await OnboardingService.isOnboardingCompleted();
           if (!isCompleted) {
             setCurrentScreen("onboarding");
+          } else if (await hasSavedPlayers()) {
+            setCurrentScreen("welcome");
           } else {
             setCurrentScreen("setup");
           }
@@ -193,6 +212,16 @@ const AppContent = () => {
           <OnboardingProvider value={{ completeOnboarding }}>
             <OnboardingScreen />
           </OnboardingProvider>
+        );
+      case "welcome":
+        return (
+          <WelcomeBackScreen
+            player1Info={gameState.player1Info}
+            player2Info={gameState.player2Info}
+            onContinue={handleWelcomeContinue}
+            onEditPlayers={handleWelcomeEdit}
+            onStartNew={handleWelcomeStartNew}
+          />
         );
       case "setup":
         return (

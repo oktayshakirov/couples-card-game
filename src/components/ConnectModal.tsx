@@ -557,7 +557,7 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
                 </TouchableOpacity>
               )}
 
-              {onRestore && (
+              {onRestore && !isLifetime && (
                 <TouchableOpacity
                   style={styles.restoreButton}
                   activeOpacity={0.8}

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Love Swipe",
     "slug": "love-swipe",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "dark",
@@ -16,10 +16,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.shadev.loveswipe",
       "infoPlist": {
-        "LSApplicationQueriesSchemes": [
-          "googlegmail",
-          "ms-outlook"
-        ]
+        "LSApplicationQueriesSchemes": ["googlegmail", "ms-outlook"]
       },
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-5852582960793521~3930930080"
@@ -39,8 +36,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-mail-composer"
-    ]
+    "plugins": ["expo-mail-composer"]
   }
 }

@@ -22,6 +22,7 @@ interface GameMenuModalProps {
   onClose: () => void;
   onEditPlayers: () => void;
   onChangeDeck: () => void;
+  onConnect: () => void;
 }
 
 export const GameMenuModal: React.FC<GameMenuModalProps> = ({
@@ -29,6 +30,7 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
   onClose,
   onEditPlayers,
   onChangeDeck,
+  onConnect,
 }) => {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -42,6 +44,11 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
   const handleChangeDeck = () => {
     onChangeDeck();
     onClose();
+  };
+
+  const handleConnect = () => {
+    onClose();
+    onConnect();
   };
 
   return (
@@ -123,6 +130,31 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
                   <Text style={stylesMemo.optionTitle}>Change Deck</Text>
                   <Text style={stylesMemo.optionDescription}>
                     Select a different card deck
+                  </Text>
+                </View>
+                <MaterialIcons
+                  name="chevron-right"
+                  size={24}
+                  color={COLORS.text.secondary}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={stylesMemo.option}
+                onPress={handleConnect}
+                activeOpacity={0.7}
+              >
+                <View style={stylesMemo.optionIconContainer}>
+                  <MaterialIcons
+                    name="settings"
+                    size={moderateScale(28)}
+                    color={COLORS.primary}
+                  />
+                </View>
+                <View style={stylesMemo.optionContent}>
+                  <Text style={stylesMemo.optionTitle}>Connect & Plan</Text>
+                  <Text style={stylesMemo.optionDescription}>
+                    Contact us, rate the app, or manage your plan
                   </Text>
                 </View>
                 <MaterialIcons

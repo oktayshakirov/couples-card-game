@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   useWindowDimensions,
-  Linking,
-  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -24,6 +22,7 @@ import { useGame } from "../contexts/GameContext";
 import { COLORS } from "../constants/colors";
 import { DeckPack } from "../components/DeckPack";
 import { ConnectModal } from "../components/ConnectModal";
+import { useConnectModal } from "../hooks/useConnectModal";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { hexToRgba } from "../utils/colorUtils";
 
@@ -68,27 +67,10 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
     syncCustomerInfo,
     showPaywallIfNeeded,
     isAvailable,
-    isLifetime,
-    customerInfo,
-    devProOverride,
-    setDevProOverride,
-    restore,
     loading: rcLoading,
   } = useRevenueCat();
   const [unlockedDecks, setUnlockedDecks] = useState<string[]>([]);
   const [connectVisible, setConnectVisible] = useState(false);
-
-  const handleManageInStore = useCallback(async () => {
-    const url =
-      Platform.OS === "ios"
-        ? "https://apps.apple.com/account/subscriptions"
-        : "https://play.google.com/store/account/subscriptions";
-    await Linking.openURL(url).catch(() => undefined);
-  }, []);
-
-  const handleUpgrade = useCallback(async () => {
-    await showPaywallIfNeeded();
-  }, [showPaywallIfNeeded]);
 
   const cardDimensions = useMemo(() => getCardDimensions(width), [width]);
 
@@ -109,20 +91,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
     setUnlockedDecks(unlocked);
   }, []);
 
-  const handleRestore = useCallback(async (): Promise<boolean> => {
-    const { success } = await restore();
-    if (!success) {
-      return false;
-    }
-    const { customerInfo: info } = await getCustomerInfo();
-    const restored = hasLifetimeEntitlement(info);
-    if (restored) {
-      await unlockAllDecks();
-      await loadUnlockedDecks();
-      await syncCustomerInfo();
-    }
-    return restored;
-  }, [restore, syncCustomerInfo, loadUnlockedDecks]);
+  const connectModalProps = useConnectModal(loadUnlockedDecks);
 
   useEffect(() => {
     loadUnlockedDecks();
@@ -263,14 +232,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
       <ConnectModal
         visible={connectVisible}
         onClose={() => setConnectVisible(false)}
-        isLifetime={isLifetime}
-        revenueCatAvailable={isAvailable}
-        customerInfo={customerInfo}
-        onManageInStore={handleManageInStore}
-        onUpgrade={handleUpgrade}
-        onRestore={handleRestore}
-        devProOverride={devProOverride}
-        setDevProOverride={setDevProOverride}
+        {...connectModalProps}
       />
 
       <ScrollView

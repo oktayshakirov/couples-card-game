@@ -13,6 +13,8 @@ import { SwipeCard } from "../components/Card";
 import { PendingCard } from "../components/PendingCard";
 import { GameHeader } from "../components/GameHeader";
 import { GameMenuModal } from "../components/GameMenuModal";
+import { ConnectModal } from "../components/ConnectModal";
+import { useConnectModal } from "../hooks/useConnectModal";
 import { ActionButtons } from "../components/ActionButtons";
 import { EmptyDeck } from "../components/EmptyDeck";
 import { useGame } from "../contexts/GameContext";
@@ -52,7 +54,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onBackToDecks,
 }) => {
   const [menuVisible, setMenuVisible] = useState(false);
+  const [connectVisible, setConnectVisible] = useState(false);
   const { isLifetime } = useRevenueCat();
+  const connectModalProps = useConnectModal();
   const {
     gameState,
     updatePlayerStats,
@@ -367,6 +371,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             onBackToDecks();
           }
         }}
+        onConnect={() => setConnectVisible(true)}
+      />
+
+      <ConnectModal
+        visible={connectVisible}
+        onClose={() => setConnectVisible(false)}
+        {...connectModalProps}
       />
 
       {totalCards > 0 && (

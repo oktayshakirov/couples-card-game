@@ -44,7 +44,7 @@ function useRevenueCatImpl(): UseRevenueCatResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<RevenueCatError | null>(null);
   const [devProOverride, setDevProOverrideState] = useState<boolean | null>(
-    null
+    __DEV__ ? false : null
   );
 
   const isAvailable = Platform.OS === "ios" || Platform.OS === "android";

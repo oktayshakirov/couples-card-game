@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { savePlayers, loadPlayers, clearPlayers } from "../utils/playerStorage";
 
 export interface PlayerStats {
   dares: number;
@@ -55,6 +56,8 @@ interface UseGameStateReturn {
   updatePlayerInfo: (player: 1 | 2, info: Partial<PlayerInfo>) => void;
   isSetupComplete: () => boolean;
   canPlayerSkip: (player: 1 | 2) => boolean;
+  /** Clears both player profiles (state + storage) for a fresh start. */
+  resetPlayers: () => void;
 }
 
 const initialGameState: GameState = {
@@ -83,6 +86,42 @@ const initialGameState: GameState = {
 
 export const useGameState = (): UseGameStateReturn => {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
+  // Guards persistence until the initial load finishes, so we never overwrite
+  // saved players with the empty defaults on first render.
+  const playersLoaded = useRef(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const saved = await loadPlayers();
+      if (!cancelled && saved) {
+        setGameState((prev) => ({
+          ...prev,
+          player1Info: saved.player1,
+          player2Info: saved.player2,
+        }));
+      }
+      if (!cancelled) {
+        playersLoaded.current = true;
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Persist profiles once both names are filled in.
+  useEffect(() => {
+    if (!playersLoaded.current) {
+      return;
+    }
+    if (
+      gameState.player1Info.name.trim() !== "" &&
+      gameState.player2Info.name.trim() !== ""
+    ) {
+      savePlayers(gameState.player1Info, gameState.player2Info);
+    }
+  }, [gameState.player1Info, gameState.player2Info]);
 
   const updatePlayerStats = (
     player: 1 | 2,
@@ -138,6 +177,15 @@ export const useGameState = (): UseGameStateReturn => {
     );
   };
 
+  const resetPlayers = () => {
+    clearPlayers();
+    setGameState((prev) => ({
+      ...prev,
+      player1Info: { ...initialGameState.player1Info },
+      player2Info: { ...initialGameState.player2Info },
+    }));
+  };
+
   const canPlayerSkip = (player: 1 | 2): boolean => {
     const playerStats = player === 1 ? gameState.player1 : gameState.player2;
     return playerStats.skipped < 3;
@@ -151,5 +199,6 @@ export const useGameState = (): UseGameStateReturn => {
     updatePlayerInfo,
     isSetupComplete,
     canPlayerSkip,
+    resetPlayers,
   };
 };
