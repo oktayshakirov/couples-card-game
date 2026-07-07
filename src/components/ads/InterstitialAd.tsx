@@ -1,6 +1,6 @@
 import { InterstitialAd, AdEventType } from "react-native-google-mobile-ads";
 import { getAdUnitId } from "./adConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getRequestNonPersonalizedAdsOnly } from "../../hooks/useAdConsent";
 import { areSubscriptionAdsDisabled } from "./adsSubscriptionGate";
 
 let interstitial: InterstitialAd | null = null;
@@ -66,8 +66,7 @@ async function waitForAdLoad(timeout = 10000): Promise<void> {
 async function createInterstitialInstance() {
   cleanupAdInstance();
 
-  const consent = await AsyncStorage.getItem("trackingConsent");
-  const requestNonPersonalizedAdsOnly = consent !== "granted";
+  const requestNonPersonalizedAdsOnly = await getRequestNonPersonalizedAdsOnly();
 
   const ad = InterstitialAd.createForAdRequest(getAdUnitId("interstitial")!, {
     requestNonPersonalizedAdsOnly,

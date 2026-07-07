@@ -1,5 +1,5 @@
 import { getAdUnitId } from "./adConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getRequestNonPersonalizedAdsOnly } from "../../hooks/useAdConsent";
 
 let RewardedAd: any;
 let RewardedAdEventType: any;
@@ -77,8 +77,7 @@ async function createRewardedInstance() {
     throw new Error("RewardedAd module not available");
   }
 
-  const consent = await AsyncStorage.getItem("trackingConsent");
-  const requestNonPersonalizedAdsOnly = consent !== "granted";
+  const requestNonPersonalizedAdsOnly = await getRequestNonPersonalizedAdsOnly();
 
   const ad = RewardedAd.createForAdRequest(getAdUnitId("rewarded")!, {
     requestNonPersonalizedAdsOnly,

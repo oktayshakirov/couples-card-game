@@ -1,236 +1,84 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  Platform,
-  StyleSheet,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { COLORS } from "../../constants/colors";
+import React, { useEffect, useRef } from "react";
+import { Platform } from "react-native";
 import { initializeGlobalAds } from "./adsManager";
+
+let AdsConsent: any;
+let AdsConsentStatus: any;
+try {
+  const mod = require("react-native-google-mobile-ads");
+  AdsConsent = mod.AdsConsent;
+  AdsConsentStatus = mod.AdsConsentStatus;
+} catch {}
 
 let TrackingTransparency: any;
 try {
   TrackingTransparency = require("expo-tracking-transparency");
-} catch (error) {}
+} catch {}
 
 type ConsentDialogProps = {
   onConsentCompleted: () => void;
 };
 
 const ConsentDialog = ({ onConsentCompleted }: ConsentDialogProps) => {
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-
-  const checkConsent = useCallback(async () => {
-    try {
-      const storedConsent = await AsyncStorage.getItem("trackingConsent");
-      if (storedConsent === null) {
-        setModalVisible(true);
-      } else {
-        await initializeGlobalAds();
-        onConsentCompleted();
-      }
-    } catch (error) {
-      setModalVisible(true);
-    }
-  }, [onConsentCompleted]);
+  const hasStartedRef = useRef(false);
+  const onConsentCompletedRef = useRef(onConsentCompleted);
+  onConsentCompletedRef.current = onConsentCompleted;
 
   useEffect(() => {
-    checkConsent();
-  }, [checkConsent]);
+    // Run the consent flow exactly once. Guards against re-renders (the parent
+    // passes a new inline callback each render) and StrictMode double-invoke,
+    // which would otherwise launch concurrent flows and stack the UMP form and
+    // the ATT prompt on top of each other.
+    if (hasStartedRef.current) return;
+    hasStartedRef.current = true;
 
-  const handleConsent = async (consent: "granted" | "denied") => {
-    try {
-      await AsyncStorage.setItem("trackingConsent", consent);
-      setModalVisible(false);
+    const run = async () => {
+      // Step 1: Google UMP GDPR consent form (EEA/UK/CH only).
+      let showedForm = false;
+      try {
+        if (AdsConsent) {
+          const info = await AdsConsent.requestInfoUpdate(
+            __DEV__
+              ? { debugSettings: { debugGeography: 1 } } // 1 = EEA, remove after testing
+              : undefined
+          );
+          if (
+            info?.isConsentFormAvailable &&
+            info?.status === AdsConsentStatus?.REQUIRED
+          ) {
+            await AdsConsent.showForm();
+            showedForm = true;
+          }
+        }
+      } catch {}
 
-      if (
-        consent === "granted" &&
-        Platform.OS === "ios" &&
-        TrackingTransparency
-      ) {
+      // Step 2: Apple ATT prompt — only after the UMP form's dismissal
+      // animation has fully settled, otherwise the two modals collide.
+      if (Platform.OS === "ios" && TrackingTransparency) {
         try {
           const { status } =
             await TrackingTransparency.getTrackingPermissionsAsync();
           const isUndetermined =
-            status === TrackingTransparency.PermissionStatus?.UNDETERMINED ||
             status === "undetermined" ||
+            status === TrackingTransparency.PermissionStatus?.UNDETERMINED ||
             status === 0;
           if (isUndetermined) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            if (showedForm) {
+              await new Promise((resolve) => setTimeout(resolve, 600));
+            }
             await TrackingTransparency.requestTrackingPermissionsAsync();
           }
-        } catch (error) {}
+        } catch {}
       }
 
       await initializeGlobalAds();
-      onConsentCompleted();
-    } catch (error) {
-      setModalVisible(false);
-      onConsentCompleted();
-    }
-  };
+      onConsentCompletedRef.current();
+    };
 
-  const handleAllow = () => handleConsent("granted");
-  const handleDontAllow = () => handleConsent("denied");
+    run();
+  }, []);
 
-  return (
-    <Modal
-      visible={modalVisible}
-      transparent
-      animationType="fade"
-      statusBarTranslucent
-      onRequestClose={() => setModalVisible(false)}
-    >
-      <SafeAreaView style={styles.modalOverlay}>
-        <View style={styles.modalContainer}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Privacy Settings</Text>
-            <Text style={styles.subtitle}>Help us improve your experience</Text>
-          </View>
-
-          <View style={styles.content}>
-            <Text style={styles.message}>
-              {Platform.OS === "ios"
-                ? "We value your privacy and aim to keep Love Swipe free through personalized ads. You'll see a system dialog next to confirm your choice."
-                : "We use data to provide you with a better experience and keep Love Swipe free through personalized ads. Your data is handled securely, and we prioritize your privacy at all times."}
-            </Text>
-
-            <View style={styles.bulletPoints}>
-              <Text style={styles.bulletPoint}>
-                • Personalized content and ads
-              </Text>
-              <Text style={styles.bulletPoint}>• Better app experience</Text>
-              <Text style={styles.bulletPoint}>• Support app development</Text>
-            </View>
-          </View>
-
-          <View style={styles.buttonContainer}>
-            {Platform.OS === "android" ? (
-              <>
-                <TouchableOpacity
-                  onPress={handleDontAllow}
-                  style={[styles.button, styles.declineButton]}
-                >
-                  <Text style={[styles.buttonText, styles.declineButtonText]}>
-                    Don't Allow
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={handleAllow}
-                  style={[styles.button, styles.allowButton]}
-                >
-                  <Text style={[styles.buttonText, styles.allowButtonText]}>
-                    Allow
-                  </Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <TouchableOpacity
-                onPress={handleAllow}
-                style={[styles.button, styles.allowButton, styles.singleButton]}
-              >
-                <Text style={[styles.buttonText, styles.allowButtonText]}>
-                  Continue
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-      </SafeAreaView>
-    </Modal>
-  );
+  return null;
 };
-
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContainer: {
-    backgroundColor: COLORS.background,
-    borderRadius: 16,
-    padding: 24,
-    width: "90%",
-    maxWidth: 400,
-  },
-  header: {
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: COLORS.text.primary,
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: COLORS.text.secondary,
-    textAlign: "center",
-  },
-  content: {
-    marginBottom: 24,
-  },
-  message: {
-    fontSize: 14,
-    color: COLORS.text.secondary,
-    lineHeight: 20,
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  bulletPoints: {
-    marginTop: 8,
-  },
-  bulletPoint: {
-    fontSize: 14,
-    color: COLORS.text.secondary,
-    marginBottom: 8,
-    paddingLeft: 8,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-  button: {
-    flex: 1,
-    backgroundColor: "#1E1E1E",
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#333333",
-  },
-  singleButton: {
-    minWidth: 150,
-  },
-  declineButton: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "#404040",
-  },
-  allowButton: {
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
-  },
-  buttonText: {
-    color: COLORS.text.primary,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  declineButtonText: {
-    color: COLORS.text.secondary,
-  },
-  allowButtonText: {
-    color: COLORS.text.primary,
-  },
-});
 
 export default ConsentDialog;

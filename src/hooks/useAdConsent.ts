@@ -1,17 +1,33 @@
 import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+let AdsConsent: any;
+let AdsConsentStatus: any;
+try {
+  const mod = require("react-native-google-mobile-ads");
+  AdsConsent = mod.AdsConsent;
+  AdsConsentStatus = mod.AdsConsentStatus;
+} catch {}
+
+export async function getRequestNonPersonalizedAdsOnly(): Promise<boolean> {
+  if (!AdsConsent || !AdsConsentStatus) return false;
+  try {
+    const info = await AdsConsent.getConsentInfo();
+    const isPersonalized =
+      info?.status === AdsConsentStatus.NOT_REQUIRED ||
+      info?.status === AdsConsentStatus.OBTAINED;
+    return !isPersonalized;
+  } catch {
+    return false;
+  }
+}
 
 export function useAdConsent() {
-  const [consent, setConsent] = useState<"granted" | "denied" | null>(null);
+  const [requestNonPersonalizedAdsOnly, setRequestNonPersonalizedAdsOnly] =
+    useState(false);
 
   useEffect(() => {
-    AsyncStorage.getItem("trackingConsent").then((stored) => {
-      setConsent(stored as "granted" | "denied" | null);
-    });
+    getRequestNonPersonalizedAdsOnly().then(setRequestNonPersonalizedAdsOnly);
   }, []);
 
-  return {
-    consent,
-    requestNonPersonalizedAdsOnly: consent !== "granted",
-  };
+  return { requestNonPersonalizedAdsOnly };
 }

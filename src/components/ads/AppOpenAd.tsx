@@ -1,6 +1,6 @@
 import { AppOpenAd, AdEventType } from "react-native-google-mobile-ads";
 import { getAdUnitId } from "./adConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getRequestNonPersonalizedAdsOnly } from "../../hooks/useAdConsent";
 import { OnboardingService } from "../../contexts/OnboardingContext";
 import { areSubscriptionAdsDisabled } from "./adsSubscriptionGate";
 
@@ -67,8 +67,7 @@ async function waitForAdLoad(timeout = 10000): Promise<void> {
 async function createAppOpenInstance() {
   cleanupAdInstance();
 
-  const consent = await AsyncStorage.getItem("trackingConsent");
-  const requestNonPersonalizedAdsOnly = consent !== "granted";
+  const requestNonPersonalizedAdsOnly = await getRequestNonPersonalizedAdsOnly();
 
   const ad = AppOpenAd.createForAdRequest(getAdUnitId("appOpen")!, {
     requestNonPersonalizedAdsOnly,
