@@ -276,6 +276,12 @@ type Tab = "connect" | "plan";
 interface ConnectModalProps {
   visible: boolean;
   onClose: () => void;
+  /**
+   * Which section(s) to show. "both" (default) keeps the tabbed layout;
+   * "connect" or "plan" render just that section as a single-purpose sheet
+   * with no tab bar.
+   */
+  mode?: Tab | "both";
   isLifetime?: boolean;
   revenueCatAvailable?: boolean;
   customerInfo?: CustomerInfo | null;
@@ -291,6 +297,7 @@ interface ConnectModalProps {
 export const ConnectModal: React.FC<ConnectModalProps> = ({
   visible,
   onClose,
+  mode = "both",
   isLifetime = false,
   revenueCatAvailable = false,
   onManageInStore,
@@ -302,6 +309,7 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<Tab>("connect");
   const [restoring, setRestoring] = useState(false);
+  const singleMode = mode !== "both";
 
   const handleRestore = async () => {
     if (!onRestore || restoring) {
@@ -321,16 +329,19 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
     }
   };
 
-  // Always start on the Connect tab each time the modal opens.
+  // Always start on the Connect tab each time the tabbed modal opens.
   useEffect(() => {
-    if (visible) {
+    if (visible && !singleMode) {
       setActiveTab("connect");
     }
-  }, [visible]);
+  }, [visible, singleMode]);
 
-  const showPlanTab = revenueCatAvailable;
-  const effectiveTab: Tab =
-    activeTab === "plan" && !showPlanTab ? "connect" : activeTab;
+  const showPlanTab = !singleMode && revenueCatAvailable;
+  const effectiveTab: Tab = singleMode
+    ? (mode as Tab)
+    : activeTab === "plan" && !showPlanTab
+    ? "connect"
+    : activeTab;
   const planLabel = getPlanLabel(isLifetime);
 
   return (
@@ -371,7 +382,8 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
             </TouchableOpacity>
           </View>
 
-          {/* Tab bar */}
+          {/* Tab bar — only in the combined (tabbed) layout */}
+          {!singleMode && (
           <View style={styles.tabBar}>
             <TouchableOpacity
               onPress={() => setActiveTab("connect")}
@@ -428,6 +440,7 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
               </TouchableOpacity>
             )}
           </View>
+          )}
 
           {/* Connect tab */}
           {effectiveTab === "connect" && (

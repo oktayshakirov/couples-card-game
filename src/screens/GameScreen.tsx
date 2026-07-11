@@ -20,10 +20,8 @@ import { EmptyDeck } from "../components/EmptyDeck";
 import { useGame } from "../contexts/GameContext";
 import { useCardDeck } from "../hooks/useCardDeck";
 import BannerAdComponent from "../components/ads/BannerAd";
-import {
-  ensureInterstitialLoaded,
-  showInterstitial,
-} from "../components/ads/InterstitialAd";
+import { ensureInterstitialLoaded } from "../components/ads/InterstitialAd";
+import { showGlobalInterstitial } from "../components/ads/adsManager";
 import { COLORS } from "../constants/colors";
 import { hexToRgba } from "../utils/colorUtils";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
@@ -36,7 +34,17 @@ import { useRevenueCat } from "../hooks/useRevenueCat";
 
 const MAX_VISIBLE_CARDS = 1;
 const SWIPE_COOLDOWN_MS = 1000;
-const CARDS_PER_INTERSTITIAL = 5; // Show ad every 5 cards
+// Show an interstitial every N cards. Lower = more ad revenue but heavier
+// native-memory churn (each interstitial is a heavyweight ad view) and higher
+// AdMob "too frequent" policy risk. 8 is a balanced default; tune as needed.
+const CARDS_PER_INTERSTITIAL = 8;
+
+// Choice/skip toasts overlay the header (player names + stats). The default
+// offset assumes the banner ad is present (free users). Pro users have no
+// banner, so the header sits ~a banner-height higher — shift the toast up by
+// the same amount so it lands on the same spot in both cases.
+const TOAST_TOP_OFFSET_WITH_BANNER = 130;
+const BANNER_HEIGHT = 60;
 
 import { Deck } from "../types/deck";
 
@@ -54,7 +62,9 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   onBackToDecks,
 }) => {
   const [menuVisible, setMenuVisible] = useState(false);
-  const [connectVisible, setConnectVisible] = useState(false);
+  const [settingsMode, setSettingsMode] = useState<"connect" | "plan" | null>(
+    null
+  );
   const { isLifetime } = useRevenueCat();
   const connectModalProps = useConnectModal();
   const {
@@ -74,6 +84,11 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const remainingCards = cards.length;
   const completedCards = totalCards - remainingCards;
   const progress = totalCards > 0 ? completedCards / totalCards : 0;
+  // No banner for pro users, so raise the toast by the banner height to keep it
+  // over the same header spot as for free users.
+  const toastTopOffset = isLifetime
+    ? TOAST_TOP_OFFSET_WITH_BANNER - BANNER_HEIGHT
+    : TOAST_TOP_OFFSET_WITH_BANNER;
   const isSkippingRef = useRef<boolean>(false);
   const topCardRef = useRef<any>(null);
   const lastSwipeTimeRef = useRef<number>(0);
@@ -172,7 +187,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       !isLifetimeRef.current &&
       swipeCountRef.current % CARDS_PER_INTERSTITIAL === 0
     ) {
-      await showInterstitial();
+      // Use the manager wrapper (not the raw showInterstitial) so it records
+      // lastOtherAdShownTime — otherwise an App Open ad can stack on top of the
+      // interstitial when the app returns to the foreground.
+      await showGlobalInterstitial();
     }
   };
 
@@ -237,6 +255,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         nextPlayerName,
         onConfirm: () => handleConfirm(player, "dares", cardId),
         onCancel: () => handleCancel(cardId),
+        topOffset: toastTopOffset,
       });
     } else if (direction === "left") {
       recordSwipe();
@@ -253,6 +272,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             remainingSkips,
             playerColor: color,
             playerAvatar: avatar,
+            topOffset: toastTopOffset,
           });
         }
         switchPlayer();
@@ -274,6 +294,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           nextPlayerName,
           onConfirm: () => handleConfirm(player, "truths", cardId),
           onCancel: () => handleCancel(cardId),
+          topOffset: toastTopOffset,
         });
       }
     }
@@ -290,6 +311,12 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     removeCard(cardId);
     cardRemountKeysRef.current.delete(cardId);
   };
+
+  const setTopCardRef = useCallback((node: any) => {
+    if (node) {
+      topCardRef.current = node;
+    }
+  }, []);
 
   const swipeLeft = useCallback(() => {
     if (!topCardRef.current || !canSwipe()) return;
@@ -371,12 +398,14 @@ export const GameScreen: React.FC<GameScreenProps> = ({
             onBackToDecks();
           }
         }}
-        onConnect={() => setConnectVisible(true)}
+        onConnect={() => setSettingsMode("connect")}
+        onPlan={() => setSettingsMode("plan")}
       />
 
       <ConnectModal
-        visible={connectVisible}
-        onClose={() => setConnectVisible(false)}
+        visible={settingsMode !== null}
+        mode={settingsMode ?? "connect"}
+        onClose={() => setSettingsMode(null)}
         {...connectModalProps}
       />
 
@@ -418,12 +447,6 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               const cardRef = getCardRef(card.id);
               const isTopCard = index === renderedCards.length - 1;
 
-              const topCardRefCallback = (node: any) => {
-                if (node) {
-                  topCardRef.current = node;
-                }
-              };
-
               const isPending = pendingConfirmation?.cardId === card.id;
               const isPlaceholder = card.id === "placeholder";
 
@@ -453,7 +476,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
                 <View key={cardKey} style={styles.cardWrapper}>
                   <TinderCard
                     key={cardKey}
-                    ref={isTopCard ? topCardRefCallback : cardRef}
+                    ref={isTopCard ? setTopCardRef : cardRef}
                     onSwipe={(direction) => onSwipe(direction, card.id)}
                     onCardLeftScreen={(direction) =>
                       onCardLeftScreen(direction, card.id)

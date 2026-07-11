@@ -152,12 +152,51 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
   return (
     <SafeAreaView style={stylesMemo.container} edges={["top", "bottom"]}>
       <View style={stylesMemo.header}>
-        {onBack && !isEditing && (
-          <TouchableOpacity onPress={onBack} style={stylesMemo.backButton}>
-            <MaterialIcons name="arrow-back" size={24} color={COLORS.primary} />
-          </TouchableOpacity>
-        )}
-        {!onBack && !isEditing && <View style={stylesMemo.placeholder} />}
+        <View style={stylesMemo.topBar}>
+          {onBack && !isEditing ? (
+            <TouchableOpacity
+              onPress={onBack}
+              style={stylesMemo.headerButton}
+              activeOpacity={0.7}
+            >
+              <MaterialIcons
+                name="arrow-back"
+                size={24}
+                color={COLORS.primary}
+              />
+            </TouchableOpacity>
+          ) : (
+            <View style={stylesMemo.headerSpacer} />
+          )}
+
+          <View style={stylesMemo.headerActions}>
+            <TouchableOpacity
+              style={stylesMemo.headerButton}
+              onPress={() => setConnectVisible(true)}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name="settings-outline"
+                size={24}
+                color={COLORS.primary}
+              />
+            </TouchableOpacity>
+            {isEditing && onClose && (
+              <TouchableOpacity
+                style={stylesMemo.headerButton}
+                onPress={onClose}
+                activeOpacity={0.7}
+              >
+                <MaterialIcons
+                  name="close"
+                  size={24}
+                  color={COLORS.text.primary}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+
         <View style={stylesMemo.titleContainer}>
           <View style={stylesMemo.titleRow}>
             <View style={stylesMemo.playerNameContainer}>
@@ -204,29 +243,6 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
           </View>
           <Text style={stylesMemo.subtitle}>Choose a Deck</Text>
         </View>
-        <View style={stylesMemo.headerActions}>
-          <TouchableOpacity
-            style={stylesMemo.iconButton}
-            onPress={() => setConnectVisible(true)}
-            activeOpacity={0.7}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          >
-            <Ionicons name="settings-outline" size={24} color={COLORS.primary} />
-          </TouchableOpacity>
-          {isEditing && onClose && (
-            <TouchableOpacity
-              style={stylesMemo.closeButton}
-              onPress={onClose}
-              activeOpacity={0.7}
-            >
-              <MaterialIcons
-                name="close"
-                size={24}
-                color={COLORS.text.primary}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
       </View>
 
       <ConnectModal
@@ -267,29 +283,21 @@ const createStyles = (width: number) =>
       backgroundColor: COLORS.background,
     },
     header: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
       paddingHorizontal: width >= 768 ? 32 : scale(16),
       paddingVertical: verticalScale(14),
     },
-    backButton: {
-      padding: 8,
+    topBar: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     headerActions: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "flex-end",
       gap: scale(8),
-      minWidth: scale(40),
     },
-    iconButton: {
-      width: scale(40),
-      height: scale(40),
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    closeButton: {
+    headerButton: {
       width: scale(40),
       height: scale(40),
       borderRadius: scale(20),
@@ -297,10 +305,14 @@ const createStyles = (width: number) =>
       alignItems: "center",
       justifyContent: "center",
     },
+    headerSpacer: {
+      width: scale(40),
+      height: scale(40),
+    },
     titleContainer: {
       alignItems: "center",
-      flex: 1,
       gap: verticalScale(4),
+      marginTop: verticalScale(12),
     },
     titleRow: {
       flexDirection: "row",
@@ -335,9 +347,6 @@ const createStyles = (width: number) =>
       fontSize: moderateScale(20),
       fontWeight: "700",
       color: COLORS.text.primary,
-    },
-    placeholder: {
-      width: 40,
     },
     scrollView: {
       flex: 1,

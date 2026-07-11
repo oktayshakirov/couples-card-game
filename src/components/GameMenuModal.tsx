@@ -23,6 +23,7 @@ interface GameMenuModalProps {
   onEditPlayers: () => void;
   onChangeDeck: () => void;
   onConnect: () => void;
+  onPlan: () => void;
 }
 
 export const GameMenuModal: React.FC<GameMenuModalProps> = ({
@@ -31,6 +32,7 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
   onEditPlayers,
   onChangeDeck,
   onConnect,
+  onPlan,
 }) => {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -49,6 +51,11 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
   const handleConnect = () => {
     onClose();
     onConnect();
+  };
+
+  const handlePlan = () => {
+    onClose();
+    onPlan();
   };
 
   return (
@@ -146,15 +153,40 @@ export const GameMenuModal: React.FC<GameMenuModalProps> = ({
               >
                 <View style={stylesMemo.optionIconContainer}>
                   <MaterialIcons
-                    name="settings"
+                    name="chat-bubble-outline"
                     size={moderateScale(28)}
                     color={COLORS.primary}
                   />
                 </View>
                 <View style={stylesMemo.optionContent}>
-                  <Text style={stylesMemo.optionTitle}>Connect & Plan</Text>
+                  <Text style={stylesMemo.optionTitle}>Connect</Text>
                   <Text style={stylesMemo.optionDescription}>
-                    Contact us, rate the app, or manage your plan
+                    Contact us, rate the app, or follow along
+                  </Text>
+                </View>
+                <MaterialIcons
+                  name="chevron-right"
+                  size={24}
+                  color={COLORS.text.secondary}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={stylesMemo.option}
+                onPress={handlePlan}
+                activeOpacity={0.7}
+              >
+                <View style={stylesMemo.optionIconContainer}>
+                  <MaterialIcons
+                    name="card-membership"
+                    size={moderateScale(28)}
+                    color={COLORS.primary}
+                  />
+                </View>
+                <View style={stylesMemo.optionContent}>
+                  <Text style={stylesMemo.optionTitle}>Plan</Text>
+                  <Text style={stylesMemo.optionDescription}>
+                    View or manage your plan
                   </Text>
                 </View>
                 <MaterialIcons
