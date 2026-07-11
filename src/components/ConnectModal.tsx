@@ -285,7 +285,6 @@ interface ConnectModalProps {
   isLifetime?: boolean;
   revenueCatAvailable?: boolean;
   customerInfo?: CustomerInfo | null;
-  onManageInStore?: () => Promise<void> | void;
   onUpgrade?: () => Promise<void> | void;
   /** Restores prior purchases. Resolves to `true` when an entitlement is active afterwards. */
   onRestore?: () => Promise<boolean>;
@@ -300,7 +299,6 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
   mode = "both",
   isLifetime = false,
   revenueCatAvailable = false,
-  onManageInStore,
   onUpgrade,
   onRestore,
   devProOverride = null,
@@ -501,47 +499,16 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
               </View>
 
               {isLifetime ? (
-                <>
-                  <TouchableOpacity
-                    style={styles.planAction}
-                    activeOpacity={0.8}
-                    onPress={async () => {
-                      await onManageInStore?.();
-                      onClose();
-                    }}
-                  >
-                    <Ionicons
-                      name="card-outline"
-                      size={moderateScale(22)}
-                      color={COLORS.primary}
-                    />
-                    <View style={styles.planActionBody}>
-                      <Text style={styles.planActionTitle}>
-                        Manage in{" "}
-                        {Platform.OS === "ios" ? "App Store" : "Play Store"}
-                      </Text>
-                      <Text style={styles.planActionSubtitle}>
-                        View your purchase or manage your account
-                      </Text>
-                    </View>
-                    <Ionicons
-                      name="chevron-forward"
-                      size={moderateScale(20)}
-                      color={COLORS.text.secondary}
-                    />
-                  </TouchableOpacity>
-
-                  <View style={styles.tipCard}>
-                    <Text style={styles.tipTitle}>
-                      Thank you for supporting {APP_NAME} 💛
-                    </Text>
-                    <Text style={styles.tipBody}>
-                      Your Full Unlock gives you every deck forever — plus any
-                      new decks and features we add down the line, at no extra
-                      cost.
-                    </Text>
-                  </View>
-                </>
+                <View style={styles.tipCard}>
+                  <Text style={styles.tipTitle}>
+                    Thank you for supporting {APP_NAME} 💛
+                  </Text>
+                  <Text style={styles.tipBody}>
+                    Your Full Unlock gives you every deck forever - plus any
+                    new decks and features we add down the line, at no extra
+                    cost.
+                  </Text>
+                </View>
               ) : (
                 <TouchableOpacity
                   style={styles.planAction}

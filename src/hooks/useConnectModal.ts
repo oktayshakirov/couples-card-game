@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { Platform, Linking } from "react-native";
 import { useRevenueCat } from "./useRevenueCat";
 import { getCustomerInfo, hasLifetimeEntitlement } from "../services/revenueCat";
 import { unlockAllDecks } from "../utils/deckStorage";
@@ -22,14 +21,6 @@ export function useConnectModal(onUnlocked?: () => void | Promise<void>) {
     restore,
     syncCustomerInfo,
   } = useRevenueCat();
-
-  const handleManageInStore = useCallback(async () => {
-    const url =
-      Platform.OS === "ios"
-        ? "https://apps.apple.com/account/subscriptions"
-        : "https://play.google.com/store/account/subscriptions";
-    await Linking.openURL(url).catch(() => undefined);
-  }, []);
 
   const handleUpgrade = useCallback(async () => {
     await showPaywallIfNeeded();
@@ -54,7 +45,6 @@ export function useConnectModal(onUnlocked?: () => void | Promise<void>) {
     isLifetime,
     revenueCatAvailable: isAvailable,
     customerInfo,
-    onManageInStore: handleManageInStore,
     onUpgrade: handleUpgrade,
     onRestore: handleRestore,
     devProOverride,
