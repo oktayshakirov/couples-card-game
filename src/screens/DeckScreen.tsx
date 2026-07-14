@@ -254,7 +254,13 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     }
   }, [loading, unlocked, deck.isDefault]);
 
+  const isEmptyFavorites =
+    deck.id === FAVORITES_DECK_ID && deck.cards.length === 0;
+
   const handleSelectDeck = async () => {
+    if (isEmptyFavorites) {
+      return;
+    }
     if (unlocked || deck.isDefault) {
       try {
         await showGlobalInterstitial();
@@ -460,6 +466,22 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           </View>
         </View>
 
+        {isEmptyFavorites && (
+          <View style={stylesMemo.lockedContainer}>
+            <MaterialIcons
+              name="favorite-border"
+              size={width >= 768 ? 40 : moderateScale(36)}
+              color={COLORS.primary}
+            />
+            <Text style={stylesMemo.lockedTitle}>No Favorites Yet</Text>
+            <Text style={stylesMemo.lockedDescription}>
+              While playing any deck, tap the heart on a card you love to add it
+              here. Your favorite truths and dares will collect into this deck
+              to replay anytime.
+            </Text>
+          </View>
+        )}
+
         {!canSelect && (
           <>
             <View style={stylesMemo.lockedContainer}>
@@ -499,27 +521,38 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         <TouchableOpacity
           style={[
             stylesMemo.selectButton,
-            !canSelect &&
+            (isEmptyFavorites ||
+              (!canSelect &&
+                (unlocking ||
+                  (!isOnline && isTested && !canTest) ||
+                  (!isAdActuallyReady &&
+                    !isActuallyLoading &&
+                    isTested &&
+                    !canTest)))) &&
+              stylesMemo.selectButtonDisabled,
+          ]}
+          onPress={handleSelectDeck}
+          disabled={
+            isEmptyFavorites ||
+            (!canSelect &&
               (unlocking ||
                 (!isOnline && isTested && !canTest) ||
                 (!isAdActuallyReady &&
                   !isActuallyLoading &&
                   isTested &&
-                  !canTest)) &&
-              stylesMemo.selectButtonDisabled,
-          ]}
-          onPress={handleSelectDeck}
-          disabled={
-            !canSelect &&
-            (unlocking ||
-              (!isOnline && isTested && !canTest) ||
-              (!isAdActuallyReady &&
-                !isActuallyLoading &&
-                isTested &&
-                !canTest))
+                  !canTest)))
           }
         >
-          {unlocking ? (
+          {isEmptyFavorites ? (
+            <View style={stylesMemo.buttonContent}>
+              <MaterialIcons
+                name="favorite-border"
+                size={moderateScale(width >= 768 ? 16 : 20)}
+                color={COLORS.text.primary}
+              />
+              <Text style={stylesMemo.selectButtonText}>No Favorites Yet</Text>
+            </View>
+          ) : unlocking ? (
             <View style={stylesMemo.buttonContent}>
               <ActivityIndicator
                 size="small"

@@ -105,11 +105,9 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
       getFavoriteCards(),
       getCustomDecks(),
     ]);
-    const decks: Deck[] = [];
-    if (favorites.length > 0) {
-      decks.push(buildFavoritesDeck(favorites));
-    }
-    decks.push(...customDecks);
+    // Always show the favorites deck (even when empty) so players discover the
+    // feature; DeckScreen blocks playing it until it has cards.
+    const decks: Deck[] = [buildFavoritesDeck(favorites), ...customDecks];
     setPersonalDecks(decks);
   }, []);
 
