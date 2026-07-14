@@ -1,3 +1,4 @@
 export { useGameState } from "./useGameState";
 export type { GameState, PlayerStats } from "./useGameState";
 export { useCardDeck } from "./useCardDeck";
+export { useFavorites } from "./useFavorites";

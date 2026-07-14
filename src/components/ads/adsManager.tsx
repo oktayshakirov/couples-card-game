@@ -44,25 +44,18 @@ export async function initializeGlobalAds(force = false) {
   }
 
   initializationPromise = (async () => {
-    try {
-      if (initializationTimeout) {
-        clearTimeout(initializationTimeout);
-        initializationTimeout = null;
-      }
-      await initializeGoogleMobileAds();
-      await Promise.all([initializeInterstitial(), loadAppOpenAd()]);
-      isInitialized = true;
-    } catch (error) {
-      if (initializationTimeout) {
-        clearTimeout(initializationTimeout);
-      }
-      initializationTimeout = setTimeout(() => {
-        initializationTimeout = null;
-        isInitialized = false;
-        initializationPromise = null;
-        initializeGlobalAds().catch(() => {});
-      }, 5000);
+    if (initializationTimeout) {
+      clearTimeout(initializationTimeout);
+      initializationTimeout = null;
     }
+    await initializeGoogleMobileAds();
+    // Load failures are normal (no fill, offline, simulator) — swallow them
+    // instead of retrying in a background loop. Screens re-request ads on
+    // demand via ensure*Loaded()/show*(), which reload lazily. The previous
+    // Promise.all + 5s retry recreated both native ad objects every cycle for
+    // the entire session, causing progressive slowdown and device heat.
+    await Promise.allSettled([initializeInterstitial(), loadAppOpenAd()]);
+    isInitialized = true;
   })();
 
   return initializationPromise;

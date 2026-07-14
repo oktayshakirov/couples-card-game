@@ -41,6 +41,7 @@ import {
 } from "../utils/deckIcons";
 import { DeckWarning } from "../components/DeckWarning";
 import { Badge } from "../components/Badge";
+import { FAVORITES_DECK_ID } from "../utils/favoritesStorage";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
@@ -48,6 +49,7 @@ interface DeckScreenProps {
   deck: Deck;
   onSelectDeck: (deck: Deck) => void;
   onDeckUnlocked?: (deck: Deck) => void;
+  onEditDeck?: (deck: Deck) => void;
   onBack: () => void;
 }
 
@@ -55,6 +57,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
   deck,
   onSelectDeck,
   onDeckUnlocked,
+  onEditDeck,
   onBack,
 }) => {
   const { width } = useWindowDimensions();
@@ -77,7 +80,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
     const checkUnlockStatus = async () => {
       const isUnlocked = await isDeckUnlocked(deck.id);
       setUnlocked(
-        Boolean(isUnlocked || deck.isDefault || isLifetime)
+        Boolean(isUnlocked || deck.isDefault || deck.isCustom || isLifetime)
       );
       setLoading(false);
     };
@@ -144,6 +147,12 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
 
     const LOAD_RETRY_INTERVAL = 5000;
     const POLL_INTERVAL = 1000;
+    // Stop background polling after this many ticks. Without a cap, sitting on
+    // a locked deck screen kept polling every second and recreating the native
+    // rewarded-ad object every few seconds when there was no fill (simulator,
+    // offline), which slowly heated up the device. The unlock button still
+    // retries on demand after polling stops.
+    const MAX_POLL_COUNT = 30;
 
     const checkAdStatus = (): boolean => {
       const isReady = isRewardedReady();
@@ -199,7 +208,7 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
       let pollCount = 0;
       pollIntervalRef.current = setInterval(() => {
         const isReadyNow = checkAdStatus();
-        
+
         if (isReadyNow) {
           if (pollIntervalRef.current) {
             clearInterval(pollIntervalRef.current);
@@ -209,6 +218,15 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
         }
 
         pollCount++;
+        if (pollCount >= MAX_POLL_COUNT) {
+          if (pollIntervalRef.current) {
+            clearInterval(pollIntervalRef.current);
+            pollIntervalRef.current = null;
+          }
+          adLoadingRef.current = false;
+          setAdLoading(false);
+          return;
+        }
         if (pollCount % 5 === 0 && isOnline && !adLoadingRef.current) {
           attemptLoadAd();
         }
@@ -384,7 +402,16 @@ export const DeckScreen: React.FC<DeckScreenProps> = ({
           />
         </TouchableOpacity>
         <Text style={stylesMemo.title}>{deck.name}</Text>
-        <View style={stylesMemo.placeholder} />
+        {deck.isCustom && deck.id !== FAVORITES_DECK_ID && onEditDeck ? (
+          <TouchableOpacity
+            onPress={() => onEditDeck(deck)}
+            style={stylesMemo.backButton}
+          >
+            <MaterialIcons name="edit" size={24} color={COLORS.text.primary} />
+          </TouchableOpacity>
+        ) : (
+          <View style={stylesMemo.placeholder} />
+        )}
       </View>
 
       <ScrollView

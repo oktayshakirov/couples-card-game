@@ -9,6 +9,7 @@ import { WelcomeBackScreen } from "./src/screens/WelcomeBackScreen";
 import { DecksLibraryScreen } from "./src/screens/DecksLibraryScreen";
 import { DeckScreen } from "./src/screens/DeckScreen";
 import { DeckUnlockedScreen } from "./src/screens/DeckUnlockedScreen";
+import { DeckEditorScreen } from "./src/screens/DeckEditorScreen";
 import { GameProvider, useGame } from "./src/contexts/GameContext";
 import {
   OnboardingProvider,
@@ -35,6 +36,7 @@ type Screen =
   | "decks"
   | "deck"
   | "deckUnlocked"
+  | "deckEditor"
   | "game";
 
 const AppContent = () => {
@@ -43,6 +45,7 @@ const AppContent = () => {
     useGame();
   const [currentScreen, setCurrentScreen] = useState<Screen>("onboarding");
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
+  const [editingDeck, setEditingDeck] = useState<Deck | null>(null);
   const [onboardingChecked, setOnboardingChecked] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [consentCompleted, setConsentCompleted] = useState(false);
@@ -138,6 +141,22 @@ const AppContent = () => {
   const handleBackToDecks = () => {
     goToDecksScreen();
     setSelectedDeck(null);
+  };
+
+  const handleCreateDeck = () => {
+    setEditingDeck(null);
+    setCurrentScreen("deckEditor");
+  };
+
+  const handleEditDeck = (deck: Deck) => {
+    setEditingDeck(deck);
+    setCurrentScreen("deckEditor");
+  };
+
+  const handleDeckEditorDone = () => {
+    setEditingDeck(null);
+    setSelectedDeck(null);
+    goToDecksScreen();
   };
 
   const handleBackToSetup = () => {
@@ -244,6 +263,7 @@ const AppContent = () => {
           <DecksLibraryScreen
             paywallEntryKey={decksVisitKey}
             onSelectDeck={handleDeckSelected}
+            onCreateDeck={handleCreateDeck}
             onBack={hasGameStartedRef.current ? handleBackToSetup : undefined}
             onClose={
               hasGameStartedRef.current ? handleCloseDeckLibrary : undefined
@@ -257,9 +277,18 @@ const AppContent = () => {
             deck={selectedDeck}
             onSelectDeck={handleDeckConfirmed}
             onDeckUnlocked={handleDeckUnlocked}
+            onEditDeck={handleEditDeck}
             onBack={handleBackToDeckLibrary}
           />
         ) : null;
+      case "deckEditor":
+        return (
+          <DeckEditorScreen
+            deck={editingDeck ?? undefined}
+            onDone={handleDeckEditorDone}
+            onBack={handleDeckEditorDone}
+          />
+        );
       case "deckUnlocked":
         return selectedDeck ? (
           <DeckUnlockedScreen

@@ -4,3 +4,4 @@ export { ActionButtons } from "./ActionButtons";
 export { DeckWarning } from "./DeckWarning";
 export { EmptyDeck } from "./EmptyDeck";
 export { Badge } from "./Badge";
+export { DareTimer, parseDareDurationSeconds } from "./DareTimer";

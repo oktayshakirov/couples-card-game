@@ -38,17 +38,24 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({
   }, [onAnimationComplete]);
 
   useEffect(() => {
-    if (isVisible) {
-      if (logoRef.current) {
-        logoRef.current.fadeIn(1200);
-      }
+    if (!isVisible) {
+      return;
+    }
 
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+    const loops: Animated.CompositeAnimation[] = [];
+
+    if (logoRef.current) {
+      logoRef.current.fadeIn(1200);
+    }
+
+    timeouts.push(
       setTimeout(() => {
         if (waveRef.current) {
           waveRef.current.fadeIn(800);
         }
 
-        Animated.loop(
+        const logoLoop = Animated.loop(
           Animated.sequence([
             Animated.timing(logoOpacity, {
               toValue: 0.6,
@@ -61,27 +68,40 @@ const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({
               useNativeDriver: true,
             }),
           ])
-        ).start();
+        );
+        loops.push(logoLoop);
+        logoLoop.start();
 
         waveValues.forEach((value, index) => {
           const delay = index * 200;
-          Animated.loop(
+          const waveLoop = Animated.loop(
             Animated.timing(value, {
               toValue: 1,
               duration: 1500,
               delay: delay,
               useNativeDriver: true,
             })
-          ).start();
+          );
+          loops.push(waveLoop);
+          waveLoop.start();
         });
-      }, 600);
+      }, 600)
+    );
 
-      const totalDisplayTime = 1200 + 600 + 800 + 1500;
+    const totalDisplayTime = 1200 + 600 + 800 + 1500;
+    timeouts.push(
       setTimeout(() => {
         handleFadeOut();
-      }, totalDisplayTime);
-    }
-  }, [isVisible, waveValues, handleFadeOut]);
+      }, totalDisplayTime)
+    );
+
+    return () => {
+      timeouts.forEach(clearTimeout);
+      loops.forEach((loop) => loop.stop());
+      logoOpacity.stopAnimation();
+      waveValues.forEach((value) => value.stopAnimation());
+    };
+  }, [isVisible, waveValues, logoOpacity, handleFadeOut]);
 
   if (!isVisible) {
     return null;

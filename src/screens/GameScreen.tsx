@@ -19,6 +19,7 @@ import { ActionButtons } from "../components/ActionButtons";
 import { EmptyDeck } from "../components/EmptyDeck";
 import { useGame } from "../contexts/GameContext";
 import { useCardDeck } from "../hooks/useCardDeck";
+import { useFavorites } from "../hooks/useFavorites";
 import BannerAdComponent from "../components/ads/BannerAd";
 import { ensureInterstitialLoaded } from "../components/ads/InterstitialAd";
 import { showGlobalInterstitial } from "../components/ads/adsManager";
@@ -77,6 +78,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const { cards, getCardRef, removeCard, resetDeck } = useCardDeck(
     selectedDeck?.cards
   );
+  const { isFavorite, toggleFavorite } = useFavorites();
   const totalCards = useMemo(
     () => selectedDeck?.cards.length || 0,
     [selectedDeck?.cards.length]
@@ -498,6 +500,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
                         ).color
                       }
                       blurred={false}
+                      isFavorite={isFavorite(card.truth, card.dare)}
+                      onToggleFavorite={() =>
+                        toggleFavorite(card.truth, card.dare)
+                      }
                     />
                   </TinderCard>
                 </View>

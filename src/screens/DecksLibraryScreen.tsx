@@ -16,6 +16,11 @@ import {
 import { allDecks } from "../data/decks";
 import { Deck } from "../types/deck";
 import { getUnlockedDecks, unlockAllDecks } from "../utils/deckStorage";
+import { getCustomDecks } from "../utils/customDeckStorage";
+import {
+  getFavoriteCards,
+  buildFavoritesDeck,
+} from "../utils/favoritesStorage";
 import { useRevenueCat } from "../hooks/useRevenueCat";
 import { getCustomerInfo, hasLifetimeEntitlement } from "../services/revenueCat";
 import { useGame } from "../contexts/GameContext";
@@ -49,6 +54,7 @@ interface DecksLibraryScreenProps {
   /** Bumps on every navigation to this screen (see App `decksVisitKey`) so the paywall flow runs each visit. */
   paywallEntryKey: number;
   onSelectDeck: (deck: Deck) => void;
+  onCreateDeck?: () => void;
   onBack?: () => void;
   onClose?: () => void;
   isEditing?: boolean;
@@ -57,6 +63,7 @@ interface DecksLibraryScreenProps {
 export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
   paywallEntryKey,
   onSelectDeck,
+  onCreateDeck,
   onBack,
   onClose,
   isEditing = false,
@@ -70,11 +77,13 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
     loading: rcLoading,
   } = useRevenueCat();
   const [unlockedDecks, setUnlockedDecks] = useState<string[]>([]);
+  const [personalDecks, setPersonalDecks] = useState<Deck[]>([]);
   const [connectVisible, setConnectVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState<"app" | "personal">("app");
 
   const cardDimensions = useMemo(() => getCardDimensions(width), [width]);
 
-  const sortedDecks = useMemo(() => {
+  const sortedAppDecks = useMemo(() => {
     return [...allDecks].sort((a, b) => {
       const aIsUnlocked = unlockedDecks.includes(a.id) || !!a.isDefault;
       const bIsUnlocked = unlockedDecks.includes(b.id) || !!b.isDefault;
@@ -91,11 +100,30 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
     setUnlockedDecks(unlocked);
   }, []);
 
+  const loadPersonalDecks = useCallback(async () => {
+    const [favorites, customDecks] = await Promise.all([
+      getFavoriteCards(),
+      getCustomDecks(),
+    ]);
+    const decks: Deck[] = [];
+    if (favorites.length > 0) {
+      decks.push(buildFavoritesDeck(favorites));
+    }
+    decks.push(...customDecks);
+    setPersonalDecks(decks);
+  }, []);
+
   const connectModalProps = useConnectModal(loadUnlockedDecks);
 
   useEffect(() => {
     loadUnlockedDecks();
   }, [loadUnlockedDecks]);
+
+  // Reload on every visit (paywallEntryKey bumps) so decks created/edited in
+  // the editor and cards favorited in-game show up immediately.
+  useEffect(() => {
+    loadPersonalDecks();
+  }, [loadPersonalDecks, paywallEntryKey]);
 
   useEffect(() => {
     if (!isAvailable || rcLoading) {
@@ -243,6 +271,59 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
           </View>
           <Text style={stylesMemo.subtitle}>Choose a Deck</Text>
         </View>
+
+        <View style={stylesMemo.tabBar}>
+          <TouchableOpacity
+            style={[
+              stylesMemo.tabButton,
+              activeTab === "app" && stylesMemo.tabButtonActive,
+            ]}
+            onPress={() => setActiveTab("app")}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons
+              name="style"
+              size={moderateScale(16)}
+              color={
+                activeTab === "app" ? COLORS.primary : COLORS.text.secondary
+              }
+            />
+            <Text
+              style={[
+                stylesMemo.tabText,
+                activeTab === "app" && stylesMemo.tabTextActive,
+              ]}
+            >
+              Decks
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              stylesMemo.tabButton,
+              activeTab === "personal" && stylesMemo.tabButtonActive,
+            ]}
+            onPress={() => setActiveTab("personal")}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons
+              name="favorite"
+              size={moderateScale(16)}
+              color={
+                activeTab === "personal"
+                  ? COLORS.primary
+                  : COLORS.text.secondary
+              }
+            />
+            <Text
+              style={[
+                stylesMemo.tabText,
+                activeTab === "personal" && stylesMemo.tabTextActive,
+              ]}
+            >
+              Your Decks
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ConnectModal
@@ -257,19 +338,56 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
         showsVerticalScrollIndicator={false}
       >
         <View style={stylesMemo.cardsGrid}>
-          {sortedDecks.map((deck) => {
-            const isUnlocked =
-              unlockedDecks.includes(deck.id) || !!deck.isDefault;
-            return (
-              <DeckPack
-                key={deck.id}
-                deck={deck}
-                isUnlocked={isUnlocked}
-                onPress={handleDeckPress}
-                cardDimensions={cardDimensions}
-              />
-            );
-          })}
+          {activeTab === "app" ? (
+            sortedAppDecks.map((deck) => {
+              const isUnlocked =
+                unlockedDecks.includes(deck.id) || !!deck.isDefault;
+              return (
+                <DeckPack
+                  key={deck.id}
+                  deck={deck}
+                  isUnlocked={isUnlocked}
+                  onPress={handleDeckPress}
+                  cardDimensions={cardDimensions}
+                />
+              );
+            })
+          ) : (
+            <>
+              {onCreateDeck && (
+                <TouchableOpacity
+                  style={stylesMemo.createDeckCard}
+                  onPress={onCreateDeck}
+                  activeOpacity={0.85}
+                >
+                  <View style={stylesMemo.createDeckIcon}>
+                    <MaterialIcons
+                      name="add"
+                      size={moderateScale(24)}
+                      color={COLORS.primary}
+                    />
+                  </View>
+                  <View style={stylesMemo.createDeckTextContainer}>
+                    <Text style={stylesMemo.createDeckTitle}>
+                      Create Your Own Deck
+                    </Text>
+                    <Text style={stylesMemo.createDeckSubtitle}>
+                      Write truths and dares just for you two
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+              {personalDecks.map((deck) => (
+                <DeckPack
+                  key={deck.id}
+                  deck={deck}
+                  isUnlocked
+                  onPress={handleDeckPress}
+                  cardDimensions={cardDimensions}
+                />
+              ))}
+            </>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -348,6 +466,38 @@ const createStyles = (width: number) =>
       fontWeight: "700",
       color: COLORS.text.primary,
     },
+    tabBar: {
+      flexDirection: "row",
+      marginTop: verticalScale(14),
+      backgroundColor: "rgba(255,255,255,0.05)",
+      borderRadius: scale(14),
+      padding: scale(4),
+      gap: scale(4),
+    },
+    tabButton: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: scale(6),
+      paddingVertical: verticalScale(9),
+      borderRadius: scale(11),
+    },
+    tabButtonActive: {
+      backgroundColor: hexToRgba(COLORS.primary, 0.18),
+      borderWidth: 1,
+      borderColor: hexToRgba(COLORS.primary, 0.4),
+    },
+    tabText: {
+      fontSize: moderateScale(13),
+      fontWeight: "600",
+      color: COLORS.text.secondary,
+      letterSpacing: 0.3,
+    },
+    tabTextActive: {
+      color: COLORS.primary,
+      fontWeight: "700",
+    },
     scrollView: {
       flex: 1,
     },
@@ -357,5 +507,40 @@ const createStyles = (width: number) =>
     },
     cardsGrid: {
       width: "100%",
+    },
+    createDeckCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: scale(14),
+      borderRadius: scale(24),
+      borderWidth: 1.5,
+      borderStyle: "dashed",
+      borderColor: hexToRgba(COLORS.primary, 0.5),
+      backgroundColor: hexToRgba(COLORS.primary, 0.05),
+      padding: width >= 768 ? scale(20) : scale(18),
+      marginBottom: scale(16),
+    },
+    createDeckIcon: {
+      width: scale(48),
+      height: scale(48),
+      borderRadius: scale(24),
+      backgroundColor: hexToRgba(COLORS.primary, 0.15),
+      borderWidth: 1.5,
+      borderColor: hexToRgba(COLORS.primary, 0.35),
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    createDeckTextContainer: {
+      flex: 1,
+    },
+    createDeckTitle: {
+      fontSize: moderateScale(17),
+      fontWeight: "700",
+      color: COLORS.text.primary,
+    },
+    createDeckSubtitle: {
+      fontSize: moderateScale(12),
+      color: COLORS.text.secondary,
+      marginTop: verticalScale(2),
     },
   });

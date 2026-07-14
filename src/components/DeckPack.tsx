@@ -73,7 +73,14 @@ export const DeckPack: React.FC<DeckPackProps> = ({
         </View>
       )}
 
-      <View style={styles.cardCountBadge}>
+      {/* Without a Classic/Spicy badge (e.g. the favorites deck) the count
+          badge takes the top spot instead of leaving an empty gap. */}
+      <View
+        style={[
+          styles.cardCountBadge,
+          deck.nsfw === undefined && styles.cardCountBadgeTop,
+        ]}
+      >
         <MaterialIcons
           name="style"
           size={moderateScale(12)}
@@ -288,6 +295,9 @@ const createStyles = (width: number) =>
       borderWidth: 1,
       borderColor: hexToRgba(COLORS.primary, 0.35),
       zIndex: 10,
+    },
+    cardCountBadgeTop: {
+      top: width >= 768 ? scale(14) : scale(12),
     },
     cardCountText: {
       fontSize: moderateScale(10),

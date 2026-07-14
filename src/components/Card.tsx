@@ -6,10 +6,13 @@ import {
   Dimensions,
   ScrollView,
   Image,
+  TouchableOpacity,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import { hexToRgba } from "../utils/colorUtils";
 import { COLORS } from "../constants/colors";
 import { Badge } from "./Badge";
+import { DareTimer, parseDareDurationSeconds } from "./DareTimer";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
@@ -21,6 +24,8 @@ interface SwipeCardProps {
   currentPlayer: 1 | 2;
   currentPlayerColor: string;
   blurred?: boolean;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }
 
 const SwipeCardComponent: React.FC<SwipeCardProps> = ({
@@ -31,6 +36,8 @@ const SwipeCardComponent: React.FC<SwipeCardProps> = ({
   currentPlayer,
   currentPlayerColor,
   blurred = false,
+  isFavorite = false,
+  onToggleFavorite,
 }) => {
   const dimensions = useMemo(() => Dimensions.get("window"), []);
   const { width, height } = dimensions;
@@ -87,6 +94,11 @@ const SwipeCardComponent: React.FC<SwipeCardProps> = ({
   const dareFontSize = useMemo(
     () => calculateFontSize(formattedDare, width >= 768),
     [formattedDare, calculateFontSize, width]
+  );
+
+  const dareTimerSeconds = useMemo(
+    () => parseDareDurationSeconds(formattedDare),
+    [formattedDare]
   );
 
   const stylesMemo = useMemo(
@@ -199,10 +211,30 @@ const SwipeCardComponent: React.FC<SwipeCardProps> = ({
                 >
                   {formattedDare}
                 </Text>
+                {dareTimerSeconds !== null && (
+                  <DareTimer
+                    seconds={dareTimerSeconds}
+                    accentColor={currentPlayerColor}
+                  />
+                )}
               </View>
             </View>
           </View>
         </ScrollView>
+        {onToggleFavorite && (
+          <TouchableOpacity
+            style={stylesMemo.favoriteButton}
+            onPress={onToggleFavorite}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons
+              name={isFavorite ? "favorite" : "favorite-border"}
+              size={moderateScale(20)}
+              color={isFavorite ? COLORS.accent.red : COLORS.text.secondary}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -325,6 +357,19 @@ const createStyles = (
       fontWeight: "600",
       textTransform: "uppercase",
       letterSpacing: 1,
+    },
+    favoriteButton: {
+      position: "absolute",
+      bottom: scale(12),
+      right: scale(14),
+      width: scale(36),
+      height: scale(36),
+      borderRadius: scale(18),
+      backgroundColor: hexToRgba(COLORS.background, 0.85),
+      borderWidth: 1,
+      borderColor: hexToRgba(COLORS.primary, 0.3),
+      alignItems: "center",
+      justifyContent: "center",
     },
   });
 
