@@ -155,46 +155,33 @@ const BannerAdComponent = () => {
     return null;
   }
 
-  if (!isAdLoaded) {
-    return (
-      <>
-        {renderPlaceholder(false)}
-        <View style={{ height: 0, overflow: "hidden" }}>
-          <BannerAd
-            key={adKey}
-            unitId={adUnitId!}
-            size={BannerAdSize.ADAPTIVE_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly,
-            }}
-            onAdLoaded={handleAdLoaded}
-            onAdFailedToLoad={handleAdFailedToLoad}
-          />
-        </View>
-      </>
-    );
-  }
-
+  // Exactly one <BannerAd> stays mounted across the loading -> loaded
+  // transition, so the instance that actually loads is the one left on
+  // screen. Swapping to a differently-shaped tree on load (as this used to)
+  // makes React remount a fresh, unloaded BannerAd right as the old one
+  // becomes visible - it never gets a chance to fire an impression.
   return (
-    <Animated.View
-      style={[
-        styles.bannerContainer,
-        {
-          opacity: fadeAnim,
-        },
-      ]}
-    >
-      <BannerAd
-        key={adKey}
-        unitId={adUnitId!}
-        size={BannerAdSize.ADAPTIVE_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly,
-        }}
-        onAdLoaded={handleAdLoaded}
-        onAdFailedToLoad={handleAdFailedToLoad}
-      />
-    </Animated.View>
+    <>
+      {!isAdLoaded && renderPlaceholder(false)}
+      <Animated.View
+        style={[
+          styles.bannerContainer,
+          !isAdLoaded && styles.bannerHidden,
+          { opacity: fadeAnim },
+        ]}
+      >
+        <BannerAd
+          key={adKey}
+          unitId={adUnitId!}
+          size={BannerAdSize.ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly,
+          }}
+          onAdLoaded={handleAdLoaded}
+          onAdFailedToLoad={handleAdFailedToLoad}
+        />
+      </Animated.View>
+    </>
   );
 };
 
@@ -202,6 +189,10 @@ const styles = StyleSheet.create({
   bannerContainer: {
     width: "100%",
     alignItems: "center",
+  },
+  bannerHidden: {
+    height: 0,
+    overflow: "hidden",
   },
   placeholderContainer: {
     width: "100%",
