@@ -56,5 +56,23 @@ target 'LoveSwipe' do
       :mac_catalyst_enabled => false,
       :ccache_enabled => ccache_enabled?(podfile_properties),
     )
+
+    # Xcode 26 / clang rejects fmt 11.0.2's `consteval` format-string checks
+    # ("call to consteval function ... is not a constant expression"), which
+    # breaks the React Native build. fmt fixed this in 11.1.0 but RN still pins
+    # 11.0.2. fmt's macro is computed unconditionally, so a -D flag can't
+    # override it - patch the vendored header to take the non-consteval path.
+    # Only relaxes compile-time format-string validation; no runtime effect.
+    fmt_base = File.join(installer.sandbox.root, 'fmt', 'include', 'fmt', 'base.h')
+    if File.exist?(fmt_base)
+      contents = File.read(fmt_base)
+      marker = "#if FMT_USE_CONSTEVAL\n#  define FMT_CONSTEVAL consteval"
+      patched = "#if 0  // FMT_USE_CONSTEVAL - patched off for Xcode 26 clang\n#  define FMT_CONSTEVAL consteval"
+      if contents.include?(marker)
+        FileUtils.chmod('u+w', fmt_base)
+        File.write(fmt_base, contents.sub(marker, patched))
+        Pod::UI.puts "[Podfile] Patched fmt/base.h to disable consteval"
+      end
+    end
   end
 end
