@@ -80,6 +80,9 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
   const [personalDecks, setPersonalDecks] = useState<Deck[]>([]);
   const [connectVisible, setConnectVisible] = useState(false);
   const [activeTab, setActiveTab] = useState<"app" | "personal">("app");
+  const [deckFilter, setDeckFilter] = useState<"all" | "classic" | "spicy">(
+    "all"
+  );
 
   const cardDimensions = useMemo(() => getCardDimensions(width), [width]);
 
@@ -94,6 +97,31 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
       return 0; // Keep original order for same unlock status
     });
   }, [unlockedDecks]);
+
+  const visibleAppDecks = useMemo(() => {
+    if (deckFilter === "all") {
+      return sortedAppDecks;
+    }
+    const wantSpicy = deckFilter === "spicy";
+    return sortedAppDecks.filter((deck) => Boolean(deck.nsfw) === wantSpicy);
+  }, [sortedAppDecks, deckFilter]);
+
+  const handleSurprise = useCallback(() => {
+    const isPlayable = (deck: Deck) =>
+      unlockedDecks.includes(deck.id) || !!deck.isDefault;
+    // Only surprise players with decks they can actually play right now, and
+    // respect the active filter — unless that leaves nothing, then fall back to
+    // any playable deck.
+    const pool = visibleAppDecks.filter(isPlayable);
+    const effectivePool =
+      pool.length > 0 ? pool : sortedAppDecks.filter(isPlayable);
+    if (effectivePool.length === 0) {
+      return;
+    }
+    const pick =
+      effectivePool[Math.floor(Math.random() * effectivePool.length)];
+    onSelectDeck(pick);
+  }, [visibleAppDecks, sortedAppDecks, unlockedDecks, onSelectDeck]);
 
   const loadUnlockedDecks = useCallback(async () => {
     const unlocked = await getUnlockedDecks();
@@ -268,6 +296,20 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
             </View>
           </View>
           <Text style={stylesMemo.subtitle}>Choose a Deck</Text>
+          {activeTab === "app" && (
+            <TouchableOpacity
+              style={stylesMemo.surpriseButton}
+              onPress={handleSurprise}
+              activeOpacity={0.8}
+            >
+              <MaterialIcons
+                name="shuffle"
+                size={moderateScale(16)}
+                color={COLORS.primary}
+              />
+              <Text style={stylesMemo.surpriseButtonText}>Surprise Me</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={stylesMemo.tabBar}>
@@ -322,6 +364,35 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
             </Text>
           </TouchableOpacity>
         </View>
+
+        {activeTab === "app" && (
+          <View style={stylesMemo.filterRow}>
+            {(["all", "classic", "spicy"] as const).map((filter) => (
+              <TouchableOpacity
+                key={filter}
+                style={[
+                  stylesMemo.filterChip,
+                  deckFilter === filter && stylesMemo.filterChipActive,
+                ]}
+                onPress={() => setDeckFilter(filter)}
+                activeOpacity={0.7}
+              >
+                <Text
+                  style={[
+                    stylesMemo.filterChipText,
+                    deckFilter === filter && stylesMemo.filterChipTextActive,
+                  ]}
+                >
+                  {filter === "all"
+                    ? "All"
+                    : filter === "classic"
+                    ? "Classic"
+                    : "Spicy"}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </View>
 
       <ConnectModal
@@ -337,7 +408,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
       >
         <View style={stylesMemo.cardsGrid}>
           {activeTab === "app" ? (
-            sortedAppDecks.map((deck) => {
+            visibleAppDecks.map((deck) => {
               const isUnlocked =
                 unlockedDecks.includes(deck.id) || !!deck.isDefault;
               return (
@@ -463,6 +534,52 @@ const createStyles = (width: number) =>
       fontSize: moderateScale(20),
       fontWeight: "700",
       color: COLORS.text.primary,
+    },
+    surpriseButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: scale(6),
+      marginTop: verticalScale(8),
+      paddingHorizontal: scale(16),
+      paddingVertical: verticalScale(7),
+      borderRadius: scale(20),
+      backgroundColor: hexToRgba(COLORS.primary, 0.12),
+      borderWidth: 1,
+      borderColor: hexToRgba(COLORS.primary, 0.35),
+    },
+    surpriseButtonText: {
+      fontSize: moderateScale(13),
+      fontWeight: "700",
+      color: COLORS.primary,
+      letterSpacing: 0.3,
+    },
+    filterRow: {
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: scale(8),
+      marginTop: verticalScale(10),
+    },
+    filterChip: {
+      paddingHorizontal: scale(16),
+      paddingVertical: verticalScale(6),
+      borderRadius: scale(16),
+      backgroundColor: "rgba(255,255,255,0.05)",
+      borderWidth: 1,
+      borderColor: "transparent",
+    },
+    filterChipActive: {
+      backgroundColor: hexToRgba(COLORS.primary, 0.18),
+      borderColor: hexToRgba(COLORS.primary, 0.4),
+    },
+    filterChipText: {
+      fontSize: moderateScale(12),
+      fontWeight: "600",
+      color: COLORS.text.secondary,
+      letterSpacing: 0.3,
+    },
+    filterChipTextActive: {
+      color: COLORS.primary,
+      fontWeight: "700",
     },
     tabBar: {
       flexDirection: "row",

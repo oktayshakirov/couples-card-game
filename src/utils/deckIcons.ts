@@ -15,6 +15,7 @@ const IMAGE_ICONS: Record<string, any> = {
   "love-nest": require("../../assets/images/love-nest.png"),
   "ever-after": require("../../assets/images/ever-after.png"),
   games: require("../../assets/images/games.png"),
+  "long-distance": require("../../assets/images/long-distance.png"),
 };
 
 export const getDeckIconSource = (icon: string) => {

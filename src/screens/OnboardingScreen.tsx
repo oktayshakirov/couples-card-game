@@ -68,6 +68,12 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     description:
       "Your partner decides if it counts. If not, you get no points and must retry the same card.",
   },
+  {
+    icon: "favorite",
+    title: "Make It Your Own",
+    description:
+      "Tap the heart on any card to save it to your Favorites deck, or build your own deck of custom truths and dares.",
+  },
 ];
 
 export const OnboardingScreen: React.FC = () => {

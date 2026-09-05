@@ -15,6 +15,7 @@ import { forbiddenDeck } from "./forbidden-fruit";
 import { velvetDeck } from "./velvet-nights";
 import { masqueradeDeck } from "./midnight-masquerade";
 import { wickedDeck } from "./wicked-games";
+import { longDistanceDeck } from "./long-distance";
 
 export { cupidDeck } from "./cupid-gw";
 export { heartsDeck } from "./stolen-hearts";
@@ -32,6 +33,7 @@ export { forbiddenDeck } from "./forbidden-fruit";
 export { velvetDeck } from "./velvet-nights";
 export { masqueradeDeck } from "./midnight-masquerade";
 export { wickedDeck } from "./wicked-games";
+export { longDistanceDeck } from "./long-distance";
 
 export const allDecks: Deck[] = [
   heartsDeck,
@@ -43,6 +45,7 @@ export const allDecks: Deck[] = [
   sugarDeck,
   nestDeck,
   everAfterDeck,
+  longDistanceDeck,
   cupidDeck,
   lustDeck,
   passionDeck,
