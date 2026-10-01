@@ -287,7 +287,7 @@ export const heartsDeck: Deck = {
     },
     {
       id: "h50",
-      truth: '{player1}, have you ever felt proud of {player2}?"',
+      truth: "{player1}, have you ever felt proud of {player2}?",
       dare: '{player1}, pretend you just won "Best Partner" — give a short acceptance speech.',
     },
   ],

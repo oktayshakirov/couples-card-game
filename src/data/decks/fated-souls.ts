@@ -70,7 +70,7 @@ export const fateDeck: Deck = {
       id: "f11",
       truth:
         "{player1}, what are the best and worst purchases you've ever made?",
-      dare: "{player1}, show {player2} embarrassing photo of you from your past.",
+      dare: "{player1}, show {player2} an embarrassing photo of you from your past.",
     },
     {
       id: "f12",
@@ -94,13 +94,13 @@ export const fateDeck: Deck = {
       id: "f15",
       truth:
         "{player1}, if you had to replace {player2} at work, how well do you think you'd do?",
-      dare: "{player1} and {player2}, play a game of rock, paper, scissors. Looser gets tickled.",
+      dare: "{player1} and {player2}, play a game of rock, paper, scissors. Loser gets tickled.",
     },
     {
       id: "f16",
       truth:
         "{player1}, if you could talk to your pets, what would you talk to them about?",
-      dare: "{player1}, tell {player2} your most embarrassing momory.",
+      dare: "{player1}, tell {player2} your most embarrassing memory.",
     },
     {
       id: "f17",
@@ -184,7 +184,7 @@ export const fateDeck: Deck = {
     {
       id: "f31",
       truth:
-        "{player1}, if you could start a business with your {player2}, would you - and what would it be?",
+        "{player1}, if you could start a business with {player2}, would you — and what would it be?",
       dare: "{player1}, play a song that reminds you of {player2}.",
     },
     {
@@ -219,7 +219,7 @@ export const fateDeck: Deck = {
       id: "f37",
       truth:
         "{player1}, what's something you're willing to spend money on for {player2}?",
-      dare: "{player1}, send {player2} a 20$ gift card for their favorite store.",
+      dare: "{player1}, send {player2} a $20 gift card for their favorite store.",
     },
     {
       id: "f38",
@@ -242,11 +242,11 @@ export const fateDeck: Deck = {
       id: "f41",
       truth:
         "{player1}, aside from {player2}'s current job, what other profession do you think they'd be good at?",
-      dare: "{player1}, show a photo of you with with a friend of yours.",
+      dare: "{player1}, show a photo of you with a friend of yours.",
     },
     {
       id: "f42",
-      truth: "{player1}, did you stalk on social media before your first met?",
+      truth: "{player1}, did you stalk {player2} on social media before you first met?",
       dare: "{player1}, propose a future date idea to {player2}.",
     },
     {

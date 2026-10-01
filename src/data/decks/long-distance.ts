@@ -4,7 +4,7 @@ export const longDistanceDeck: Deck = {
   id: "long-distance",
   name: "Long Distance",
   description:
-    "For couples with miles between them. Honest questions and playful dares made for a video call - hop on camera together and play.",
+    "For couples with miles between them. Honest questions and playful dares made for a video call — hop on camera together and play.",
   icon: "long-distance",
   isDefault: false,
   nsfw: false,
@@ -31,25 +31,25 @@ export const longDistanceDeck: Deck = {
       id: "ld4",
       truth:
         "{player1}, if you could teleport to {player2} for exactly one hour, how would you spend it?",
-      dare: "{player1}, plan that hour out loud, minute by minute, for {player2}.",
+      dare: "{player1}, show {player2} the last five photos in your camera roll. No skipping.",
     },
     {
       id: "ld5",
       truth:
         "{player1}, what's the hardest part of being apart that you don't usually talk about?",
-      dare: "{player1}, show {player2} one object near you that reminds you of them and explain why.",
+      dare: "{player1}, go and get one object near you that reminds you of {player2} and hold it up to the camera.",
     },
     {
       id: "ld6",
       truth:
         "{player1}, what's your favorite photo of you and {player2} together?",
-      dare: "{player1}, find a photo of you two and hold it up to the camera, then say what you remember about that day.",
+      dare: "{player1}, change your profile picture to a photo of you two, right now.",
     },
     {
       id: "ld7",
       truth:
         "{player1}, what time zone math have you done in your head this week to figure out what {player2} is doing?",
-      dare: "{player1}, guess exactly what {player2} was doing one hour ago - they confirm how close you got.",
+      dare: "{player1}, guess exactly what {player2} was doing one hour ago — they confirm how close you got.",
     },
     {
       id: "ld8",
@@ -60,8 +60,8 @@ export const longDistanceDeck: Deck = {
     {
       id: "ld9",
       truth:
-        "{player1}, which city should be 'ours' one day - where we actually live in the same place?",
-      dare: "{player1}, screen-share a map and drop a pin on where you'd want to close the distance.",
+        "{player1}, which city should be yours and {player2}'s one day — where you actually live in the same place?",
+      dare: "{player1}, open a map and name the three places you'd move to tomorrow.",
     },
     {
       id: "ld10",
@@ -79,7 +79,7 @@ export const longDistanceDeck: Deck = {
       id: "ld12",
       truth:
         "{player1}, what's something you were nervous to tell {player2} over text but should have just said out loud?",
-      dare: "{player1}, say it now, on camera, looking {player2} in the eye.",
+      dare: "{player1}, call {player2} by a pet name for the rest of the game. They pick it.",
     },
     {
       id: "ld13",
@@ -91,7 +91,7 @@ export const longDistanceDeck: Deck = {
       id: "ld14",
       truth:
         "{player1}, what's the most romantic thing {player2} has done from far away?",
-      dare: "{player1}, describe your dream 'delivery surprise' you'd love {player2} to send you one day.",
+      dare: "{player1}, order {player2} something real to arrive at their door this week.",
     },
     {
       id: "ld15",
@@ -103,13 +103,13 @@ export const longDistanceDeck: Deck = {
       id: "ld16",
       truth:
         "{player1}, what's a place in your city you're saving to visit for the first time WITH {player2}?",
-      dare: "{player1}, give {player2} a walking-tour narration of the route from your home to that place.",
+      dare: "{player1}, walk {player2} to your front door, open it, and stay on camera for 30 seconds.",
     },
     {
       id: "ld17",
       truth:
         "{player1}, what's the countdown you're most looking forward to right now?",
-      dare: "{player1}, work out loud exactly how many days until you next see {player2} in person.",
+      dare: "{player1}, open your calendar and name the next three days you're completely free.",
     },
     {
       id: "ld18",
@@ -121,7 +121,7 @@ export const longDistanceDeck: Deck = {
       id: "ld19",
       truth:
         "{player1}, what's a small insecurity the distance sometimes feeds, and what helps you shut it down?",
-      dare: "{player1}, tell {player2} three specific reasons you trust them completely.",
+      dare: "{player1}, hold the camera on your face and don't speak or look away for 30 seconds.",
     },
     {
       id: "ld20",
@@ -132,7 +132,7 @@ export const longDistanceDeck: Deck = {
     {
       id: "ld21",
       truth:
-        "{player1}, if we cooked 'together' over a call, what dish should we both make?",
+        "{player1}, if you two cooked 'together' over a call, what dish should you both make?",
       dare: "{player1}, open your fridge on camera and let {player2} plan your next meal.",
     },
     {
@@ -145,7 +145,7 @@ export const longDistanceDeck: Deck = {
       id: "ld23",
       truth:
         "{player1}, what's a moment you laughed out loud alone because of something {player2} sent you?",
-      dare: "{player1}, scroll your chat with {player2}, find that message, and read it out loud.",
+      dare: "{player1}, scroll to the very top of your chat with {player2} and read the first message out loud.",
     },
     {
       id: "ld24",
@@ -169,7 +169,7 @@ export const longDistanceDeck: Deck = {
       id: "ld27",
       truth:
         "{player1}, what's a 'first' you're still waiting to have with {player2} in person?",
-      dare: "{player1}, describe that first in detail, like a scene from a movie.",
+      dare: "{player1}, let {player2} set you a 30-second task in your own home. Do it on camera.",
     },
     {
       id: "ld28",
@@ -192,8 +192,8 @@ export const longDistanceDeck: Deck = {
     {
       id: "ld31",
       truth:
-        "{player1}, what's the reunion greeting you've imagined most - the run, the hug, the tears, the calm?",
-      dare: "{player1}, act out your side of that reunion in slow motion for {player2}.",
+        "{player1}, what's the reunion greeting you've imagined most — the run, the hug, the tears, the calm?",
+      dare: "{player1}, act out your worst airport goodbye in slow motion.",
     },
     {
       id: "ld32",
@@ -205,7 +205,7 @@ export const longDistanceDeck: Deck = {
       id: "ld33",
       truth:
         "{player1}, what do you want your shared home to feel like when the distance is finally over?",
-      dare: "{player1}, describe the front door of that home and what {player2} sees walking in.",
+      dare: "{player1}, write {player2}'s name somewhere on your skin and hold it up to the camera.",
     },
     {
       id: "ld34",
@@ -217,19 +217,19 @@ export const longDistanceDeck: Deck = {
       id: "ld35",
       truth:
         "{player1}, when the distance is hard, what do you remind yourself about why {player2} is worth it?",
-      dare: "{player1}, finish this sentence to the camera: 'I do the distance because...'",
+      dare: "{player1}, let {player2} pick one thing in your room — go get it and keep it on camera for the rest of the game.",
     },
     {
       id: "ld36",
       truth:
         "{player1}, what's a private joke between you and {player2} that only makes sense over text?",
-      dare: "{player1}, explain that joke out loud like you're presenting it to a room of strangers.",
+      dare: "{player1}, send {player2} three emojis and make them guess the sentence.",
     },
     {
       id: "ld37",
       truth:
         "{player1}, what's one thing you're doing now, apart, to build the future with {player2}?",
-      dare: "{player1}, share one concrete step toward closing the distance and pick a month for it.",
+      dare: "{player1}, set a real phone reminder for the next time you'll book a trip to see {player2}.",
     },
     {
       id: "ld38",
@@ -241,7 +241,7 @@ export const longDistanceDeck: Deck = {
       id: "ld39",
       truth:
         "{player1}, what's a song that makes you think of {player2} the second it starts?",
-      dare: "{player1}, play 15 seconds of that song and watch {player2}'s face while it plays.",
+      dare: "{player1}, play any song on your side and dance to it on camera for 20 seconds.",
     },
     {
       id: "ld40",
@@ -252,7 +252,7 @@ export const longDistanceDeck: Deck = {
     {
       id: "ld41",
       truth:
-        "{player1}, what everyday thing would you happily do together that most couples find boring - errands, chores, waiting rooms?",
+        "{player1}, what everyday thing would you happily do together that most couples find boring — errands, chores, waiting rooms?",
       dare: "{player1}, keep {player2} on the call and actually do one small chore together right now.",
     },
     {
@@ -265,43 +265,43 @@ export const longDistanceDeck: Deck = {
       id: "ld43",
       truth:
         "{player1}, what's a gift you're secretly planning to give {player2} the next time you meet?",
-      dare: "{player1}, drop one vague hint about it and let {player2} guess three times.",
+      dare: "{player1}, let {player2} choose anything in your room — go and get it, no arguing.",
     },
     {
       id: "ld44",
       truth:
         "{player1}, what's the first meal you two should share the day you're reunited?",
-      dare: "{player1}, describe that meal so vividly that {player2} gets hungry.",
+      dare: "{player1}, eat or drink something on camera and review it for {player2} like a food critic.",
     },
     {
       id: "ld45",
       truth:
-        "{player1}, what part of {player2}'s voice or laugh do photos and texts just can't capture?",
-      dare: "{player1}, get {player2} to do that exact laugh on camera right now.",
+        "{player1}, what part of {player2}'s voice or laugh do photos and texts never capture?",
+      dare: "{player1}, make {player2} laugh in under 30 seconds. Camera on.",
     },
     {
       id: "ld46",
       truth:
         "{player1}, have you ever changed a plan or trip just to line it up with seeing {player2}?",
-      dare: "{player1}, screen-share your calendar and find the next realistic window to visit {player2}.",
+      dare: "{player1}, open your calendar and name the next realistic window to visit {player2}.",
     },
     {
       id: "ld47",
       truth:
         "{player1}, what's something you want {player2} to know you never doubt, even on the lonely nights?",
-      dare: "{player1}, look into the camera and tell {player2} that thing directly.",
+      dare: "{player1}, write something on paper and hold it to the camera. {player2} reads it out loud.",
     },
     {
       id: "ld48",
       truth:
         "{player1}, what's a ritual you want to start on every call from now on?",
-      dare: "{player1}, propose the ritual to {player2} and do it together for the first time right now.",
+      dare: "{player1}, invent a sign-off for every call from now on and use it at the end of this one.",
     },
     {
       id: "ld49",
       truth:
         "{player1}, when you picture 'no more distance', what's the very first ordinary morning together like?",
-      dare: "{player1}, narrate that morning to {player2} from the first alarm to the first coffee.",
+      dare: "{player1}, make yourself a drink on camera without saying a single word.",
     },
     {
       id: "ld50",

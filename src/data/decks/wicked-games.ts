@@ -4,7 +4,7 @@ export const wickedDeck: Deck = {
   id: "wicked",
   name: "Wicked Games",
   description:
-    "Play to win. Flirty competitions, bold bets, and spicy stakes for two players.",
+    "Play to win. Flirty competitions, bold bets, and spicy stakes.",
   icon: "games",
   isDefault: false,
   nsfw: true,
@@ -24,13 +24,13 @@ export const wickedDeck: Deck = {
       id: "wg3",
       truth:
         "{player1}, what game are you unbeatable at — and what would you wager on it?",
-      dare: "{player1}, challenge {player2} to 10 seconds of it (mime counts) — the winner assigns one spicy task.",
+      dare: "{player1}, challenge {player2} to a staring contest. The loser removes one item of clothing.",
     },
     {
       id: "wg4",
       truth:
         "{player1}, what question have you been a little scared to ask {player2}?",
-      dare: "{player1}, ask it. They answer honestly — then get to ask one back.",
+      dare: "{player1}, {player2} picks a body part. Kiss it for 10 seconds.",
     },
     {
       id: "wg5",
@@ -64,7 +64,7 @@ export const wickedDeck: Deck = {
       id: "wg10",
       truth:
         "{player1}, what's the highest-stakes 'would you rather' you can invent right now?",
-      dare: "{player1}, pose one spicy would-you-rather — {player2} must answer, then return fire.",
+      dare: "{player1}, let {player2} set the stakes, then play one round of rock-paper-scissors.",
     },
     {
       id: "wg11",
@@ -75,7 +75,7 @@ export const wickedDeck: Deck = {
       id: "wg12",
       truth:
         "{player1}, which piece of clothing would you least want to lose in a strip game?",
-      dare: "{player1}, play odds-or-evens with {player2} — the loser surrenders exactly that item.",
+      dare: "{player1}, play odds-or-evens with {player2}. The loser removes one item of clothing.",
     },
     {
       id: "wg13",
@@ -87,12 +87,12 @@ export const wickedDeck: Deck = {
       id: "wg14",
       truth:
         "{player1}, what's your seduction speedrun record — how fast have you gotten {player2} flustered?",
-      dare: "{player1}, attempt a new record. {player2} times it honestly.",
+      dare: "{player1}, you have 30 seconds to get {player2} flustered. They judge honestly.",
     },
     {
       id: "wg15",
       truth: "{player1}, dare or double-dare — which are you tonight?",
-      dare: "{player1}, if 'dare': kiss {player2} for 10 seconds. If 'double-dare': they choose where.",
+      dare: "{player1}, kiss {player2} for 10 seconds. They choose where.",
     },
     {
       id: "wg16",
@@ -110,13 +110,13 @@ export const wickedDeck: Deck = {
       id: "wg18",
       truth:
         "{player1}, if kissing were scored like figure skating, what's your signature element?",
-      dare: "{player1}, perform it — {player2} holds up a score.",
+      dare: "{player1}, kiss {player2} once. They hold up a score out of 10.",
     },
     {
       id: "wg19",
       truth:
         "{player1}, what 'punishment' from {player2} would you secretly enjoy?",
-      dare: "{player1}, confess it — {player2} decides whether to grant it now.",
+      dare: "{player1}, let {player2} invent one punishment for you. It's due tonight.",
     },
     {
       id: "wg20",
@@ -127,7 +127,7 @@ export const wickedDeck: Deck = {
       id: "wg21",
       truth:
         "{player1}, what would you wager for one week of {player2} doing anything you ask (within reason)?",
-      dare: "{player1}, negotiate the terms, then settle it: both name a number 1–13, closest to {player2}'s secret number wins.",
+      dare: "{player1} and {player2}, both name a number from 1 to 13. Closest to {player2}'s secret number wins a favor.",
     },
     {
       id: "wg22",
@@ -138,7 +138,7 @@ export const wickedDeck: Deck = {
       id: "wg23",
       truth:
         "{player1}, what's your victory dance when you beat {player2} at anything?",
-      dare: "{player1}, perform tonight's victory dance in advance — confidence is the bet.",
+      dare: "{player1}, let {player2} choose: 15 seconds of outrageous gloating, or 15 push-ups.",
     },
     {
       id: "wg24",
@@ -149,7 +149,7 @@ export const wickedDeck: Deck = {
       id: "wg25",
       truth:
         "{player1}, what's the boldest 'loser has to…' stake you've ever agreed to?",
-      dare: "{player1}, set one with {player2} for the rest of this game — whoever skips a card next pays it.",
+      dare: "{player1}, agree a stake with {player2} for the rest of this game — whoever skips a card next pays it.",
     },
     {
       id: "wg26",
@@ -178,13 +178,13 @@ export const wickedDeck: Deck = {
       id: "wg30",
       truth:
         "{player1}, which board game would end your relationship for one evening?",
-      dare: "{player1}, play 'categories: things that are hot about {player2}' — alternate answers with them; whoever runs dry first loses.",
+      dare: "{player1} and {player2}, alternate naming things you find hot about each other. First to run dry loses.",
     },
     {
       id: "wg31",
       truth:
         "{player1}, what's a spicy 'never have I ever' you know you'd win?",
-      dare: "{player1}, trade three rounds of it with {player2} — every 'I have' earns a kiss.",
+      dare: "{player1}, play three rounds of 'never have I ever' with {player2} — every 'I have' earns a kiss.",
     },
     {
       id: "wg32",
@@ -196,7 +196,7 @@ export const wickedDeck: Deck = {
       id: "wg33",
       truth:
         "{player1}, could you win a staring contest while {player2} whispers what they'd do to you?",
-      dare: "{player1}, prove it — 15 seconds.",
+      dare: "{player1}, hold a staring contest with {player2} while they whisper whatever they like. 15 seconds.",
     },
     {
       id: "wg34",
@@ -208,12 +208,12 @@ export const wickedDeck: Deck = {
       id: "wg35",
       truth:
         "{player1}, what reward should exist for winning an argument?",
-      dare: "{player1}, award it to {player2} retroactively for their last win.",
+      dare: "{player1}, let {player2} name a prize and claim it right now, completely unearned.",
     },
     {
       id: "wg36",
       truth: "{player1}, which trivia category would destroy you?",
-      dare: "{player1}, answer one question from {player2} in that category — a wrong answer costs clothing.",
+      dare: "{player1}, {player2} asks you one question about themselves. Get it wrong and lose an item of clothing.",
     },
     {
       id: "wg37",
@@ -225,19 +225,19 @@ export const wickedDeck: Deck = {
       id: "wg38",
       truth:
         "{player1}, what dare would you only do if you lost fair and square?",
-      dare: "{player1}, {player2} hides a coin in one hand — guess wrong and that dare is due tonight.",
+      dare: "{player1}, {player2} hides a coin in one hand. Guess wrong and they name your forfeit.",
     },
     {
       id: "wg39",
       truth:
         "{player1}, what's the most creative forfeit you've ever paid?",
-      dare: "{player1}, invent a brand-new forfeit with {player2} and save it for future games.",
+      dare: "{player1}, let {player2} time you. 20 push-ups, or forfeit an item of clothing.",
     },
     {
       id: "wg40",
       truth:
         "{player1}, if date night were a bingo card, what's on the squares?",
-      dare: "{player1}, call out five squares — {player2} marks which ones you've already hit tonight.",
+      dare: "{player1}, race {player2} to touch every wall in this room. The loser owes a kiss.",
     },
     {
       id: "wg41",
@@ -255,29 +255,29 @@ export const wickedDeck: Deck = {
       id: "wg43",
       truth:
         "{player1}, what skill of {player2}'s would you bet money on, sight unseen?",
-      dare: "{player1}, bet a favor on them performing it right now — pay up either way, with interest.",
+      dare: "{player1}, bet a favor with {player2} on who can go longest without blinking. Settle it now.",
     },
     {
       id: "wg44",
       truth: "{player1}, casino night at home: what's your game?",
-      dare: "{player1}, deal an imaginary hand and play it out with {player2} — betting kisses instead of chips.",
+      dare: "{player1}, play three rounds of anything with {player2}, betting kisses instead of chips.",
     },
     {
       id: "wg45",
       truth:
-        "{player1}, which mini-game should this app add so you'd always win?",
-      dare: "{player1}, invent it right now and play one round with {player2}.",
+        "{player1}, what game would you invent if you were guaranteed to win it every single time?",
+      dare: "{player1}, invent a game with {player2} right now and play one round of it.",
     },
     {
       id: "wg46",
       truth:
         "{player1}, what's a secret advantage you have over {player2} in any competition?",
-      dare: "{player1}, whisper it to them like classified information.",
+      dare: "{player1}, let {player2} pick: 20 push-ups, or they choose where you kiss them.",
     },
     {
       id: "wg47",
       truth: "{player1}, penalty shoot-out: what should the penalty be?",
-      dare: "{player1}, three tosses of something soft into a target {player2} picks — each miss costs an item or a favor, your choice.",
+      dare: "{player1}, throw something soft at a target {player2} picks. Three tries, each miss costs a favor.",
     },
     {
       id: "wg48",
@@ -289,13 +289,13 @@ export const wickedDeck: Deck = {
       id: "wg49",
       truth:
         "{player1}, sudden death: one question decides everything — what should it be?",
-      dare: "{player1}, let {player2} ask it. Answer with zero hesitation.",
+      dare: "{player1}, let {player2} set one rule you have to obey for the rest of the game.",
     },
     {
       id: "wg50",
       truth:
         "{player1}, when you lose to {player2}, do you demand rematches?",
-      dare: "{player1}, declare tonight's official rematch — name the game and the spicy stakes.",
+      dare: "{player1}, challenge {player2} to anything right now. The winner names the stakes.",
     },
   ],
 };

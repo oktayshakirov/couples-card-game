@@ -36,13 +36,13 @@ export const forbiddenDeck: Deck = {
     {
       id: "ff5",
       truth: "{player1}, if teasing were a sport, what's your signature move?",
-      dare: "{player1}, demonstrate that move on {player2} right now.",
+      dare: "{player1}, tease {player2} however you like for 20 seconds. No kissing allowed.",
     },
     {
       id: "ff6",
       truth:
         "{player1}, what forbidden place have you imagined kissing {player2}?",
-      dare: "{player1}, whisper that place in {player2}'s ear, then act like nothing happened.",
+      dare: "{player1}, kiss {player2} somewhere you have never kissed them before.",
     },
     {
       id: "ff7",
@@ -53,13 +53,13 @@ export const forbiddenDeck: Deck = {
     {
       id: "ff8",
       truth: "{player1}, which outfit of yours do you know does damage?",
-      dare: "{player1}, describe what you're wearing right now as if it's absolutely scandalous.",
+      dare: "{player1}, let {player2} undo one button, zip, or strap of yours. Their choice.",
     },
     {
       id: "ff9",
       truth:
         "{player1}, what's the most seductive sentence {player2} could say to you right now?",
-      dare: "{player1}, teach {player2} the exact sentence, then have them say it back to you slowly.",
+      dare: "{player1}, say one filthy sentence into {player2}'s ear, then walk away.",
     },
     {
       id: "ff10",
@@ -71,7 +71,7 @@ export const forbiddenDeck: Deck = {
       id: "ff11",
       truth:
         "{player1}, what's a fantasy of yours that starts with the words 'we really shouldn't'?",
-      dare: "{player1}, whisper 'we really shouldn't' in {player2}'s ear — and finish the sentence.",
+      dare: "{player1}, whisper 'we really shouldn't' in {player2}'s ear, then do something about it.",
     },
     {
       id: "ff12",
@@ -83,13 +83,13 @@ export const forbiddenDeck: Deck = {
       id: "ff13",
       truth:
         "{player1}, what's the most electric accidental touch you two have ever shared?",
-      dare: "{player1}, recreate it — same spot, same speed.",
+      dare: "{player1}, brush past {player2} three times without ever quite touching them.",
     },
     {
       id: "ff14",
       truth:
         "{player1}, which of {player2}'s features are you not allowed to stare at in public?",
-      dare: "{player1}, stare at it now for 15 seconds, completely unapologetically.",
+      dare: "{player1}, stare at {player2} for 15 seconds, completely unapologetically.",
     },
     {
       id: "ff15",
@@ -100,7 +100,7 @@ export const forbiddenDeck: Deck = {
     {
       id: "ff16",
       truth: "{player1}, what's your favorite way to be teased?",
-      dare: "{player1}, explain the rules to {player2}, then let them tease you for 30 seconds by those rules.",
+      dare: "{player1}, let {player2} tease you however they like for 30 seconds. Don't move.",
     },
     {
       id: "ff17",
@@ -117,7 +117,7 @@ export const forbiddenDeck: Deck = {
     {
       id: "ff19",
       truth: "{player1}, what's your idea of a perfect forbidden rendezvous?",
-      dare: "{player1}, schedule one with {player2} — real time, real place — and whisper the details.",
+      dare: "{player1}, pick a real time and place with {player2} this week. Lock it in.",
     },
     {
       id: "ff20",
@@ -133,7 +133,7 @@ export const forbiddenDeck: Deck = {
       id: "ff22",
       truth:
         "{player1}, what part of your own body do you love {player2} noticing?",
-      dare: "{player1}, point to it — {player2} gets to kiss it once.",
+      dare: "{player1}, let {player2} kiss you once, anywhere they choose.",
     },
     {
       id: "ff23",
@@ -151,7 +151,7 @@ export const forbiddenDeck: Deck = {
       id: "ff25",
       truth:
         "{player1}, what's the slowest, most torturous way {player2} could kiss you?",
-      dare: "{player1}, perform it on {player2} instead.",
+      dare: "{player1}, kiss {player2} as slowly as you are physically capable of.",
     },
     {
       id: "ff26",
@@ -174,19 +174,19 @@ export const forbiddenDeck: Deck = {
       id: "ff29",
       truth:
         "{player1}, which is more dangerous: {player2}'s smile or {player2}'s hands?",
-      dare: "{player1}, let the winner prove your point for 15 seconds.",
+      dare: "{player1}, hold {player2}'s hands still and kiss them without using yours.",
     },
     {
       id: "ff30",
       truth:
         "{player1}, what's the longest you two have ever kissed without stopping?",
-      dare: "{player1}, try to beat the record with {player2}. The timer starts now.",
+      dare: "{player1}, kiss {player2} for 60 seconds without stopping.",
     },
     {
       id: "ff31",
       truth:
         "{player1}, what's the one text from {player2} that would make you cancel all your plans?",
-      dare: "{player1}, dictate that text word for word while {player2} saves it in their notes for future use.",
+      dare: "{player1}, send {player2} a message right now that would ruin their concentration.",
     },
     {
       id: "ff32",
@@ -197,19 +197,19 @@ export const forbiddenDeck: Deck = {
       id: "ff33",
       truth:
         "{player1}, what's your favorite kind of tension: the buildup, the almost, or the giving in?",
-      dare: "{player1}, create your favorite kind with {player2} for the next 30 seconds.",
+      dare: "{player1}, build tension with {player2} for 30 seconds without touching them once.",
     },
     {
       id: "ff34",
       truth:
         "{player1}, what's something you've wanted to whisper to {player2} at a family dinner?",
-      dare: "{player1}, whisper it now at family-dinner volume, with a completely straight face.",
+      dare: "{player1}, whisper something indecent to {player2} at completely normal dinner-table volume.",
     },
     {
       id: "ff35",
       truth:
         "{player1}, if {player2}'s lips were off-limits for a week, where would you kiss instead?",
-      dare: "{player1}, give a tour of your top 3 alternatives — one kiss each.",
+      dare: "{player1}, kiss {player2} three times, never once on the mouth.",
     },
     {
       id: "ff36",
@@ -226,19 +226,19 @@ export const forbiddenDeck: Deck = {
       id: "ff38",
       truth:
         "{player1}, when is your favorite forbidden time for s*x — when you absolutely shouldn't?",
-      dare: "{player1}, whisper the next 'absolutely shouldn't' opportunity in {player2}'s ear.",
+      dare: "{player1}, whisper one thing you want to do to {player2} later tonight.",
     },
     {
       id: "ff39",
       truth:
         "{player1}, which is hotter: {player2} taking charge or {player2} begging?",
-      dare: "{player1}, have {player2} demonstrate the winner for 20 seconds.",
+      dare: "{player1}, take charge of {player2} for the next two rounds. They follow.",
     },
     {
       id: "ff40",
       truth:
         "{player1}, what's a spot in this home where you two have never kissed?",
-      dare: "{player1}, fix that immediately.",
+      dare: "{player1}, take {player2} into a different room and kiss them there.",
     },
     {
       id: "ff41",
@@ -250,30 +250,30 @@ export const forbiddenDeck: Deck = {
       id: "ff42",
       truth:
         "{player1}, what's the most innocent-looking thing that turns you on?",
-      dare: "{player1}, confess it while holding eye contact with {player2}.",
+      dare: "{player1}, hold eye contact with {player2} and touch them anywhere for 20 seconds.",
     },
     {
       id: "ff43",
       truth:
         "{player1}, how would you seduce {player2} if you could only use one hand?",
-      dare: "{player1}, prove it — one hand, 30 seconds.",
+      dare: "{player1}, seduce {player2} using one hand only. 30 seconds.",
     },
     {
       id: "ff44",
       truth: "{player1}, what's the naughtiest thought you've had this week?",
-      dare: "{player1}, rate it 1-10 out loud, then let {player2} decide if they want the details.",
+      dare: "{player1}, bite your lip and hold {player2}'s gaze until they look away.",
     },
     {
       id: "ff45",
       truth:
         "{player1}, if you could freeze time for 10 minutes with {player2}, what happens?",
-      dare: "{player1}, give {player2} a preview of the first 30 seconds.",
+      dare: "{player1}, give {player2} 30 seconds of exactly what you'd do with no time limit at all.",
     },
     {
       id: "ff46",
       truth:
         "{player1}, what's your tell — the thing you do when you want {player2}?",
-      dare: "{player1}, let {player2} guess your tell first, then confirm or reveal it.",
+      dare: "{player1}, let {player2} watch you for 30 seconds while you try to give nothing away.",
     },
     {
       id: "ff47",
@@ -296,7 +296,7 @@ export const forbiddenDeck: Deck = {
       id: "ff50",
       truth:
         "{player1}, how long could you sit this close to {player2} without kissing them?",
-      dare: "{player1}, test it with {player2}. First one to break loses — the winner claims a prize of their choice.",
+      dare: "{player1} and {player2}, sit as close as possible without kissing. First to break loses, winner claims a prize.",
     },
   ],
 };

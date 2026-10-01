@@ -4,15 +4,15 @@ export const passionDeck: Deck = {
   id: "passion",
   name: "Passion Elixir",
   description:
-    "The ultimate elixir for adventurous lovers. Steamy encounters and wild fantasies.",
+    "The ultimate elixir for adventurous lovers. Explicit questions and unapologetically steamy dares.",
   icon: "elixir",
   isDefault: false,
   nsfw: true,
   cards: [
     {
       id: "p1",
-      truth: "{player1}, do you prefer morning s*x or night s*x?",
-      dare: "{player1}, let {player2} remove a piece of your clothing.",
+      truth: "{player1}, what's the longest you've ever made someone wait?",
+      dare: "{player1}, let {player2} remove two pieces of your clothing. Their choice.",
     },
     {
       id: "p2",
@@ -43,17 +43,17 @@ export const passionDeck: Deck = {
     {
       id: "p7",
       truth: "{player1}, have you ever sent nudes?",
-      dare: "{player1}, give {player2} a back massage for 3 minutes.",
+      dare: "{player1}, give {player2} a massage with oil or lotion for 3 minutes.",
     },
     {
       id: "p8",
       truth:
-        "{player1}, what's your favorite position and why does it work for you?",
+        "{player1}, what's the one thing that always works on you, no matter your mood?",
       dare: "{player1}, kiss {player2}'s neck for 30 seconds.",
     },
     {
       id: "p9",
-      truth: "{player1}, do you prefer lights on or off during s*x?",
+      truth: "{player1}, how do you feel about mirrors in the bedroom?",
       dare: "{player1}, let {player2} take a naughty photo of you in any pose they want.",
     },
     {
@@ -104,7 +104,7 @@ export const passionDeck: Deck = {
     {
       id: "p18",
       truth: "{player1}, have you ever recorded yourself having s*x?",
-      dare: "{player1}, give {player2} a lap dance for 60 seconds.",
+      dare: "{player1}, let {player2} direct you through a 60-second dance. They call every move.",
     },
     {
       id: "p19",
@@ -130,7 +130,7 @@ export const passionDeck: Deck = {
     {
       id: "p23",
       truth:
-        "{player1}, describe the most intense orgasm you've ever experienced?",
+        "{player1}, what's the loudest you've ever had to stay quiet?",
       dare: "{player1}, give {player2} a slow, sensual kiss while your hands explore their body.",
     },
     {
@@ -157,7 +157,7 @@ export const passionDeck: Deck = {
     {
       id: "p28",
       truth:
-        "{player1}, what's your favorite dirty word or phrase to hear during s*x?",
+        "{player1}, what's the hottest thing you've ever overheard?",
       dare: "{player1}, let {player2} blindfold you and feed you something sweet.",
     },
     {
@@ -210,7 +210,7 @@ export const passionDeck: Deck = {
     },
     {
       id: "p38",
-      truth: "{player1}, what's your favorite thing about {player2}'s body?",
+      truth: "{player1}, what's one thing you'd never put in writing?",
       dare: "{player1}, let {player2} take a photo of you in underwear.",
     },
     {
@@ -323,7 +323,7 @@ export const passionDeck: Deck = {
     },
     {
       id: "p59",
-      truth: "{player1}, when was first time you watched porn?",
+      truth: "{player1}, what's something you've watched that you'd never admit to {player2}?",
       dare: "{player1}, let {player2} choose a song and you must sing it seductively to them.",
     },
     {

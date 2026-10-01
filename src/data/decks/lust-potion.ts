@@ -4,7 +4,7 @@ export const lustDeck: Deck = {
   id: "lust",
   name: "Lust Potion",
   description:
-    "Unlock your deepest fantasies with seductive dares that push passion's boundaries.",
+    "Unlock your deepest fantasies. Bold questions and seductive dares that push every boundary.",
   icon: "potion",
   isDefault: false,
   nsfw: true,
@@ -18,7 +18,7 @@ export const lustDeck: Deck = {
     {
       id: "l2",
       truth:
-        "{player1}, what was your very first impression of {player2} when you met them?",
+        "{player1}, what did you imagine doing to {player2} before you ever did?",
       dare: "{player1}, suck {player2}'s finger seductively.",
     },
     {
@@ -116,7 +116,7 @@ export const lustDeck: Deck = {
     {
       id: "l19",
       truth:
-        "{player1}, what's the most embarrassing thing that's happened to you during s*x?",
+        "{player1}, what's the funniest thing that's ever interrupted an intimate moment?",
       dare: "{player1}, bend over and let {player2} spank you for being naughty.",
     },
     {
@@ -132,8 +132,8 @@ export const lustDeck: Deck = {
     },
     {
       id: "l22",
-      truth: "{player1}, what's the kinkiest thing you've ever done?",
-      dare: "{player1}, post a photo of you kissing {player2} on social media.",
+      truth: "{player1}, what's something you've done that surprised even you?",
+      dare: "{player1}, send {player2} a photo of yourself you'd never post publicly.",
     },
     {
       id: "l23",
@@ -155,7 +155,7 @@ export const lustDeck: Deck = {
     {
       id: "l26",
       truth:
-        "{player1}, share something you've always wanted to try in bed but haven't told {player2}.",
+        "{player1}, what's one boundary you'd never want {player2} to cross?",
       dare: "{player1}, describe in detail how you like to be pleased.",
     },
     {
@@ -167,7 +167,7 @@ export const lustDeck: Deck = {
     {
       id: "l28",
       truth:
-        "{player1}, tell me about something {player2} does during s*x that makes you lose control.",
+        "{player1}, what does {player2} do during s*x that makes you lose control?",
       dare: "{player1}, let {player2} do whatever they want with you for 2 minutes.",
     },
     {
@@ -180,7 +180,7 @@ export const lustDeck: Deck = {
       id: "l30",
       truth:
         "{player1}, name something you'd love {player2} to do to you that they haven't tried yet.",
-      dare: "{player1}, do whatever {player2} asks for 2 minutes.",
+      dare: "{player1}, hold still with your hands behind your back while {player2} touches you for 2 minutes.",
     },
     {
       id: "l31",
@@ -202,7 +202,7 @@ export const lustDeck: Deck = {
       id: "l34",
       truth:
         "{player1}, what's something s*xually you've done that you're not proud of?",
-      dare: "{player1}, pin {player2} against a wall and kiss them passionately.",
+      dare: "{player1}, pull {player2} onto you and kiss them like you've been waiting all day.",
     },
     {
       id: "l35",
@@ -232,11 +232,11 @@ export const lustDeck: Deck = {
       id: "l39",
       truth:
         "{player1}, rate {player2}'s performance in bed from 1-10 and explain why.",
-      dare: "{player1}, kiss {player2} on the lips.",
+      dare: "{player1}, kiss {player2} slowly with your hands in their hair.",
     },
     {
       id: "l40",
-      truth: "{player1}, what's the longest you've gone without having s*x?",
+      truth: "{player1}, what's the quickest you've ever gone from zero to completely in the mood?",
       dare: "{player1}, play the next 3 rounds in your underwear.",
     },
     {

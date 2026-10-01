@@ -4,7 +4,7 @@ export const sugarDeck: Deck = {
   id: "sugar",
   name: "Sugar & Spice",
   description:
-    "A deck for foodies in love. Tasty questions and deliciously silly dares.",
+    "For foodies in love. Tasty questions and dares you'll actually taste.",
   icon: "sugar-spice",
   isDefault: false,
   nsfw: false,
@@ -13,7 +13,7 @@ export const sugarDeck: Deck = {
       id: "ss1",
       truth:
         "{player1}, what food could you never give up, not even for love?",
-      dare: "{player1}, describe your love for {player2} using only cooking terms.",
+      dare: "{player1}, go to the kitchen and bring {player2} back one thing to taste.",
     },
     {
       id: "ss2",
@@ -24,25 +24,25 @@ export const sugarDeck: Deck = {
     {
       id: "ss3",
       truth:
-        "{player1}, pancakes or waffles — defend your choice like a lawyer.",
-      dare: "{player1}, mime cooking {player2}'s favorite breakfast while they narrate it.",
+        "{player1}, pancakes or waffles — and what exactly is wrong with the other one?",
+      dare: "{player1}, feed {player2} one bite of anything from the kitchen while they keep their eyes closed.",
     },
     {
       id: "ss4",
       truth: "{player1}, what's your most unpopular food opinion?",
-      dare: "{player1}, rank pizza, tacos, and sushi out loud — {player2} is allowed to boo.",
+      dare: "{player1}, let {player2} name any two foods — eat or mime eating them together.",
     },
     {
       id: "ss5",
       truth:
         "{player1}, what dish from your childhood do you wish you could taste one more time?",
-      dare: "{player1}, describe that dish to {player2} until they can almost taste it.",
+      dare: "{player1}, let {player2} pick your next meal. No vetoes.",
     },
     {
       id: "ss6",
       truth:
         "{player1}, if you two opened a food truck, what would it sell and what's it called?",
-      dare: "{player1}, take {player2}'s order at the truck window, fully in character.",
+      dare: "{player1}, take {player2}'s order like a drive-through worker at the end of a 12-hour shift.",
     },
     {
       id: "ss7",
@@ -53,64 +53,64 @@ export const sugarDeck: Deck = {
       id: "ss8",
       truth:
         "{player1}, sweet, salty, sour, or spicy — which one is {player2}?",
-      dare: "{player1}, justify your answer with three examples.",
+      dare: "{player1}, put something sweet on your finger and let {player2} taste it.",
     },
     {
       id: "ss9",
       truth:
         "{player1}, what restaurant meal have you been thinking about for years?",
-      dare: "{player1}, recreate your face mid-bite of that meal and hold it for 10 seconds.",
+      dare: "{player1}, eat or drink whatever {player2} hands you next without asking what it is.",
     },
     {
       id: "ss10",
       truth:
         "{player1}, what's the best thing {player2} has ever cooked or ordered for you?",
-      dare: "{player1}, give that dish a Michelin-style review out loud.",
+      dare: "{player1}, make {player2} a drink or a snack right now and serve it properly.",
     },
     {
       id: "ss11",
       truth: "{player1}, what food smell instantly makes you happy?",
-      dare: "{player1}, describe the memory attached to that smell in delicious detail.",
+      dare: "{player1}, close your eyes while {player2} holds three things from the kitchen under your nose. Name them.",
     },
     {
       id: "ss12",
       truth:
         "{player1}, would you rather never eat cheese again or never eat chocolate again?",
-      dare: "{player1}, console {player2} as if they just lost the one you decided to keep.",
+      dare: "{player1}, let {player2} ban one food from your diet for a week.",
     },
     {
       id: "ss13",
       truth:
         "{player1}, what's your go-to comfort meal after a terrible day?",
-      dare: "{player1}, promise to make or order it for {player2}'s next bad day — set the menu now.",
+      dare: "{player1}, plan a real meal for {player2} this week — pick the day right now.",
     },
     {
       id: "ss14",
       truth:
         "{player1}, what's the most romantic meal you two have ever shared?",
-      dare: "{player1}, recreate a 10-second moment from that meal.",
+      dare: "{player1}, set a table for two properly, right now. Candles optional.",
     },
     {
       id: "ss15",
       truth: "{player1}, if {player2} were a dessert, which one would they be?",
-      dare: "{player1}, present {player2} like a dessert-cart special: 'and tonight we have…'",
+      dare: "{player1}, feed {player2} something sweet with your hands, slowly.",
     },
     {
       id: "ss16",
       truth:
         "{player1}, what's the biggest kitchen disaster you've ever caused?",
-      dare: "{player1}, dramatically reenact the disaster — {player2} plays the smoke alarm.",
+      dare: "{player1}, go to the kitchen and make the fastest edible thing you can in 60 seconds.",
     },
     {
       id: "ss17",
       truth: "{player1}, fancy tasting menu or all-you-can-eat buffet?",
-      dare: "{player1}, escort {player2} through the imaginary buffet and describe every station.",
+      dare: "{player1}, let {player2} build you a plate of anything in the kitchen. Eat all of it.",
     },
     {
       id: "ss18",
       truth:
         "{player1}, which international cuisine could you eat every week forever?",
-      dare: "{player1}, teach {player2} how to compliment the chef in that cuisine's language — real or improvised.",
+      dare: "{player1}, teach {player2} to say 'delicious' in another language — real or invented.",
     },
     {
       id: "ss19",
@@ -121,76 +121,76 @@ export const sugarDeck: Deck = {
       id: "ss20",
       truth:
         "{player1}, cooking together: romantic teamwork or kitchen warfare?",
-      dare: "{player1}, assign roles for your next meal together — chef, sous-chef, dishwasher.",
+      dare: "{player1}, wash {player2}'s hands for them properly, like a surgeon scrubbing in.",
     },
     {
       id: "ss21",
       truth:
         "{player1}, what's the spiciest thing you've ever eaten — and did you survive with dignity?",
-      dare: "{player1}, reenact your face at peak spice.",
+      dare: "{player1}, eat the spiciest thing in the kitchen. {player2} picks it.",
     },
     {
       id: "ss22",
       truth: "{player1}, breakfast in bed: dream or crumbs nightmare?",
-      dare: "{player1}, fluff a pillow and serve {player2} an imaginary breakfast in bed.",
+      dare: "{player1}, bring {player2} something to eat or drink wherever they're sitting.",
     },
     {
       id: "ss23",
       truth: "{player1}, what's your ultimate movie-night snack combo?",
-      dare: "{player1}, plan your next movie night menu with {player2} — three snacks, one drink.",
+      dare: "{player1}, let {player2} choose tonight's snack — then go and get it.",
     },
     {
       id: "ss24",
       truth:
         "{player1}, if you named a signature dish after {player2}, what would it be called?",
-      dare: "{player1}, announce it like a cooking-show host revealing the final plate.",
+      dare: "{player1}, hand-feed {player2} three bites of anything while they keep their hands behind their back.",
     },
     {
       id: "ss25",
       truth: "{player1}, what food trend do you refuse to respect?",
-      dare: "{player1}, rant about it for 20 seconds while {player2} times you.",
+      dare: "{player1}, let {player2} pick any food in the house — eat one bite with a completely straight face.",
     },
     {
       id: "ss26",
       truth: "{player1}, ice cream: cup, cone, or straight from the tub?",
-      dare: "{player1}, share an imaginary tub with {player2} — one spoon between you.",
+      dare: "{player1}, share one spoon of something with {player2}. They go first.",
     },
     {
       id: "ss27",
       truth: "{player1}, what's the best street food you've ever had?",
-      dare: "{player1}, haggle with street-vendor {player2} for the very last skewer.",
+      dare: "{player1}, haggle with {player2} for the last bite of whatever food is nearest.",
     },
     {
       id: "ss28",
       truth: "{player1}, who's the better cook between you two — honestly?",
-      dare: "{player1}, crown the winner with an imaginary chef's hat and bow.",
+      dare: "{player1}, let {player2} crown you with anything in the room, then bow to them.",
     },
     {
       id: "ss29",
       truth:
         "{player1}, what's one dish you wish {player2} would make more often?",
-      dare: "{player1}, place a formal order for it, complete with compliments to the chef.",
+      dare: "{player1}, cook or prepare one thing for {player2} before tomorrow night. Shake on it.",
     },
     {
       id: "ss30",
       truth: "{player1}, garlic bread or dessert — only one, for life.",
-      dare: "{player1}, deliver a short eulogy for the one you gave up.",
+      dare: "{player1}, give up one food of {player2}'s choosing until your next game night.",
     },
     {
       id: "ss31",
       truth: "{player1}, what's your lazy-Sunday breakfast of choice?",
-      dare: "{player1}, plan next Sunday's breakfast with {player2} and lock it in.",
+      dare: "{player1}, put a breakfast with {player2} in your real calendar before your next turn.",
     },
     {
       id: "ss32",
       truth: "{player1}, what candy defined your childhood?",
-      dare: "{player1}, trade imaginary Halloween candy with {player2} — drive a hard bargain.",
+      dare: "{player1}, let {player2} feed you something with your eyes closed. One guess only.",
     },
     {
       id: "ss33",
       truth:
         "{player1}, what's the most overrated food — and the most underrated?",
-      dare: "{player1}, give the underrated one a 15-second campaign speech.",
+      dare: "{player1}, eat something you'd normally never touch. {player2} chooses it.",
     },
     {
       id: "ss34",
@@ -202,35 +202,35 @@ export const sugarDeck: Deck = {
       id: "ss35",
       truth:
         "{player1}, what's your comfort drink: tea, coffee, cocoa, or something stronger?",
-      dare: "{player1}, prepare {player2}'s comfort drink right now — or hand over a solemn IOU.",
+      dare: "{player1}, make {player2} their favorite drink right now, or hand over a written IOU.",
     },
     {
       id: "ss36",
       truth:
         "{player1}, what's the fanciest meal you've ever eaten — and did you use the right fork?",
-      dare: "{player1}, teach {player2} exaggerated fine-dining etiquette for 20 seconds.",
+      dare: "{player1}, eat the next three bites of anything using only a knife.",
     },
     {
       id: "ss37",
       truth: "{player1}, what would you eat for your last meal on earth?",
-      dare: "{player1}, describe it course by course while waiter {player2} takes notes.",
+      dare: "{player1}, let {player2} order for you out loud from anywhere — then promise to eat it.",
     },
     {
       id: "ss38",
       truth:
         "{player1}, pineapple on pizza: love it, hate it, or secretly fine with it?",
-      dare: "{player1}, argue the opposite of your real opinion — convincingly.",
+      dare: "{player1}, let {player2} combine any two foods in the house — eat one bite of the result.",
     },
     {
       id: "ss39",
       truth: "{player1}, what family recipe do you want to pass on someday?",
-      dare: "{player1}, tell {player2} the story behind it.",
+      dare: "{player1}, text someone in your family and ask them for a recipe right now.",
     },
     {
       id: "ss40",
       truth:
         "{player1}, midnight pancakes or sunrise smoothies — which is more 'you two'?",
-      dare: "{player1}, shake on it with {player2}: the winner happens sometime this month.",
+      dare: "{player1}, lock one breakfast date with {player2} into the real calendar.",
     },
     {
       id: "ss41",
@@ -241,52 +241,52 @@ export const sugarDeck: Deck = {
       id: "ss42",
       truth:
         "{player1}, what's the longest you've waited in line for food — and was it worth it?",
-      dare: "{player1}, reenact yourself in that line at minute 45.",
+      dare: "{player1}, stand perfectly still and expressionless for 45 seconds while {player2} tries to break you.",
     },
     {
       id: "ss43",
       truth:
         "{player1}, buffet strategy: reconnaissance lap first, or dive straight in?",
-      dare: "{player1}, brief {player2} on your buffet game plan like a coach at halftime.",
+      dare: "{player1}, build {player2} the best plate you can from whatever's in the kitchen. 60 seconds.",
     },
     {
       id: "ss44",
       truth:
         "{player1}, what's the strangest thing in your fridge right now?",
-      dare: "{player1} and {player2}, both guess — then go check. Closest guess wins a kiss on the cheek.",
+      dare: "{player1} and {player2}, go to the fridge together and each eat one bite of the first thing you touch.",
     },
     {
       id: "ss45",
       truth: "{player1}, what fruit is {player2}? Explain yourself.",
-      dare: "{player1}, build {player2} an imaginary fruit basket of the three fruits that suit them best — explain each one sweetly.",
+      dare: "{player1}, peel or cut up a piece of fruit and feed it to {player2}.",
     },
     {
       id: "ss46",
       truth: "{player1}, soup: a real meal or a sad appetizer?",
-      dare: "{player1}, slurp an imaginary bowl as loudly as possible until {player2} laughs.",
+      dare: "{player1}, drink a glass of water as loudly and dramatically as humanly possible.",
     },
     {
       id: "ss47",
       truth: "{player1}, what dessert could you eat every single day?",
-      dare: "{player1}, split an imaginary one with {player2} — and fight over the last bite.",
+      dare: "{player1}, split whatever sweet thing is in the house with {player2}. They get the bigger half.",
     },
     {
       id: "ss48",
       truth:
         "{player1}, what's the best meal you two have ever cooked together?",
-      dare: "{player1}, recreate your kitchen teamwork in a 10-second mime.",
+      dare: "{player1} and {player2}, go to the kitchen and make one thing together in five minutes.",
     },
     {
       id: "ss49",
       truth:
         "{player1}, what would you name a restaurant that only served your cooking?",
-      dare: "{player1}, perform the TV commercial for it, starring {player2}.",
+      dare: "{player1}, let {player2} name any dish — perform its TV commercial in 20 seconds.",
     },
     {
       id: "ss50",
       truth:
         "{player1}, dinner rule: phones on the table or banished forever?",
-      dare: "{player1}, establish one new dinner tradition with {player2}, starting tonight.",
+      dare: "{player1}, put both your phones in another room until the game ends.",
     },
   ],
 };

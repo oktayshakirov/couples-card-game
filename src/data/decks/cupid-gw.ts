@@ -265,7 +265,7 @@ export const cupidDeck: Deck = {
       id: "c48",
       truth:
         "{player1}, what's the most romantic thing you've ever done for someone?",
-      dare: "{player1}, let {player2} choose what you wear for the next 3 rounds.",
+      dare: "{player1}, let {player2} plan your next date start to finish. You just show up.",
     },
     {
       id: "c49",

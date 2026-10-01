@@ -4,7 +4,7 @@ export const honeymoonDeck: Deck = {
   id: "honeymoon",
   name: "Honeymoon Fever",
   description:
-    "Wanderlust for two. Dreamy travel questions and playful adventures without leaving the room.",
+    "Wanderlust for two. Dreamy travel questions and playful adventures without leaving home.",
   icon: "honeymoon",
   isDefault: false,
   nsfw: false,
@@ -25,7 +25,7 @@ export const honeymoonDeck: Deck = {
       id: "hm3",
       truth:
         "{player1}, would you rather have one whole summer off with {player2} or a full year of free weekends?",
-      dare: "{player1}, pack an imaginary suitcase for {player2} and describe the 5 things you put in it.",
+      dare: "{player1}, pack a real bag for {player2} with five things from this room. They have to carry it.",
     },
     {
       id: "hm4",
@@ -36,7 +36,7 @@ export const honeymoonDeck: Deck = {
     {
       id: "hm5",
       truth: "{player1}, what's the one thing you always forget to pack?",
-      dare: "{player1}, carry {player2}'s imaginary luggage across the room like a fancy hotel bellboy.",
+      dare: "{player1}, carry {player2} across the room like luggage. Safely.",
     },
     {
       id: "hm6",
@@ -64,13 +64,13 @@ export const honeymoonDeck: Deck = {
       id: "hm10",
       truth:
         "{player1}, what city would you move to tomorrow if {player2} agreed?",
-      dare: "{player1}, give {player2} a 30-second sales pitch to convince them to move there with you.",
+      dare: "{player1}, let {player2} name any country — you have 20 seconds to sell them on moving there.",
     },
     {
       id: "hm11",
       truth:
         "{player1}, which hotel freebie do you always take home — slippers, soaps, pens?",
-      dare: "{player1}, model an imaginary hotel bathrobe like it's high fashion.",
+      dare: "{player1}, wrap {player2} in a towel or blanket and tie it like a hotel robe.",
     },
     {
       id: "hm12",
@@ -81,7 +81,7 @@ export const honeymoonDeck: Deck = {
     {
       id: "hm13",
       truth: "{player1}, are you a beach person or a pool person?",
-      dare: "{player1}, apply imaginary sunscreen to {player2}'s shoulders very, very seriously.",
+      dare: "{player1}, rub {player2}'s shoulders for 30 seconds. Properly.",
     },
     {
       id: "hm14",
@@ -167,7 +167,7 @@ export const honeymoonDeck: Deck = {
       id: "hm28",
       truth:
         "{player1}, what three snacks are absolutely mandatory on your road trips?",
-      dare: "{player1}, feed {player2} an imaginary snack and describe the flavor in detail.",
+      dare: "{player1}, feed {player2} something real from the kitchen with their eyes closed.",
     },
     {
       id: "hm29",
@@ -185,13 +185,13 @@ export const honeymoonDeck: Deck = {
       id: "hm31",
       truth:
         "{player1}, if your love story was a destination, what would it be?",
-      dare: "{player1}, raise an imaginary glass and give a toast to 'the trip so far' with {player2}.",
+      dare: "{player1}, pour two real drinks and toast {player2}.",
     },
     {
       id: "hm32",
       truth:
         "{player1}, which of you two would get you both kicked out of a tour group?",
-      dare: "{player1}, apologize dramatically to an imaginary tour guide on behalf of {player2}.",
+      dare: "{player1}, apologize to {player2} for something completely ridiculous, with total sincerity.",
     },
     {
       id: "hm33",
@@ -203,12 +203,12 @@ export const honeymoonDeck: Deck = {
       id: "hm34",
       truth:
         "{player1}, which country's stamp do you want in your passport the most?",
-      dare: "{player1}, stamp {player2}'s hand with an imaginary passport stamp and welcome them to the country.",
+      dare: "{player1}, kiss the back of {player2}'s hand and declare them officially admitted.",
     },
     {
       id: "hm35",
       truth:
-        "{player1}, you have 24 hours in Paris with {player2} — plan them out loud.",
+        "{player1}, if you had 24 hours in Paris with {player2}, what's the one thing you'd refuse to skip?",
       dare: "{player1}, recreate a romantic movie poster with {player2} and hold the pose for 10 seconds.",
     },
     {
@@ -238,13 +238,13 @@ export const honeymoonDeck: Deck = {
       id: "hm40",
       truth:
         "{player1}, what's the best photo you and {player2} have ever taken together, and where was it?",
-      dare: "{player1}, recreate that photo with {player2} right now, as close as you can.",
+      dare: "{player1}, take a new photo with {player2} right now and make it the best one you own.",
     },
     {
       id: "hm41",
       truth:
         "{player1}, if {player2} planned a surprise trip, would you actually let it stay a surprise?",
-      dare: "{player1}, quick-fire round: {player2} names a continent, you instantly say the city you'd take them to.",
+      dare: "{player1}, hand {player2} your phone and let them save one thing for a future trip.",
     },
     {
       id: "hm42",
@@ -256,7 +256,7 @@ export const honeymoonDeck: Deck = {
       id: "hm43",
       truth:
         "{player1}, who packs faster, you or {player2} — and who packs better?",
-      dare: "{player1}, 'pack' for a beach trip in 20 seconds by pointing at everything you'd bring.",
+      dare: "{player1}, pack a real beach bag in 60 seconds. {player2} inspects it.",
     },
     {
       id: "hm44",
@@ -274,7 +274,7 @@ export const honeymoonDeck: Deck = {
       id: "hm46",
       truth:
         "{player1}, if you and {player2} had a boat, what would you name it?",
-      dare: "{player1}, hold a christening ceremony for the imaginary boat with {player2} — speech included.",
+      dare: "{player1}, name something in this room after {player2} and announce it formally.",
     },
     {
       id: "hm47",
@@ -292,13 +292,13 @@ export const honeymoonDeck: Deck = {
       id: "hm49",
       truth:
         "{player1}, what's one place you'd only ever go back to with {player2}?",
-      dare: "{player1}, promise {player2} one trip out loud — name the place and the month.",
+      dare: "{player1}, promise {player2} one real trip out loud — name the month.",
     },
     {
       id: "hm50",
       truth:
         "{player1}, if your next anniversary could be anywhere in the world, where are you taking {player2}?",
-      dare: "{player1}, seal the destination with a handshake, a hug, and your best 'deal!' face.",
+      dare: "{player1}, shake hands with {player2} on one real plan for your next anniversary.",
     },
   ],
 };

@@ -12,7 +12,7 @@ export const crimeDeck: Deck = {
     {
       id: "pc1",
       truth: "{player1}, what's the sneakiest thing you've done this month?",
-      dare: "{player1}, whisper a secret mission to {player2} that they must complete before the game ends.",
+      dare: "{player1}, steal something small off {player2} without them noticing before your next turn.",
     },
     {
       id: "pc2",
@@ -23,7 +23,7 @@ export const crimeDeck: Deck = {
     {
       id: "pc3",
       truth: "{player1}, what rule do you always break without any guilt?",
-      dare: "{player1}, invent secret code names for you and {player2} — use them for the rest of the game.",
+      dare: "{player1}, break one house rule right now, with {player2} watching.",
     },
     {
       id: "pc4",
@@ -40,7 +40,7 @@ export const crimeDeck: Deck = {
     {
       id: "pc6",
       truth:
-        "{player1}, if you and {player2} had a secret handshake, what moves would be in it?",
+        "{player1}, what's one thing you and {player2} could get away with that nobody would ever suspect?",
       dare: "{player1}, invent a secret handshake with {player2} right now — minimum 4 moves.",
     },
     {
@@ -77,12 +77,12 @@ export const crimeDeck: Deck = {
       id: "pc12",
       truth:
         "{player1}, if your relationship was a crime-duo movie, what's the title?",
-      dare: "{player1}, perform the movie trailer voice-over for it, starring you and {player2}.",
+      dare: "{player1}, narrate {player2}'s next 30 seconds in a movie-trailer voice.",
     },
     {
       id: "pc13",
       truth: "{player1}, what's the best prank you've ever pulled on someone?",
-      dare: "{player1}, plan a harmless prank out loud that you and {player2} could pull on a friend.",
+      dare: "{player1}, let {player2} tie your shoelaces together. Walk to the door and back.",
     },
     {
       id: "pc14",
@@ -94,13 +94,13 @@ export const crimeDeck: Deck = {
       id: "pc15",
       truth:
         "{player1}, which of you is more likely to talk your way out of a speeding ticket?",
-      dare: "{player1}, talk your way out of an imaginary ticket — {player2} plays the officer.",
+      dare: "{player1}, {player2} plays a police officer. Talk your way out of whatever they accuse you of.",
     },
     {
       id: "pc16",
       truth:
         "{player1}, what guilty pleasure do you hide from everyone except {player2}?",
-      dare: "{player1} and {player2}, trade one secret each — vault rules, it never leaves this room.",
+      dare: "{player1}, let {player2} look through one app on your phone for 30 seconds.",
     },
     {
       id: "pc17",
@@ -123,7 +123,7 @@ export const crimeDeck: Deck = {
       id: "pc20",
       truth:
         "{player1}, who in your phone would help you with anything, no questions asked?",
-      dare: "{player1}, draft the 'I need help, don't ask questions' text and show {player2} — but don't send it.",
+      dare: "{player1}, text one person a single word with no explanation. {player2} picks the word.",
     },
     {
       id: "pc21",
@@ -163,13 +163,13 @@ export const crimeDeck: Deck = {
     {
       id: "pc27",
       truth: "{player1}, what would your mugshot face look like?",
-      dare: "{player1}, pose for a mugshot while {player2} takes the photo — invisible crime sign included.",
+      dare: "{player1}, let {player2} take three unflattering photos of you. They keep all three.",
     },
     {
       id: "pc28",
       truth:
         "{player1}, what's something everyone does but nobody ever admits?",
-      dare: "{player1} and {player2}, each admit one on the count of three — no backing out.",
+      dare: "{player1}, do something mildly embarrassing in front of {player2} and never explain it.",
     },
     {
       id: "pc29",
@@ -181,7 +181,7 @@ export const crimeDeck: Deck = {
       id: "pc30",
       truth:
         "{player1}, what's the best hiding spot you've ever had for snacks, money, or gifts?",
-      dare: "{player1}, reveal one current hiding spot to {player2} — partner privileges.",
+      dare: "{player1}, hide somewhere in this home. {player2} gets 60 seconds to find you.",
     },
     {
       id: "pc31",
@@ -205,7 +205,7 @@ export const crimeDeck: Deck = {
       id: "pc34",
       truth:
         "{player1}, if you two had to go off-grid for a month, where's the safe house?",
-      dare: "{player1}, sketch the safe-house floor plan in the air and present it to {player2}.",
+      dare: "{player1}, build a hiding place for two out of whatever's in this room. Both of you get in.",
     },
     {
       id: "pc35",
@@ -234,13 +234,13 @@ export const crimeDeck: Deck = {
       id: "pc39",
       truth:
         "{player1}, who would win a game of hide and seek right now — you or {player2}?",
-      dare: "{player1}, prove it: hide while {player2} counts to 10, then survive 30 seconds.",
+      dare: "{player1}, carry {player2} out of this room without putting them down.",
     },
     {
       id: "pc40",
       truth:
         "{player1}, what skill does {player2} have that you'd want on your heist crew?",
-      dare: "{player1}, recruit {player2} to your crew with your best pitch — they're allowed to play hard to get.",
+      dare: "{player1}, lift {player2} off the ground and hold them there for 5 seconds.",
     },
     {
       id: "pc41",
@@ -268,7 +268,7 @@ export const crimeDeck: Deck = {
     {
       id: "pc45",
       truth: "{player1}, which of you two keeps secrets better?",
-      dare: "{player1}, whisper your next gift idea for {player2} into a pillow — they don't get to hear it.",
+      dare: "{player1}, let {player2} whisper one word to you. Keep it secret for the rest of the game.",
     },
     {
       id: "pc46",
@@ -286,19 +286,19 @@ export const crimeDeck: Deck = {
       id: "pc48",
       truth:
         "{player1}, what's one thing you'd only confess under extreme pressure?",
-      dare: "{player1}, give {player2} one yes-or-no question — answer it completely honestly.",
+      dare: "{player1}, hold {player2}'s hand and keep eye contact for 30 seconds without blinking.",
     },
     {
       id: "pc49",
       truth:
         "{player1}, which of your friends would join your crew, and in what role?",
-      dare: "{player1}, assemble your imaginary crew out loud — {player2} must get the coolest role.",
+      dare: "{player1}, text one friend right now and send them nothing but 'it's done.'",
     },
     {
       id: "pc50",
       truth:
         "{player1}, if you and {player2} got matching 'partners in crime' tattoos, what's the design?",
-      dare: "{player1}, draw the design on {player2}'s hand with your finger and make them guess what it is.",
+      dare: "{player1} and {player2}, draw a small matching mark on each other's wrist with a pen.",
     },
   ],
 };

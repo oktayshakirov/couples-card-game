@@ -4,7 +4,7 @@ export const timelessDeck: Deck = {
   id: "timeless",
   name: "Timeless Love",
   description:
-    "Classic romance and sweet moments. Timeless questions and charming dares for couples.",
+    "Classic romance and sweet moments. Nostalgic questions and charming dares.",
   icon: "timeless",
   isDefault: false,
   nsfw: false,
@@ -12,7 +12,7 @@ export const timelessDeck: Deck = {
     {
       id: "t1",
       truth:
-        "{player1}, what's the most embarrassing song on your playlist that you secretly love?",
+        "{player1}, which song instantly takes you back to being sixteen?",
       dare: "{player1}, sing a love song to {player2} in your most dramatic voice.",
     },
     {
@@ -48,7 +48,7 @@ export const timelessDeck: Deck = {
       id: "t7",
       truth:
         "{player1}, what's the dumbest thing you've done to impress someone?",
-      dare: "{player1}, recreate the moment you first tried to impress {player2}.",
+      dare: "{player1}, hold eye contact with {player2} for 30 seconds without laughing.",
     },
     {
       id: "t8",
@@ -63,7 +63,7 @@ export const timelessDeck: Deck = {
     {
       id: "t10",
       truth:
-        "{player1}, what's the most embarrassing thing you've posted on social media?",
+        "{player1}, if everything you posted five years ago vanished tonight, would you miss any of it?",
       dare: "{player1}, take a silly selfie with {player2} and set it as your phone wallpaper for the day.",
     },
     {
@@ -74,18 +74,18 @@ export const timelessDeck: Deck = {
     },
     {
       id: "t12",
-      truth: "{player1}, what's the most ridiculous thing you've ever bought?",
-      dare: "{player1}, let {player2} choose one item from your wallet or bag and explain why you have it.",
+      truth: "{player1}, what purchase would you defend to your last breath, no matter who mocks it?",
+      dare: "{player1}, let {player2} take one item from your wallet or bag and keep it until the game ends.",
     },
     {
       id: "t13",
       truth: "{player1}, what's the most awkward date you've ever been on?",
-      dare: "{player1}, plan out your ideal date with {player2} and describe it in detail.",
+      dare: "{player1}, plan a real date with {player2} right now. Pick the day.",
     },
     {
       id: "t14",
       truth: "{player1}, what's the silliest thing you're afraid of?",
-      dare: "{player1}, let {player2} help you face one small fear together right now.",
+      dare: "{player1}, let {player2} blindfold you and hand you three things to identify by touch.",
     },
     {
       id: "t15",
@@ -96,19 +96,19 @@ export const timelessDeck: Deck = {
     {
       id: "t16",
       truth:
-        "{player1}, what's the most embarrassing nickname you've ever had?",
+        "{player1}, who gave you a nickname that actually stuck?",
       dare: "{player1}, write a short poem about {player2} and read it to them.",
     },
     {
       id: "t17",
       truth: "{player1}, what's the most unusual thing you've ever collected?",
-      dare: "{player1}, show {player2} something you're passionate about.",
+      dare: "{player1}, let {player2} choose one thing of yours to put on display for the rest of the day.",
     },
     {
       id: "t18",
       truth:
         "{player1}, what's one thing you do when you're alone that you'd never do in front of others?",
-      dare: "{player1}, do something silly that you normally only do alone, but do it with {player2}.",
+      dare: "{player1}, do 20 jumping jacks while {player2} counts them out loud.",
     },
     {
       id: "t19",
@@ -118,20 +118,20 @@ export const timelessDeck: Deck = {
     {
       id: "t20",
       truth:
-        "{player1}, what's something you believed as a child that turned out to be completely wrong?",
-      dare: "{player1}, draw a picture of something from your childhood and explain it to {player2}.",
+        "{player1}, what did you believe about love as a kid that turned out to be completely wrong?",
+      dare: "{player1}, draw {player2}'s portrait in 30 seconds and hand it over. No corrections.",
     },
     {
       id: "t21",
       truth:
-        "{player1}, what's the most embarrassing thing that's happened to you at school?",
-      dare: "{player1}, share a photo from your school days with {player2} and tell them the story behind it.",
+        "{player1}, who were you in school — and would {player2} have liked that version of you?",
+      dare: "{player1}, let {player2} pick any photo on your phone and post it.",
     },
     {
       id: "t22",
       truth:
-        "{player1}, what's something you're secretly proud of but never talk about?",
-      dare: "{player1}, brag about something you're proud of to {player2} for 30 seconds.",
+        "{player1}, what are you quietly proud of that never comes up in conversation?",
+      dare: "{player1}, let {player2} introduce you to the room like a celebrity. Bow accordingly.",
     },
     {
       id: "t23",
@@ -147,61 +147,61 @@ export const timelessDeck: Deck = {
     {
       id: "t25",
       truth:
-        "{player1}, what's the most embarrassing thing in your search history?",
-      dare: "{player1}, let {player2} ask you 3 questions and you must answer honestly.",
+        "{player1}, what's the most incriminating thing in your search history?",
+      dare: "{player1}, let {player2} choose one app you can't open until tomorrow.",
     },
     {
       id: "t26",
       truth:
-        "{player1}, what's something you've always wanted to try but haven't had the courage?",
-      dare: "{player1}, try something new with {player2} right now - even if it's just a silly pose or face.",
+        "{player1}, what have you always wanted to try but never found the nerve for?",
+      dare: "{player1}, let {player2} name one thing you must do before your next turn. No arguing.",
     },
     {
       id: "t27",
-      truth: "{player1}, what's the worst haircut you've ever had?",
+      truth: "{player1}, what trend did you follow that you'd never admit to now?",
       dare: "{player1}, let {player2} give you a pretend makeover using only their hands.",
     },
     {
       id: "t28",
       truth:
-        "{player1}, what's something you do that you think is normal but others find weird?",
-      dare: "{player1}, show {player2} your weirdest habit and explain why you do it.",
+        "{player1}, which of your habits does {player2} find strangest?",
+      dare: "{player1}, copy everything {player2} does for the next 60 seconds.",
     },
     {
       id: "t29",
       truth:
-        "{player1}, what's the most embarrassing thing you've done to get someone's attention?",
-      dare: "{player1}, do something to get {player2}'s attention in the most dramatic way possible.",
+        "{player1}, how did you first try to get {player2} to notice you?",
+      dare: "{player1}, stand on a chair or the sofa and announce one thing you like about {player2} to the room.",
     },
     {
       id: "t30",
       truth:
         "{player1}, what's a skill you wish you had but have never tried to learn?",
-      dare: "{player1}, try to learn something new from {player2} right now - even if it's just a silly trick.",
+      dare: "{player1}, let {player2} teach you a word in another language. Use it until the game ends.",
     },
     {
       id: "t31",
       truth:
-        "{player1}, what's the most embarrassing thing you've done while trying to be cool?",
-      dare: "{player1}, try to be as cool as possible for 30 seconds while {player2} watches.",
+        "{player1}, when was the last time you tried far too hard to seem cool?",
+      dare: "{player1}, walk across the room in the most ridiculous way you can manage.",
     },
     {
       id: "t32",
       truth:
-        "{player1}, what's something you're really bad at but pretend you're good at?",
-      dare: "{player1}, show {player2} something you're actually good at and let them be impressed.",
+        "{player1}, what do you confidently pretend to be good at?",
+      dare: "{player1}, let {player2} pick a talent-show act — perform it badly for 20 seconds.",
     },
     {
       id: "t33",
       truth:
-        "{player1}, what's the most embarrassing thing you've ever said to someone you liked?",
-      dare: "{player1}, say something sweet and genuine to {player2} that you've never said before.",
+        "{player1}, what's the very first thing you ever said to {player2}?",
+      dare: "{player1}, kiss {player2} on the back of the neck.",
     },
     {
       id: "t34",
       truth:
-        "{player1}, what's something you do when you're stressed that others might find strange?",
-      dare: "{player1}, show {player2} your stress-relief technique and do it together.",
+        "{player1}, how does {player2} know you're stressed before you say a word?",
+      dare: "{player1}, give {player2} a two-minute back rub without speaking.",
     },
     {
       id: "t35",
@@ -212,25 +212,25 @@ export const timelessDeck: Deck = {
     {
       id: "t36",
       truth:
-        "{player1}, what's something you've always wanted to tell {player2} but haven't?",
-      dare: "{player1}, write down what you wanted to tell {player2} on a piece of paper and give it to them to read later.",
+        "{player1}, when did you know you were serious about {player2}?",
+      dare: "{player1}, write a word on {player2}'s palm with your finger and let them guess it.",
     },
     {
       id: "t37",
       truth:
-        "{player1}, what's the most embarrassing thing you've done to avoid talking to someone?",
+        "{player1}, how far would you go to avoid one awkward conversation?",
       dare: "{player1}, have a 2-minute conversation with {player2} where you can only use questions.",
     },
     {
       id: "t38",
       truth:
-        "{player1}, what's something you're embarrassed to admit you don't know how to do?",
-      dare: "{player1}, let {player2} teach you something simple right now.",
+        "{player1}, which basic life skill have you never got round to learning?",
+      dare: "{player1}, let {player2} assign you one chore to do before tomorrow night.",
     },
     {
       id: "t39",
       truth: "{player1}, what's something you used to hate but now you love?",
-      dare: "{player1}, let {player2} pick a song and you both have to dance to it together.",
+      dare: "{player1}, make {player2} laugh within 20 seconds using only sounds.",
     },
     {
       id: "t40",
@@ -242,13 +242,13 @@ export const timelessDeck: Deck = {
       id: "t41",
       truth:
         "{player1}, what's a tradition or ritual you'd like to start with {player2}?",
-      dare: "{player1}, do something romantic for {player2} right now - even if it's silly.",
+      dare: "{player1}, let {player2} pick a song and slow dance to it with them.",
     },
     {
       id: "t42",
       truth:
-        "{player1}, what's something you've always wanted to do with {player2} but haven't suggested?",
-      dare: "{player1}, create a bucket list of 5 things you want to do with {player2} and share it with them.",
+        "{player1}, where do you and {player2} always say you'll go, and never actually go?",
+      dare: "{player1}, put one real plan with {player2} into your calendar right now.",
     },
     {
       id: "t43",
@@ -260,7 +260,7 @@ export const timelessDeck: Deck = {
       id: "t44",
       truth:
         "{player1}, what's a song that always brings back a specific memory for you?",
-      dare: "{player1}, play that song for {player2} and share the memory with them.",
+      dare: "{player1}, sing the chorus of the last song you listened to. Badly and loudly.",
     },
     {
       id: "t45",
@@ -271,7 +271,7 @@ export const timelessDeck: Deck = {
     {
       id: "t46",
       truth:
-        "{player1}, what's something you do that you think makes you look cool but actually doesn't?",
+        "{player1}, which of your signature moves do you suspect isn't working?",
       dare: "{player1}, do 10 push-ups while {player2} counts them.",
     },
     {
@@ -283,14 +283,14 @@ export const timelessDeck: Deck = {
     {
       id: "t48",
       truth:
-        "{player1}, what's something you've always wanted to learn from {player2}?",
-      dare: "{player1}, ask {player2} to teach you something and actually try to learn it.",
+        "{player1}, what could {player2} teach you that you'd actually sit still for?",
+      dare: "{player1}, take {player2}'s hand and kiss each knuckle once.",
     },
     {
       id: "t49",
       truth:
-        "{player1}, what's something you used to be really good at but haven't done in a while?",
-      dare: "{player1}, do something completely spontaneous with {player2} right now.",
+        "{player1}, what were you once genuinely good at that you've let slide?",
+      dare: "{player1}, do the first spontaneous thing that comes into your head. You have 10 seconds to commit.",
     },
     {
       id: "t50",
@@ -302,7 +302,7 @@ export const timelessDeck: Deck = {
       id: "t51",
       truth:
         "{player1}, what's a memory from your childhood that you'd love to recreate with {player2}?",
-      dare: "{player1}, teach {player2} how to do something you learned as a kid.",
+      dare: "{player1}, give {player2} a piggyback ride across the room. Safely.",
     },
     {
       id: "t52",

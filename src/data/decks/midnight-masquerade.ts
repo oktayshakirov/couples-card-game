@@ -30,25 +30,25 @@ export const masqueradeDeck: Deck = {
       id: "mm4",
       truth:
         "{player1}, what's your alter ego's name — and their signature move?",
-      dare: "{player1}, demonstrate the signature move on {player2}.",
+      dare: "{player1}, kiss {player2} the way a stranger would who's been watching them all night.",
     },
     {
       id: "mm5",
       truth:
         "{player1}, bodyguard, vampire, or royalty — who's seducing you tonight?",
-      dare: "{player1}, play the winner and seduce {player2} for 30 seconds.",
+      dare: "{player1}, pin {player2}'s wrists gently and hold them there for 15 seconds.",
     },
     {
       id: "mm6",
       truth:
         "{player1}, what outfit or uniform would you wear to drive {player2} crazy?",
-      dare: "{player1}, describe yourself in it — slowly — while {player2} listens with their eyes closed.",
+      dare: "{player1}, take off one item of your own clothing as slowly as you can.",
     },
     {
       id: "mm7",
       truth:
         "{player1}, what's the hottest scene from a movie or show you'd reenact with {player2}?",
-      dare: "{player1}, recreate it with {player2} — PG-13 version, for now.",
+      dare: "{player1}, kiss {player2} against the nearest wall.",
     },
     {
       id: "mm8",
@@ -66,13 +66,13 @@ export const masqueradeDeck: Deck = {
       id: "mm10",
       truth:
         "{player1}, have you ever flirted in character — an accent, a fake name, a persona?",
-      dare: "{player1}, order {player2} a drink at an imaginary bar using your smoothest fake persona.",
+      dare: "{player1}, offer {player2} a drink in your smoothest fake persona — then actually go and get it.",
     },
     {
       id: "mm11",
       truth:
         "{player1}, what's {player2}'s alter ego called, and what are they infamous for?",
-      dare: "{player1}, introduce {player2}'s alter ego to the press like a scandalous headline.",
+      dare: "{player1}, bite {player2}'s shoulder gently, like you've been waiting all night to.",
     },
     {
       id: "mm12",
@@ -84,13 +84,13 @@ export const masqueradeDeck: Deck = {
       id: "mm13",
       truth:
         "{player1}, which era would be the hottest to roleplay — roaring 20s, medieval court, or the far future?",
-      dare: "{player1}, seduce {player2} using only era-appropriate language.",
+      dare: "{player1}, kiss {player2}'s hand like a duellist, then their mouth like a soldier on leave.",
     },
     {
       id: "mm14",
       truth:
         "{player1}, what's the boldest thing your masked alter ego would do that you wouldn't?",
-      dare: "{player1}, do the mildest version of it right now.",
+      dare: "{player1}, do something your usual self would never do in front of {player2}. 10 seconds.",
     },
     {
       id: "mm15",
@@ -108,19 +108,19 @@ export const masqueradeDeck: Deck = {
       id: "mm17",
       truth:
         "{player1}, masseur and client — which one are you, and how does the appointment end?",
-      dare: "{player1}, introduce your 'massage services' and give {player2} a one-minute demo.",
+      dare: "{player1}, give {player2} a two-minute massage and never once break character as their masseur.",
     },
     {
       id: "mm18",
       truth:
         "{player1}, which celebrity couple would you two roleplay perfectly?",
-      dare: "{player1} and {player2}, pose for the paparazzi as that couple — three poses.",
+      dare: "{player1} and {player2}, pose for three paparazzi photos, each one more scandalous than the last.",
     },
     {
       id: "mm19",
       truth:
         "{player1}, what's the hottest kind of forbidden pairing: boss and intern, sworn rivals, or best friends?",
-      dare: "{player1}, act out the moment the tension finally breaks — {player2} plays along.",
+      dare: "{player1}, remove one layer of {player2}'s clothing, in character as somebody who shouldn't.",
     },
     {
       id: "mm20",
@@ -131,7 +131,7 @@ export const masqueradeDeck: Deck = {
     {
       id: "mm21",
       truth: "{player1}, what would your stripper name be?",
-      dare: "{player1}, announce {player2} to the stage with their stripper name and full hype-man energy.",
+      dare: "{player1}, dance for {player2} for 20 seconds and lose one accessory on the final beat.",
     },
     {
       id: "mm22",
@@ -143,19 +143,19 @@ export const masqueradeDeck: Deck = {
       id: "mm23",
       truth:
         "{player1}, what persona could {player2} slip into that would completely undo you?",
-      dare: "{player1}, beg {player2} — in character — for mercy they refuse to give.",
+      dare: "{player1}, get on your knees in front of {player2} and ask them for something. Anything.",
     },
     {
       id: "mm24",
       truth:
         "{player1}, if tonight had a dress code, what would you make {player2} wear?",
-      dare: "{player1}, style {player2} with three imaginary items, describing each one as you 'put it on.'",
+      dare: "{player1}, pick out a real outfit for {player2} to wear the next time you two go out.",
     },
     {
       id: "mm25",
       truth:
         "{player1}, you're caught sneaking out of {player2}'s room at 3 a.m. — what's your cover story?",
-      dare: "{player1}, deliver the cover story while {player2} tries to make you break character.",
+      dare: "{player1}, keep a completely straight face while {player2} spends 30 seconds trying to seduce you.",
     },
     {
       id: "mm26",
@@ -167,19 +167,19 @@ export const masqueradeDeck: Deck = {
       id: "mm27",
       truth:
         "{player1}, hotel bar, you're both pretending not to know each other — how does it start?",
-      dare: "{player1}, send {player2} an imaginary drink from across the room and raise one eyebrow like a stranger.",
+      dare: "{player1}, cross the room, introduce yourself to {player2} as a stranger, and get as close as they'll allow.",
     },
     {
       id: "mm28",
       truth:
-        "{player1}, which is hotter: {player2} in charge as the boss, or {player2} taking orders?",
-      dare: "{player1}, play the opposite role for the next 2 rounds.",
+        "{player1}, which authority figure would you least want to be caught by?",
+      dare: "{player1}, let {player2} give you orders for the next 2 rounds.",
     },
     {
       id: "mm29",
       truth:
         "{player1}, you have to seduce {player2} in a silent library — what's your whispered opening line?",
-      dare: "{player1}, use it — at a whisper, an inch from their ear.",
+      dare: "{player1}, whisper to {player2} for 20 seconds without ever rising above a breath.",
     },
     {
       id: "mm30",
@@ -191,13 +191,13 @@ export const masqueradeDeck: Deck = {
       id: "mm31",
       truth:
         "{player1}, what would the tabloids write about your alter ego's night with {player2}?",
-      dare: "{player1}, read the headline and the first sentence of the article out loud.",
+      dare: "{player1}, carry {player2} into another room like you're stealing them from a party.",
     },
     {
       id: "mm32",
       truth:
         "{player1}, pirate, poet, or royalty — who writes {player2} the best love confession?",
-      dare: "{player1}, perform that confession in character.",
+      dare: "{player1}, confess your love to {player2} as a pirate, then a poet, then royalty. 10 seconds each.",
     },
     {
       id: "mm33",
@@ -209,37 +209,37 @@ export const masqueradeDeck: Deck = {
       id: "mm34",
       truth:
         "{player1}, could you keep a straight face while {player2} seduced you in a ridiculous accent?",
-      dare: "{player1}, find out — {player2} gets 20 seconds.",
+      dare: "{player1}, let {player2} seduce you in the most ridiculous accent they can manage. Don't laugh.",
     },
     {
       id: "mm35",
       truth:
         "{player1}, what's your emergency word for when a roleplay gets too silly to continue?",
-      dare: "{player1}, invent one with {player2} right now and shake on it.",
+      dare: "{player1}, agree a real safe word with {player2} right now. It stays after the game ends.",
     },
     {
       id: "mm36",
       truth:
         "{player1}, masked ball, midnight, one dance — what happens at the last chime?",
-      dare: "{player1}, reenact the final ten seconds of that dance with {player2}.",
+      dare: "{player1}, slow dance with {player2} and kiss them the moment they least expect it.",
     },
     {
       id: "mm37",
       truth:
         "{player1}, which fairy tale would you make significantly less family-friendly?",
-      dare: "{player1}, retell its opening line the adult way.",
+      dare: "{player1}, tell {player2} a bedtime story that goes badly wrong within three sentences.",
     },
     {
       id: "mm38",
       truth:
         "{player1}, your alter ego leaves notes on pillows — what does tonight's note say?",
-      dare: "{player1}, write it down and press it into {player2}'s hand without a word.",
+      dare: "{player1}, write something on {player2}'s skin with your fingertip and let them guess it wrong three times.",
     },
     {
       id: "mm39",
       truth:
         "{player1}, in another life, what would {player2}'s hands be famous for?",
-      dare: "{player1}, kiss those famous hands like a devoted fan meeting their idol.",
+      dare: "{player1}, kiss {player2}'s hands like a devoted fan finally meeting their idol.",
     },
     {
       id: "mm40",
@@ -251,37 +251,37 @@ export const masqueradeDeck: Deck = {
       id: "mm41",
       truth:
         "{player1}, what's the hottest way {player2} could say your name in character?",
-      dare: "{player1}, coach {player2} until they nail the delivery.",
+      dare: "{player1}, say {player2}'s name three times, each one lower and slower than the last.",
     },
     {
       id: "mm42",
       truth:
         "{player1}, what character from a book made you feel things you don't admit to?",
-      dare: "{player1}, read an imaginary page of that book aloud to {player2}, slowly.",
+      dare: "{player1}, read anything within reach out loud to {player2} as though it were filthy.",
     },
     {
       id: "mm43",
       truth:
         "{player1}, you're the professor of 'romance studies' — what's tonight's lesson?",
-      dare: "{player1}, teach {player2} lesson one, with a demonstration.",
+      dare: "{player1}, teach {player2} one thing using only your hands. No words, 30 seconds.",
     },
     {
       id: "mm44",
       truth:
         "{player1}, if {player2} went undercover to seduce you, what disguise would work instantly?",
-      dare: "{player1}, describe spotting them across the room, then act out your approach.",
+      dare: "{player1}, look {player2} up and down slowly, then tell them exactly what you've decided about them.",
     },
     {
       id: "mm45",
       truth:
         "{player1}, what's your favorite kind of roleplay tension: rivals, strangers, or reunited exes?",
-      dare: "{player1}, set the scene out loud and play the first 20 seconds with {player2}.",
+      dare: "{player1} and {player2}, play total strangers for the next two rounds. No pet names, no shared history.",
     },
     {
       id: "mm46",
       truth:
         "{player1}, two rivals forced to share one bed — how does the night go?",
-      dare: "{player1}, draw the imaginary pillow line between you and {player2}, then break your own rule.",
+      dare: "{player1}, lie down beside {player2} back to back and last 30 seconds without touching.",
     },
     {
       id: "mm47",
@@ -293,19 +293,19 @@ export const masqueradeDeck: Deck = {
       id: "mm48",
       truth:
         "{player1}, the masquerade masks come off at midnight — what's the first thing you do?",
-      dare: "{player1}, remove {player2}'s imaginary mask as slowly as possible and react to what you see.",
+      dare: "{player1}, look {player2} in the eye and tell them one thing you want, in as few words as possible.",
     },
     {
       id: "mm49",
       truth:
         "{player1}, which persona are you retiring after tonight, and which one debuts next?",
-      dare: "{player1}, take a bow as the old persona and introduce the new one to {player2}.",
+      dare: "{player1}, take a bow, then introduce yourself to {player2} as somebody entirely new.",
     },
     {
       id: "mm50",
       truth:
         "{player1}, in character or out of character — who kisses better?",
-      dare: "{player1}, prove it with a side-by-side comparison on {player2}.",
+      dare: "{player1}, kiss {player2} twice — once as yourself, once as someone else entirely.",
     },
   ],
 };
