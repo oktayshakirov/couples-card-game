@@ -16,6 +16,12 @@ import {
 import { allDecks } from "../data/decks";
 import { Deck } from "../types/deck";
 import { getUnlockedDecks, unlockAllDecks } from "../utils/deckStorage";
+import {
+  addRecentSurprise,
+  getRecentSurprises,
+  recordSurprise,
+} from "../utils/surpriseStorage";
+import { pickSurpriseDeck } from "../utils/surprisePicker";
 import { getCustomDecks } from "../utils/customDeckStorage";
 import {
   getFavoriteCards,
@@ -83,6 +89,7 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
   const [deckFilter, setDeckFilter] = useState<"all" | "classic" | "spicy">(
     "all"
   );
+  const [recentSurprises, setRecentSurprises] = useState<string[]>([]);
 
   const cardDimensions = useMemo(() => getCardDimensions(width), [width]);
 
@@ -115,13 +122,22 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
     const pool = visibleAppDecks.filter(isPlayable);
     const effectivePool =
       pool.length > 0 ? pool : sortedAppDecks.filter(isPlayable);
-    if (effectivePool.length === 0) {
+    const pick = pickSurpriseDeck(effectivePool, recentSurprises);
+    if (!pick) {
       return;
     }
-    const pick =
-      effectivePool[Math.floor(Math.random() * effectivePool.length)];
+    // This screen unmounts as soon as a deck is selected, so the history has to
+    // be persisted rather than kept in state alone.
+    setRecentSurprises((prev) => addRecentSurprise(prev, pick.id));
+    void recordSurprise(pick.id);
     onSelectDeck(pick);
-  }, [visibleAppDecks, sortedAppDecks, unlockedDecks, onSelectDeck]);
+  }, [
+    visibleAppDecks,
+    sortedAppDecks,
+    unlockedDecks,
+    recentSurprises,
+    onSelectDeck,
+  ]);
 
   const loadUnlockedDecks = useCallback(async () => {
     const unlocked = await getUnlockedDecks();
@@ -144,6 +160,21 @@ export const DecksLibraryScreen: React.FC<DecksLibraryScreenProps> = ({
   useEffect(() => {
     loadUnlockedDecks();
   }, [loadUnlockedDecks]);
+
+  // Reload on every visit: the screen unmounts on each pick, so storage is the
+  // only place the Surprise Me history survives.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const recent = await getRecentSurprises();
+      if (!cancelled) {
+        setRecentSurprises(recent);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [paywallEntryKey]);
 
   // Reload on every visit (paywallEntryKey bumps) so decks created/edited in
   // the editor and cards favorited in-game show up immediately.

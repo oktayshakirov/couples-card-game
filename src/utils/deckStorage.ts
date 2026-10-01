@@ -4,15 +4,19 @@ import { allDecks } from "../data/decks";
 const UNLOCKED_DECKS_KEY = "unlockedDecks";
 const TESTED_DECKS_KEY = "testedDecks";
 
+/** The deck flagged `isDefault` is free and always playable. */
+const DEFAULT_DECK_ID =
+  allDecks.find((deck) => deck.isDefault)?.id ?? allDecks[0].id;
+
 export async function getUnlockedDecks(): Promise<string[]> {
   try {
     const unlocked = await AsyncStorage.getItem(UNLOCKED_DECKS_KEY);
     if (unlocked) {
       return JSON.parse(unlocked);
     }
-    return ["default"];
+    return [DEFAULT_DECK_ID];
   } catch {
-    return ["default"];
+    return [DEFAULT_DECK_ID];
   }
 }
 
