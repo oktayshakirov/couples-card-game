@@ -24,7 +24,7 @@ const ActionButtonsComponent: React.FC<ActionButtonsProps> = ({
 
   const handleSkip = () => {
     if (canSkip) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
       onSkip();
     }
   };

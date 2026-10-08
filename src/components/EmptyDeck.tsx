@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -8,10 +8,49 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { PlayerColor } from "../hooks/useGameState";
 import { COLORS } from "../constants/colors";
 
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+
+interface Highlight {
+  title: string;
+  detail: string;
+  color: string;
+}
+
+// Bravest player = more dares; equal dares falls back to fewer skips.
+const getHighlight = (
+  p1: { name: string; color: string; dares: number; skipped: number },
+  p2: { name: string; color: string; dares: number; skipped: number }
+): Highlight => {
+  const daresLabel = (n: number) => `${n} ${n === 1 ? "dare" : "dares"}`;
+
+  if (p1.dares !== p2.dares) {
+    const [winner, loser] = p1.dares > p2.dares ? [p1, p2] : [p2, p1];
+    return {
+      title: `${winner.name} was the braver one 🔥`,
+      detail: `${daresLabel(winner.dares)} vs ${loser.dares}`,
+      color: winner.color,
+    };
+  }
+
+  if (p1.skipped !== p2.skipped) {
+    const winner = p1.skipped < p2.skipped ? p1 : p2;
+    return {
+      title: `${winner.name} was the braver one 🔥`,
+      detail: `Same dares, fewer skips`,
+      color: winner.color,
+    };
+  }
+
+  return {
+    title: "Perfect match 💞",
+    detail: `${daresLabel(p1.dares)} each, nobody backed down`,
+    color: COLORS.primary,
+  };
+};
 
 interface EmptyDeckProps {
   player1Name: string;
@@ -44,6 +83,24 @@ export const EmptyDeck: React.FC<EmptyDeckProps> = ({
 }) => {
   const { width } = useWindowDimensions();
   const stylesMemo = useMemo(() => createStyles(width), [width]);
+  const highlight = getHighlight(
+    {
+      name: player1Name,
+      color: player1Color,
+      dares: player1Dares,
+      skipped: player1Skipped,
+    },
+    {
+      name: player2Name,
+      color: player2Color,
+      dares: player2Dares,
+      skipped: player2Skipped,
+    }
+  );
+
+  useEffect(() => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  }, []);
 
   return (
     <ScrollView
@@ -55,6 +112,15 @@ export const EmptyDeck: React.FC<EmptyDeckProps> = ({
         <Text style={stylesMemo.subtitle}>
           You've finished the deck together!
         </Text>
+
+        <View
+          style={[stylesMemo.highlightCard, { borderColor: highlight.color }]}
+        >
+          <Text style={[stylesMemo.highlightTitle, { color: highlight.color }]}>
+            {highlight.title}
+          </Text>
+          <Text style={stylesMemo.highlightDetail}>{highlight.detail}</Text>
+        </View>
 
         <View style={stylesMemo.statsContainer}>
           <View
@@ -188,6 +254,27 @@ const createStyles = (width: number) =>
       color: COLORS.text.secondary,
       textAlign: "center",
       marginBottom: verticalScale(20),
+    },
+    highlightCard: {
+      width: "100%",
+      alignItems: "center",
+      backgroundColor: "rgba(255,255,255,0.05)",
+      borderRadius: 14,
+      borderWidth: 1,
+      paddingVertical: verticalScale(12),
+      paddingHorizontal: scale(16),
+      marginBottom: verticalScale(16),
+    },
+    highlightTitle: {
+      fontSize: moderateScale(18),
+      fontWeight: "700",
+      textAlign: "center",
+    },
+    highlightDetail: {
+      fontSize: moderateScale(13),
+      color: COLORS.text.secondary,
+      marginTop: verticalScale(4),
+      textAlign: "center",
     },
     statsContainer: {
       width: "100%",

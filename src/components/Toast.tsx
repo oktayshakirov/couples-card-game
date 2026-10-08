@@ -39,7 +39,7 @@ const CustomToast: React.FC<CustomToastProps> = ({ text1, text2, props }) => {
   const stylesMemo = useMemo(() => createStyles(width), [width]);
 
   const handleConfirm = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     onConfirm?.();
     Toast.hide();
   };
